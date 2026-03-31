@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Board Arc Zones — Radial Layout Prototype</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060610; font-family:Georgia,serif; overflow:hidden; width:100vw; height:100vh; display:flex; flex-direction:column; }
+
+.topbar {
+  height:36px; background:#08080f; border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; padding:0 14px; gap:10px; flex-shrink:0;
+}
+.topbar h1 { font-size:11px; color:rgba(186,140,30,0.65); letter-spacing:2px; }
+.topbar button {
+  background:rgba(255,255,255,0.05); border:0.5px solid rgba(186,140,30,0.3);
+  color:rgba(186,140,30,0.7); padding:4px 14px; border-radius:4px;
+  font-family:Georgia,serif; font-size:10px; cursor:pointer; transition:all .15s;
+}
+.topbar button:hover { background:rgba(186,140,30,0.12); color:rgba(186,140,30,0.95); }
+.topbar button.active { background:rgba(186,140,30,0.2); border-color:rgba(186,140,30,0.6); color:rgba(186,140,30,1); }
+.tb-sep { width:1px; height:18px; background:rgba(255,255,255,0.06); }
+.topbar label { font-size:9px; color:rgba(255,255,255,0.3); }
+.topbar input[type=range] { width:80px; accent-color:rgba(186,140,30,0.7); }
+.topbar span.val { font-size:9px; color:rgba(186,140,30,0.6); min-width:30px; }
+
+#board-container { flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#060610; }
+
+canvas#board { cursor:crosshair; }
+
+.legend {
+  position:fixed; bottom:10px; left:50%; transform:translateX(-50%);
+  display:flex; gap:14px; z-index:10;
+}
+.legend-item { display:flex; align-items:center; gap:5px; }
+.legend-swatch { width:12px; height:12px; border-radius:2px; border:1px solid rgba(255,255,255,0.15); }
+.legend-label { font-size:9px; color:rgba(255,255,255,0.35); letter-spacing:0.5px; }
+
+.info {
+  position:fixed; top:44px; right:12px; font-size:9px; color:rgba(255,255,255,0.2);
+  line-height:1.8; text-align:right; z-index:10; max-width:220px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>RADIAL ARC BOARD</h1>
+  <div class="tb-sep"></div>
+  <button id="btn-a" class="active" onclick="setLayout('A')">A — Wide Horizon</button>
+  <button id="btn-b" onclick="setLayout('B')">B — Portrait Stage</button>
+  <button id="btn-c" onclick="setLayout('C')">C — Diagonal</button>
+  <div class="tb-sep"></div>
+  <label>Player angle:</label>
+  <input type="range" id="angle-slider" min="-30" max="30" value="8" oninput="updateAngle(this.value)">
+  <span class="val" id="angle-val">8°</span>
+  <div class="tb-sep"></div>
+  <label>Spread:</label>
+  <input type="range" id="spread-slider" min="40" max="120" value="75" oninput="updateSpread(this.value)">
+  <span class="val" id="spread-val">75°</span>
+  <div class="tb-sep"></div>
+  <button onclick="toggleLabels()">Labels</button>
+  <button onclick="toggleFlatGround()">Flat Ground</button>
+</div>
+
+<canvas id="board"></canvas>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(186,140,30,0.4)"></div><span class="legend-label">Fellowship (inner arc)</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(200,60,60,0.35)"></div><span class="legend-label">Skirmish (mid arc)</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(80,50,120,0.4)"></div><span class="legend-label">Shadow (outer arc)</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(120,80,30,0.4)"></div><span class="legend-label">Adventure Path</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(80,180,80,0.3)"></div><span class="legend-label">Flat Ground</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(55,138,221,0.4)"></div><span class="legend-label">Twilight Pool</span></div>
+</div>
+
+<div class="info" id="info">
+  Player position: lower-right<br>
+  Focal point: ~33%, 33%<br>
+  Zones arc from player outward<br>
+  <br>
+  Drag angle/spread sliders to adjust<br>
+  Switch A/B/C for layout variants
+</div>
+
+<script>
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+let showLabels = true;
+let showFlatGround = true;
+let currentLayout = 'A';
+
+// Player origin (lower-right, slightly inset)
+let playerX, playerY;
+// Focal point (~33% from upper-left)
+let focalX, focalY;
+// Player look angle (from player toward focal point, in radians)
+let lookAngle;
+// Manual angle offset
+let angleOffset = 8; // degrees
+// Arc spread (total angular width of zones)
+let arcSpread = 75; // degrees
+
+// ─── Layout definitions ────────────────────────────
+// Each layout defines radii (as % of max reach) for each zone
+
+const LAYOUTS = {
+  A: { // Wide Horizon — zones spread wide, thinner vertically
+    name: 'A — Wide Horizon',
+    fellowship: { rInner: 0.22, rOuter: 0.38, angleSpread: 1.0 },
+    skirmish:   { rInner: 0.42, rOuter: 0.60, angleSpread: 0.85 },
+    shadow:     { rInner: 0.64, rOuter: 0.82, angleSpread: 0.75 },
+    adventure:  { rInner: 0.15, rOuter: 0.19, angleSpread: 0.9 },
+    twilight:   { rInner: 0.48, rOuter: 0.56, angleBias: 0.42 }, // offset toward one side
+    desc: 'Sites 1, 4, 7 — Open panoramas (Shire, Caradhras, Anduin)',
+  },
+  B: { // Portrait Stage — zones in narrower, taller columns
+    name: 'B — Portrait Stage',
+    fellowship: { rInner: 0.20, rOuter: 0.42, angleSpread: 0.55 },
+    skirmish:   { rInner: 0.44, rOuter: 0.65, angleSpread: 0.50 },
+    shadow:     { rInner: 0.67, rOuter: 0.88, angleSpread: 0.50 },
+    adventure:  { rInner: 0.14, rOuter: 0.18, angleSpread: 0.85 },
+    twilight:   { rInner: 0.50, rOuter: 0.58, angleBias: 0.5 },
+    desc: 'Sites 2, 5, 8 — Tall features (Bree, Khazad-dûm, Pillars)',
+  },
+  C: { // Diagonal Frontier — offset arcs, asymmetric
+    name: 'C — Diagonal Frontier',
+    fellowship: { rInner: 0.18, rOuter: 0.36, angleSpread: 0.75, angleShift: 0.12 },
+    skirmish:   { rInner: 0.38, rOuter: 0.58, angleSpread: 0.65, angleShift: -0.05 },
+    shadow:     { rInner: 0.62, rOuter: 0.85, angleSpread: 0.60, angleShift: -0.18 },
+    adventure:  { rInner: 0.13, rOuter: 0.17, angleSpread: 0.85 },
+    twilight:   { rInner: 0.45, rOuter: 0.53, angleBias: 0.35 },
+    desc: 'Sites 3, 6, 9 — Diagonal compositions (Rivendell, Lothlórien, Amon Hen)',
+  },
+};
+
+// ─── Rendering ─────────────────────────────────────
+
+function resize() {
+  W = window.innerWidth;
+  H = window.innerHeight - 36; // minus topbar
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+
+  // Player position: lower-right, inset ~8%
+  playerX = W * 0.88;
+  playerY = H * 0.92;
+
+  // Focal point: ~33% from upper-left
+  focalX = W * 0.33;
+  focalY = H * 0.30;
+
+  // Look angle from player to focal point
+  lookAngle = Math.atan2(focalY - playerY, focalX - playerX);
+
+  draw();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // ── Landscape background ──
+  drawLandscape();
+
+  const layout = LAYOUTS[currentLayout];
+  const maxReach = Math.sqrt(W * W + H * H) * 0.65;
+  const baseAngle = lookAngle + (angleOffset * Math.PI / 180);
+  const halfSpread = (arcSpread / 2) * Math.PI / 180;
+
+  // ── Draw flat ground indicators first (behind zones) ──
+  if (showFlatGround) {
+    drawArcZone(layout.fellowship, maxReach, baseAngle, halfSpread,
+      'rgba(80,180,80,0.08)', 'rgba(80,180,80,0.12)', null);
+    drawArcZone(layout.skirmish, maxReach, baseAngle, halfSpread,
+      'rgba(80,180,80,0.06)', 'rgba(80,180,80,0.10)', null);
+    drawArcZone(layout.shadow, maxReach, baseAngle, halfSpread,
+      'rgba(80,180,80,0.05)', 'rgba(80,180,80,0.08)', null);
+  }
+
+  // ── Adventure path ──
+  drawArcZone(layout.adventure, maxReach, baseAngle, halfSpread,
+    'rgba(120,80,30,0.15)', 'rgba(120,80,30,0.3)',
+    showLabels ? 'ADVENTURE PATH' : null);
+
+  // ── Shadow zone (outer arc) ──
+  drawArcZone(layout.shadow, maxReach, baseAngle, halfSpread,
+    'rgba(80,50,120,0.1)', 'rgba(80,50,120,0.25)',
+    showLabels ? 'SHADOW ZONE' : null);
+
+  // ── Skirmish zone (mid arc) ──
+  drawArcZone(layout.skirmish, maxReach, baseAngle, halfSpread,
+    'rgba(200,60,60,0.06)', 'rgba(200,80,80,0.18)',
+    showLabels ? 'SKIRMISH' : null);
+
+  // ── Fellowship zone (inner arc) ──
+  drawArcZone(layout.fellowship, maxReach, baseAngle, halfSpread,
+    'rgba(186,140,30,0.1)', 'rgba(186,140,30,0.25)',
+    showLabels ? 'FELLOWSHIP ZONE' : null);
+
+  // ── Twilight pool (small zone offset to one side) ──
+  drawTwilightPool(layout.twilight, maxReach, baseAngle, halfSpread);
+
+  // ── Hand fan indicator (lower-right, off-edge) ──
+  drawHandFan(baseAngle);
+
+  // ── Player position marker ──
+  ctx.beginPath();
+  ctx.arc(playerX, playerY, 6, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(186,140,30,0.7)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(186,140,30,0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(186,140,30,0.5)';
+    ctx.font = '8px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('PLAYER', playerX, playerY - 12);
+  }
+
+  // ── Focal point marker ──
+  ctx.beginPath();
+  ctx.arc(focalX, focalY, 4, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fill();
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '7px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('FOCAL POINT (33%, 33%)', focalX, focalY - 10);
+  }
+
+  // ── Gaze line ──
+  ctx.beginPath();
+  ctx.moveTo(playerX, playerY);
+  ctx.lineTo(focalX, focalY);
+  ctx.strokeStyle = 'rgba(186,140,30,0.1)';
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([4, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ── Solid UI elements ──
+  drawPhaseTracker();
+  drawPassButton(baseAngle, maxReach);
+  drawPiles(layout, maxReach, baseAngle, halfSpread);
+  drawCardShelf();
+
+  // ── Layout label ──
+  ctx.fillStyle = 'rgba(186,140,30,0.4)';
+  ctx.font = '11px Georgia';
+  ctx.textAlign = 'left';
+  ctx.fillText(layout.name, 14, H - 30);
+  ctx.font = '9px Georgia';
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillText(layout.desc, 14, H - 16);
+}
+
+function drawArcZone(zone, maxReach, baseAngle, halfSpread, fillColor, strokeColor, label) {
+  const rInner = zone.rInner * maxReach;
+  const rOuter = zone.rOuter * maxReach;
+  const spread = halfSpread * (zone.angleSpread || 1);
+  const shift = (zone.angleShift || 0) * halfSpread;
+  const centerAngle = baseAngle + shift;
+
+  const aStart = centerAngle - spread;
+  const aEnd = centerAngle + spread;
+
+  ctx.beginPath();
+  ctx.arc(playerX, playerY, rOuter, aStart, aEnd);
+  ctx.arc(playerX, playerY, rInner, aEnd, aStart, true);
+  ctx.closePath();
+
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([6, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  if (label) {
+    const midAngle = centerAngle;
+    const midR = (rInner + rOuter) / 2;
+    const lx = playerX + Math.cos(midAngle) * midR;
+    const ly = playerY + Math.sin(midAngle) * midR;
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(midAngle + Math.PI / 2);
+    ctx.fillStyle = strokeColor.replace(/[\d.]+\)$/, '0.7)');
+    ctx.font = '9px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, 0, 3);
+    ctx.restore();
+  }
+}
+
+function drawTwilightPool(twilight, maxReach, baseAngle, halfSpread) {
+  const rMid = ((twilight.rInner + twilight.rOuter) / 2) * maxReach;
+  const r = ((twilight.rOuter - twilight.rInner) / 2) * maxReach;
+  const biasAngle = baseAngle + (twilight.angleBias - 0.5) * halfSpread * 2;
+  const tx = playerX + Math.cos(biasAngle) * rMid;
+  const ty = playerY + Math.sin(biasAngle) * rMid;
+
+  ctx.beginPath();
+  ctx.ellipse(tx, ty, r * 1.5, r, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(55,138,221,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(55,138,221,0.35)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(130,190,240,0.5)';
+    ctx.font = '8px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('TWILIGHT', tx, ty + 3);
+  }
+}
+
+function drawHandFan(baseAngle) {
+  // Small arc in the lower-right corner, extending off-screen
+  const fanRadius = Math.min(W, H) * 0.2;
+  const fanCenter = { x: playerX + 10, y: playerY + 20 };
+  const fanStart = baseAngle - 0.3;
+  const fanEnd = baseAngle + 0.5;
+
+  // Draw card outlines in a fan
+  const cardCount = 8;
+  const cardW = 22;
+  const cardH = 32;
+
+  for (let i = 0; i < cardCount; i++) {
+    const t = i / (cardCount - 1);
+    const angle = fanStart + t * (fanEnd - fanStart);
+    const cx = fanCenter.x + Math.cos(angle) * fanRadius;
+    const cy = fanCenter.y + Math.sin(angle) * fanRadius;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle + Math.PI / 2);
+
+    // Card
+    ctx.fillStyle = `rgba(${30 + i * 8}, ${40 + i * 5}, ${20 + i * 6}, 0.5)`;
+    ctx.strokeStyle = 'rgba(186,140,30,0.25)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.roundRect(-cardW / 2, -cardH, cardW, cardH, 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // Thumb
+  ctx.beginPath();
+  ctx.ellipse(fanCenter.x - 15, fanCenter.y + 5, 10, 14, -0.3, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(160,120,80,0.35)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(160,120,80,0.2)';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(186,140,30,0.3)';
+    ctx.font = '7px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('HAND FAN', fanCenter.x - 20, fanCenter.y - 15);
+  }
+}
+
+function drawPhaseTracker() {
+  const pw = W * 0.4;
+  const ph = 22;
+  const px = (W - pw) / 2;
+  const py = 6;
+
+  ctx.fillStyle = 'rgba(8,8,18,0.88)';
+  ctx.strokeStyle = 'rgba(186,140,30,0.2)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.roundRect(px, py, pw, ph, 12);
+  ctx.fill();
+  ctx.stroke();
+
+  const phases = ['Fell.', 'Shad.', 'Man.', 'Arch.', 'Asgn.', 'Skir.', 'Regr.'];
+  ctx.font = '7px Georgia';
+  ctx.textAlign = 'center';
+  phases.forEach((p, i) => {
+    const x = px + 20 + i * ((pw - 40) / 6);
+    ctx.fillStyle = i === 0 ? 'rgba(186,140,30,0.8)' : 'rgba(255,255,255,0.2)';
+    ctx.fillText(p, x, py + 14);
+  });
+}
+
+function drawPassButton(baseAngle, maxReach) {
+  const r = maxReach * 0.12;
+  const bx = playerX + Math.cos(baseAngle) * r;
+  const by = playerY + Math.sin(baseAngle) * r;
+
+  ctx.fillStyle = 'rgba(8,8,18,0.85)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.roundRect(bx - 30, by - 10, 60, 20, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '8px Georgia';
+  ctx.textAlign = 'center';
+  ctx.fillText('↷ PASS', bx, by + 3);
+}
+
+function drawPiles(layout, maxReach, baseAngle, halfSpread) {
+  // Your piles — near fellowship zone edge, player side
+  const fpR = layout.fellowship.rOuter * maxReach;
+  const fpAngle = baseAngle + halfSpread * 0.85;
+  const fpX = playerX + Math.cos(fpAngle) * fpR;
+  const fpY = playerY + Math.sin(fpAngle) * fpR;
+
+  ctx.fillStyle = 'rgba(20,50,35,0.6)';
+  ctx.strokeStyle = 'rgba(29,158,117,0.35)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.roundRect(fpX - 18, fpY - 20, 36, 40, 3);
+  ctx.fill();
+  ctx.stroke();
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(100,200,150,0.5)';
+    ctx.font = '6px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('YOUR', fpX, fpY - 4);
+    ctx.fillText('PILES', fpX, fpY + 5);
+  }
+
+  // Opp piles — near shadow zone edge, far side
+  const shR = layout.shadow.rOuter * maxReach;
+  const shAngle = baseAngle - halfSpread * 0.75 + (layout.shadow.angleShift || 0) * halfSpread;
+  const shX = playerX + Math.cos(shAngle) * shR;
+  const shY = playerY + Math.sin(shAngle) * shR;
+
+  ctx.fillStyle = 'rgba(40,20,60,0.6)';
+  ctx.strokeStyle = 'rgba(100,60,150,0.35)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.roundRect(shX - 18, shY - 20, 36, 40, 3);
+  ctx.fill();
+  ctx.stroke();
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(160,130,200,0.5)';
+    ctx.font = '6px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('OPP.', shX, shY - 4);
+    ctx.fillText('PILES', shX, shY + 5);
+  }
+
+  // Ring-bearer — inner, off-center
+  const rbAngle = baseAngle - halfSpread * 0.6;
+  const rbR = layout.fellowship.rInner * maxReach * 0.7;
+  const rbX = playerX + Math.cos(rbAngle) * rbR;
+  const rbY = playerY + Math.sin(rbAngle) * rbR;
+
+  ctx.beginPath();
+  ctx.arc(rbX, rbY, 14, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(186,117,23,0.35)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(rbX, rbY, 6, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(186,117,23,0.2)';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  if (showLabels) {
+    ctx.fillStyle = 'rgba(186,117,23,0.4)';
+    ctx.font = '6px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('RB', rbX, rbY + 3);
+  }
+}
+
+function drawCardShelf() {
+  const shelfW = W * 0.04;
+  const shelfH = H * 0.55;
+  const sx = 4;
+  const sy = H * 0.08;
+
+  ctx.fillStyle = 'rgba(186,140,30,0.02)';
+  ctx.strokeStyle = 'rgba(186,140,30,0.06)';
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.roundRect(sx, sy, shelfW, shelfH, 4);
+  ctx.fill();
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  if (showLabels) {
+    ctx.save();
+    ctx.translate(sx + shelfW / 2, sy + shelfH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillStyle = 'rgba(186,140,30,0.15)';
+    ctx.font = '8px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('CARD SHELF', 0, 3);
+    ctx.restore();
+  }
+}
+
+function drawLandscape() {
+  // Dark gradient background
+  const grad = ctx.createLinearGradient(0, 0, W * 0.3, H);
+  grad.addColorStop(0, '#080614');
+  grad.addColorStop(0.3, '#100c22');
+  grad.addColorStop(0.6, '#1a1208');
+  grad.addColorStop(1, '#0a0a0a');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Mountain silhouettes
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  ctx.lineTo(0, H * 0.25);
+  ctx.lineTo(W * 0.12, H * 0.15);
+  ctx.lineTo(W * 0.25, H * 0.3);
+  ctx.lineTo(W * 0.35, H * 0.08);
+  ctx.lineTo(W * 0.5, H * 0.22);
+  ctx.lineTo(W * 0.65, H * 0.05);
+  ctx.lineTo(W * 0.8, H * 0.18);
+  ctx.lineTo(W * 0.9, H * 0.1);
+  ctx.lineTo(W, H * 0.15);
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(12,9,26,0.9)';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  ctx.lineTo(0, H * 0.4);
+  ctx.lineTo(W * 0.15, H * 0.32);
+  ctx.lineTo(W * 0.3, H * 0.42);
+  ctx.lineTo(W * 0.5, H * 0.28);
+  ctx.lineTo(W * 0.7, H * 0.38);
+  ctx.lineTo(W * 0.85, H * 0.25);
+  ctx.lineTo(W, H * 0.32);
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(20,14,40,0.85)';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  ctx.lineTo(0, H * 0.55);
+  ctx.lineTo(W * 0.2, H * 0.5);
+  ctx.lineTo(W * 0.4, H * 0.56);
+  ctx.lineTo(W * 0.6, H * 0.48);
+  ctx.lineTo(W * 0.8, H * 0.54);
+  ctx.lineTo(W, H * 0.5);
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(22,16,6,0.9)';
+  ctx.fill();
+
+  // Stars
+  [[80,40],[280,25],[520,20],[750,45],[1000,30],[1300,50],[400,60]].forEach(([x, y]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, 0.8 + Math.random() * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${0.15 + Math.random() * 0.15})`;
+    ctx.fill();
+  });
+}
+
+// ─── Controls ──────────────────────────────────────
+
+function setLayout(l) {
+  currentLayout = l;
+  document.querySelectorAll('.topbar button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + l.toLowerCase()).classList.add('active');
+  draw();
+}
+
+function updateAngle(v) {
+  angleOffset = parseInt(v);
+  document.getElementById('angle-val').textContent = v + '°';
+  draw();
+}
+
+function updateSpread(v) {
+  arcSpread = parseInt(v);
+  document.getElementById('spread-val').textContent = v + '°';
+  draw();
+}
+
+function toggleLabels() {
+  showLabels = !showLabels;
+  draw();
+}
+
+function toggleFlatGround() {
+  showFlatGround = !showFlatGround;
+  draw();
+}
+
+// ─── Init ──────────────────────────────────────────
+
+// Polyfill roundRect for older browsers
+if (!ctx.roundRect) {
+  ctx.roundRect = function(x, y, w, h, r) {
+    if (typeof r === 'number') r = [r, r, r, r];
+    this.moveTo(x + r[0], y);
+    this.lineTo(x + w - r[1], y);
+    this.arcTo(x + w, y, x + w, y + r[1], r[1]);
+    this.lineTo(x + w, y + h - r[2]);
+    this.arcTo(x + w, y + h, x + w - r[2], y + h, r[2]);
+    this.lineTo(x + r[3], y + h);
+    this.arcTo(x, y + h, x, y + h - r[3], r[3]);
+    this.lineTo(x, y + r[0]);
+    this.arcTo(x, y, x + r[0], y, r[0]);
+    this.closePath();
+  };
+}
+
+window.addEventListener('resize', resize);
+resize();
+</script>
+</body>
+</html>

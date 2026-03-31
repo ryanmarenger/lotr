@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LotR TCG — Board Layout Editor v3</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0e;font-family:Georgia,serif;overflow:hidden;width:100vw;height:100vh;display:flex;flex-direction:column;}
+
+/* ── TOP BAR ── */
+#topbar{height:40px;background:#08080f;border-bottom:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 10px;gap:5px;flex-shrink:0;z-index:200;overflow-x:auto;overflow-y:hidden;}
+#topbar h1{font-size:11px;color:rgba(186,140,30,0.85);letter-spacing:2px;margin-right:6px;white-space:nowrap;}
+.tb-btn{background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:3px;color:rgba(255,255,255,0.55);font-size:10px;padding:3px 9px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.tb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.9);}
+.tb-btn.active{background:rgba(186,140,30,0.18);border-color:rgba(186,140,30,0.5);color:rgba(186,140,30,0.9);}
+.tb-btn.gold{border-color:rgba(186,140,30,0.4);color:rgba(186,140,30,0.75);}
+.tb-btn.gold:hover{background:rgba(186,140,30,0.12);}
+.tb-btn.danger{border-color:rgba(200,60,60,0.4);color:rgba(200,100,100,0.6);}
+.tb-btn.danger:hover{background:rgba(200,60,60,0.12);}
+.tb-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.08);margin:0 2px;flex-shrink:0;}
+.tb-label{font-size:9px;color:rgba(255,255,255,0.25);white-space:nowrap;flex-shrink:0;}
+#align-group{display:none;align-items:center;gap:4px;}
+#align-group.visible{display:flex;}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;overflow:hidden;}
+
+/* ── LEFT PANEL ── */
+#left-panel{width:180px;background:#090912;border-right:0.5px solid rgba(255,255,255,0.07);flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;}
+.panel-tabs{display:flex;border-bottom:0.5px solid rgba(255,255,255,0.07);}
+.panel-tab{flex:1;font-size:9px;letter-spacing:1.2px;color:rgba(255,255,255,0.3);padding:6px 0;text-align:center;cursor:pointer;transition:all .15s;}
+.panel-tab:hover{color:rgba(255,255,255,0.6);}
+.panel-tab.active{color:rgba(186,140,30,0.85);border-bottom:1px solid rgba(186,140,30,0.5);}
+
+/* ── LAYERS ── */
+#layers-list{flex:1;overflow-y:auto;padding:4px 0;}
+.layer-group{border-bottom:0.5px solid rgba(255,255,255,0.04);}
+.layer-header{display:flex;align-items:center;padding:5px 8px;cursor:pointer;gap:4px;transition:background .1s;}
+.layer-header:hover{background:rgba(255,255,255,0.03);}
+.layer-vis{width:13px;height:13px;border:0.5px solid rgba(255,255,255,0.18);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:7px;color:rgba(255,255,255,0.55);}
+.layer-vis.hidden{opacity:0.25;}
+.layer-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.layer-name{font-size:10px;color:rgba(255,255,255,0.55);flex:1;}
+.layer-caret{font-size:8px;color:rgba(255,255,255,0.2);}
+.layer-items{padding:0 0 2px 18px;}
+.comp-row{display:flex;align-items:center;padding:3px 8px;cursor:pointer;gap:4px;border-radius:2px;}
+.comp-row:hover{background:rgba(255,255,255,0.03);}
+.comp-row.selected{background:rgba(186,140,30,0.1);}
+.comp-vis{width:11px;height:11px;border:0.5px solid rgba(255,255,255,0.14);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:6px;color:rgba(255,255,255,0.45);}
+.comp-vis.hidden{opacity:0.2;}
+.comp-name{font-size:9px;color:rgba(255,255,255,0.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.comp-row.selected .comp-name{color:rgba(186,140,30,0.8);}
+
+/* ── TOYBOX ── */
+#toybox-content{flex:1;overflow-y:auto;padding:8px;}
+.toy-category{font-size:8px;color:rgba(186,140,30,0.5);letter-spacing:1.2px;margin:8px 0 4px;padding-bottom:3px;border-bottom:0.5px solid rgba(186,140,30,0.15);}
+.toy-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:4px;}
+.toy-item{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:3px;padding:5px 2px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.toy-item:hover{background:rgba(186,140,30,0.12);border-color:rgba(186,140,30,0.4);}
+.toy-item:active{transform:scale(0.95);}
+.toy-icon{font-size:14px;line-height:1;}
+.toy-label{font-size:7px;color:rgba(255,255,255,0.4);font-family:Georgia,serif;}
+
+/* ── ADD PANEL ── */
+#add-panel{padding:6px;border-top:0.5px solid rgba(255,255,255,0.06);flex-shrink:0;}
+#add-panel-title{font-size:8px;color:rgba(255,255,255,0.25);letter-spacing:1px;margin-bottom:5px;}
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.add-btn{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:3px;color:rgba(255,255,255,0.45);font-size:8px;padding:3px 2px;cursor:pointer;font-family:Georgia,serif;text-align:center;transition:all .15s;line-height:1.2;}
+.add-btn:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);}
+
+/* ── BOARD WRAP ── */
+#board-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden;background:#0a0a0e;position:relative;}
+#board-outer{position:relative;transform-style:preserve-3d;transition:transform 0.3s ease;}
+#board{position:relative;background:#0d0d1a;overflow:hidden;cursor:default;flex-shrink:0;}
+#bg-landscape{position:absolute;inset:0;pointer-events:none;z-index:0;}
+#horizon-line{position:absolute;left:0;right:0;height:1px;cursor:ns-resize;z-index:8;pointer-events:all;}
+#horizon-line .hl-line{height:0.5px;background:rgba(186,140,30,0.4);position:absolute;left:0;right:0;}
+#horizon-line .hl-label{position:absolute;right:6px;top:-9px;font-size:8px;color:rgba(186,140,30,0.45);letter-spacing:1px;font-family:Georgia,serif;white-space:nowrap;}
+#horizon-line .hl-drag{position:absolute;left:0;right:0;top:-5px;height:11px;cursor:ns-resize;}
+#horizon-line.hidden-horizon{display:none;}
+#grid-overlay{position:absolute;inset:0;pointer-events:none;z-index:7;display:none;}
+#grid-overlay.visible{display:block;}
+#negspace-canvas{position:absolute;inset:0;pointer-events:none;z-index:600;}
+
+/* ── COMPONENTS ── */
+.comp{position:absolute;cursor:move;user-select:none;transform-origin:center center;}
+.comp-inner{position:absolute;inset:0;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:visible;}
+.comp-inner-label{font-size:10px;font-family:Georgia,serif;text-align:center;line-height:1.4;pointer-events:none;padding:3px;}
+.comp.selected>.comp-inner{outline:1.5px solid rgba(186,140,30,0.85);outline-offset:0px;}
+.comp.hidden>.comp-inner{opacity:0.1;}
+.rh{display:none;position:absolute;width:8px;height:8px;background:rgba(186,140,30,0.85);border:0.5px solid rgba(0,0,0,0.5);border-radius:1px;z-index:700;}
+.comp.selected .rh{display:block;}
+.rh-tl{top:-4px;left:-4px;cursor:nw-resize;}
+.rh-tm{top:-4px;left:calc(50% - 4px);cursor:n-resize;}
+.rh-tr{top:-4px;right:-4px;cursor:ne-resize;}
+.rh-ml{top:calc(50% - 4px);left:-4px;cursor:w-resize;}
+.rh-mr{top:calc(50% - 4px);right:-4px;cursor:e-resize;}
+.rh-bl{bottom:-4px;left:-4px;cursor:sw-resize;}
+.rh-bm{bottom:-4px;left:calc(50% - 4px);cursor:s-resize;}
+.rh-br{bottom:-4px;right:-4px;cursor:se-resize;}
+.rotate-handle{display:none;position:absolute;width:10px;height:10px;background:rgba(100,180,255,0.8);border:0.5px solid rgba(0,0,0,0.5);border-radius:50%;z-index:700;top:-18px;left:calc(50% - 5px);cursor:crosshair;}
+.comp.selected .rotate-handle{display:block;}
+
+/* ── RIGHT PANEL ── */
+#props-panel{width:175px;background:#090912;border-left:0.5px solid rgba(255,255,255,0.07);flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;}
+#props-title{font-size:9px;color:rgba(186,140,30,0.7);letter-spacing:1.5px;padding:7px 10px 5px;border-bottom:0.5px solid rgba(255,255,255,0.06);}
+#props-body{flex:1;overflow-y:auto;padding:8px;}
+.prop-row{margin-bottom:7px;}
+.prop-section{font-size:8px;color:rgba(186,140,30,0.5);letter-spacing:1px;margin:10px 0 5px;padding-bottom:3px;border-bottom:0.5px solid rgba(186,140,30,0.15);}
+.prop-label{font-size:8px;color:rgba(255,255,255,0.3);letter-spacing:0.7px;margin-bottom:3px;}
+.prop-input{width:100%;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.1);border-radius:3px;color:rgba(255,255,255,0.7);font-size:10px;padding:3px 6px;font-family:Georgia,serif;}
+.prop-input:focus{outline:none;border-color:rgba(186,140,30,0.45);}
+.prop-slider{width:100%;accent-color:rgba(186,140,30,0.8);height:3px;}
+.prop-row-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.prop-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.prop-note{font-size:8px;color:rgba(255,255,255,0.18);line-height:1.5;margin-top:6px;}
+.prop-btn{width:100%;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:3px;color:rgba(255,255,255,0.45);font-size:9px;padding:4px;cursor:pointer;font-family:Georgia,serif;margin-bottom:4px;text-align:center;}
+.prop-btn:hover{background:rgba(255,255,255,0.09);color:rgba(255,255,255,0.8);}
+.prop-btn.danger{border-color:rgba(200,50,50,0.35);color:rgba(200,100,100,0.55);}
+.prop-btn.danger:hover{background:rgba(200,50,50,0.12);color:rgba(220,100,100,0.9);}
+.prop-val-row{display:flex;align-items:center;gap:5px;}
+.prop-val{font-size:10px;color:rgba(186,140,30,0.7);min-width:28px;text-align:right;}
+.board-ctrl-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.board-ctrl-row label{font-size:8px;color:rgba(255,255,255,0.3);min-width:45px;}
+.board-ctrl-row input[type=range]{flex:1;accent-color:rgba(186,140,30,0.7);}
+.board-ctrl-row span{font-size:9px;color:rgba(186,140,30,0.6);min-width:28px;text-align:right;}
+.toggle-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;cursor:pointer;}
+.toggle-row input{accent-color:rgba(186,140,30,0.8);}
+.toggle-row span{font-size:9px;color:rgba(255,255,255,0.4);}
+
+/* ── BOTTOM BAR ── */
+#bottombar{height:32px;background:#08080f;border-top:0.5px solid rgba(255,255,255,0.07);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;z-index:100;}
+#bottombar .bb-label{font-size:9px;color:rgba(255,255,255,0.25);white-space:nowrap;}
+#burden-slider{flex:0 0 120px;accent-color:rgba(186,140,30,0.8);}
+#burden-val{font-size:10px;color:rgba(186,140,30,0.6);min-width:20px;}
+.bb-sep{width:0.5px;height:16px;background:rgba(255,255,255,0.07);}
+#status-msg{font-size:9px;color:rgba(255,255,255,0.22);margin-left:auto;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px;}
+
+/* ── ANIMATIONS ── */
+@keyframes ringspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes negspace-pulse{0%,100%{opacity:0.18}50%{opacity:0.28}}
+.negspace-active{animation:negspace-pulse 3s ease-in-out infinite;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <h1>LotR TCG ∙ Board Editor v3</h1>
+  <div class="tb-sep"></div>
+  <span class="tb-label">Ratio:</span>
+  <button class="tb-btn" id="btn-169" onclick="setBoardRatio('16:9')">16:9</button>
+  <button class="tb-btn" id="btn-21" onclick="setBoardRatio('2:1')">2:1</button>
+  <button class="tb-btn" id="btn-1610" onclick="setBoardRatio('16:10')">16:10</button>
+  <div class="tb-sep"></div>
+  <span class="tb-label">View:</span>
+  <button class="tb-btn" onclick="setView('fellowship')">Fellowship</button>
+  <button class="tb-btn" onclick="setView('shadow')">Shadow</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" id="btn-negspace" onclick="toggleNegSpace()">◈ Neg Space</button>
+  <button class="tb-btn" id="btn-grid" onclick="toggleGrid()">⊞ Grid</button>
+  <button class="tb-btn" id="btn-horizon" onclick="toggleHorizon()">— Horizon</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" onclick="undo()" title="Cmd+Z">↩ Undo</button>
+  <button class="tb-btn" onclick="redo()" title="Cmd+Shift+Z">↪ Redo</button>
+  <div class="tb-sep"></div>
+  <!-- Alignment group (shown when multi-select) -->
+  <div id="align-group">
+    <span class="tb-label">Align:</span>
+    <button class="tb-btn" title="Align left" onclick="alignSelected('left')">⬜⬛</button>
+    <button class="tb-btn" title="Center H" onclick="alignSelected('centerH')">⬜◻⬜</button>
+    <button class="tb-btn" title="Align right" onclick="alignSelected('right')">⬛⬜</button>
+    <button class="tb-btn" title="Align top" onclick="alignSelected('top')">⬜⬜</button>
+    <button class="tb-btn" title="Center V" onclick="alignSelected('centerV')">⬜∙⬜</button>
+    <button class="tb-btn" title="Align bottom" onclick="alignSelected('bottom')">⬜⬜</button>
+    <button class="tb-btn" title="Distribute H" onclick="alignSelected('distributeH')">⟺H</button>
+    <button class="tb-btn" title="Distribute V" onclick="alignSelected('distributeV')">⟺V</button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn danger" onclick="deleteSelected()">✕ Delete sel.</button>
+    <div class="tb-sep"></div>
+  </div>
+  <button class="tb-btn" onclick="deleteSelected()">✕ Delete</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn gold" onclick="saveLayout()">⬇ Save HTML</button>
+  <button class="tb-btn gold" onclick="exportJSON()">⬇ JSON</button>
+  <button class="tb-btn" onclick="importJSON()">⬆ Load JSON</button>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- LEFT PANEL -->
+  <div id="left-panel">
+    <div class="panel-tabs">
+      <div class="panel-tab active" id="tab-layers" onclick="switchLeftTab('layers')">LAYERS</div>
+      <div class="panel-tab" id="tab-toybox" onclick="switchLeftTab('toybox')">TOYBOX</div>
+    </div>
+
+    <!-- LAYERS CONTENT -->
+    <div id="layers-content" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div id="layers-list"></div>
+      <div id="add-panel">
+        <div id="add-panel-title">ADD ZONE</div>
+        <div class="add-grid" id="add-grid"></div>
+      </div>
+    </div>
+
+    <!-- TOYBOX CONTENT -->
+    <div id="toybox-content" style="display:none;flex:1;overflow-y:auto;padding:8px;"></div>
+  </div>
+
+  <!-- BOARD WRAP -->
+  <div id="board-wrap">
+    <div id="board-outer">
+      <div id="board">
+        <div id="bg-landscape"></div>
+        <canvas id="negspace-canvas"></canvas>
+        <svg id="grid-overlay"></svg>
+        <div id="horizon-line">
+          <div class="hl-line"></div>
+          <div class="hl-label">HORIZON</div>
+          <div class="hl-drag"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div id="props-panel">
+    <div id="props-title">PROPERTIES</div>
+    <div id="props-body"></div>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div id="bottombar">
+  <span class="bb-label">Burdens:</span>
+  <input type="range" id="burden-slider" min="0" max="12" value="0" oninput="setBurdens(this.value)">
+  <span id="burden-val">0</span>
+  <div class="bb-sep"></div>
+  <span class="bb-label">Board tilt X:</span>
+  <input type="range" id="tilt-x-slider" min="0" max="40" value="0" style="width:90px;accent-color:rgba(186,140,30,0.7);" oninput="state.boardTiltX=parseFloat(this.value);document.getElementById('tilt-x-val').textContent=this.value+'°';applyBoardTilt();">
+  <span id="tilt-x-val" style="font-size:9px;color:rgba(186,140,30,0.6);min-width:28px;">0°</span>
+  <span class="bb-label">Y:</span>
+  <input type="range" id="tilt-y-slider" min="-20" max="20" value="0" style="width:70px;accent-color:rgba(186,140,30,0.7);" oninput="state.boardTiltY=parseFloat(this.value);document.getElementById('tilt-y-val').textContent=this.value+'°';applyBoardTilt();">
+  <span id="tilt-y-val" style="font-size:9px;color:rgba(186,140,30,0.6);min-width:28px;">0°</span>
+  <span class="bb-label" style="margin-left:4px;">Depth:</span>
+  <input type="range" id="depth-slider" min="300" max="2000" value="900" style="width:80px;accent-color:rgba(186,140,30,0.7);" oninput="state.perspectiveDepth=parseFloat(this.value);document.getElementById('depth-val').textContent=this.value;applyBoardTilt();">
+  <span id="depth-val" style="font-size:9px;color:rgba(186,140,30,0.6);min-width:32px;">900</span>
+  <button class="tb-btn" style="font-size:9px;padding:2px 8px;" onclick="resetTilt()">Reset tilt</button>
+  <span id="status-msg">Click to select · Drag to move · Corner handles to resize · Blue handle to rotate</span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+
+const LAYER_DEFS = [
+  { id:'landscape',  name:'Landscape',  color:'#2a4a1a', locked:true  },
+  { id:'shadow',     name:'Shadow',     color:'#4a2a6a', locked:false },
+  { id:'neutral',    name:'Neutral',    color:'#2a3a5a', locked:false },
+  { id:'fellowship', name:'Fellowship', color:'#6a4a10', locked:false },
+  { id:'interface',  name:'Interface',  color:'#3a3a3a', locked:false },
+  { id:'hand',       name:'Hand',       color:'#1a4a2a', locked:false },
+];
+
+const COMP_TEMPLATES = [
+  { type:'phase-tracker',    label:'Phase Tracker',        layer:'interface',  w:62, h:5,   x:19,y:1,   bg:'rgba(12,12,28,0.88)',    border:'rgba(255,255,255,0.14)', color:'rgba(255,255,255,0.55)'  },
+  { type:'shadow-zone',      label:'Shadow Zone',          layer:'shadow',     w:98, h:11,  x:1, y:8,   bg:'rgba(28,12,48,0.38)',    border:'rgba(80,50,120,0.5)',    color:'rgba(160,130,210,0.7)'  },
+  { type:'fellowship-zone',  label:'Fellowship Zone',      layer:'fellowship', w:98, h:13,  x:1, y:38,  bg:'rgba(80,55,10,0.38)',    border:'rgba(186,140,30,0.5)',   color:'rgba(240,200,100,0.7)'  },
+  { type:'skirmish-left',    label:'Skirmish L',           layer:'neutral',    w:41, h:11,  x:1, y:23,  bg:'rgba(255,255,255,0.025)',border:'rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.2)',  dashed:true },
+  { type:'skirmish-right',   label:'Skirmish R',           layer:'neutral',    w:41, h:11,  x:58,y:23,  bg:'rgba(255,255,255,0.025)',border:'rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.2)',  dashed:true },
+  { type:'twilight-pool',    label:'Twilight Pool',        layer:'neutral',    w:13, h:11,  x:43,y:23,  bg:'rgba(55,138,221,0.28)',  border:'rgba(55,138,221,0.55)',  color:'rgba(130,190,240,0.8)'  },
+  { type:'adventure-path',   label:'Adventure Path',       layer:'neutral',    w:70, h:8,   x:15,y:52,  bg:'rgba(30,20,8,0.5)',      border:'rgba(120,80,30,0.5)',    color:'rgba(180,140,60,0.55)'  },
+  { type:'hand-fan',         label:'Hand (fan)',           layer:'hand',       w:38, h:38,  x:62,y:62,  bg:'rgba(15,50,35,0.08)',    border:'rgba(186,140,30,0.12)', color:'rgba(200,200,200,0.35)'  },
+  { type:'pass-btn',         label:'Pass Button',          layer:'interface',  w:9,  h:5,   x:45,y:93,  bg:'rgba(10,10,22,0.85)',    border:'rgba(255,255,255,0.18)', color:'rgba(255,255,255,0.45)'  },
+  { type:'opp-hand',         label:'Shadow hand count',    layer:'shadow',     w:4,  h:5,   x:1, y:9,   bg:'rgba(50,30,80,0.7)',     border:'rgba(100,60,150,0.6)',   color:'rgba(180,150,220,0.8)'  },
+  { type:'action-log',       label:'Action Log',           layer:'interface',  w:18, h:6,   x:80,y:9,   bg:'rgba(0,0,0,0.35)',       border:'rgba(255,255,255,0.08)', color:'rgba(100,220,130,0.7)'  },
+  { type:'left-dock',        label:'Left Dock',            layer:'interface',  w:4,  h:42,  x:0, y:10,  bg:'rgba(0,0,0,0.01)',       border:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.25)', dashed:true },
+  { type:'right-dock',       label:'Right Dock',           layer:'interface',  w:4,  h:42,  x:96,y:10,  bg:'rgba(0,0,0,0.01)',       border:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.25)', dashed:true },
+  { type:'baradur',          label:'Barad-dûr indicator',  layer:'landscape',  w:3,  h:12,  x:83,y:6,   bg:'rgba(30,5,5,0)',         border:'rgba(150,30,30,0.5)',    color:'rgba(200,80,50,0.6)'    },
+  { type:'opp-piles',        label:'Opp. Piles',           layer:'shadow',     w:8,  h:8,   x:91,y:9,   bg:'rgba(50,30,80,0.5)',     border:'rgba(100,60,150,0.4)',   color:'rgba(160,130,200,0.6)'  },
+  { type:'your-piles',       label:'Your Piles',           layer:'fellowship', w:8,  h:8,   x:91,y:44,  bg:'rgba(29,80,50,0.5)',     border:'rgba(29,158,117,0.4)',   color:'rgba(100,200,150,0.6)'  },
+  { type:'ring-spinner',     label:'Ring / RB portrait',   layer:'interface',  w:5,  h:7,   x:94,y:10,  bg:'rgba(0,0,0,0)',          border:'rgba(186,117,23,0.4)',   color:'rgba(186,117,23,0.6)'   },
+  { type:'terrain-bg',       label:'Terrain BG',           layer:'landscape',  w:100,h:40,  x:0, y:5,   bg:'rgba(15,10,5,0.6)',      border:'rgba(255,255,255,0.04)', color:'rgba(150,120,80,0.25)'  },
+  { type:'sky-bg',           label:'Sky BG',               layer:'landscape',  w:100,h:30,  x:0, y:0,   bg:'rgba(10,8,20,0.8)',      border:'rgba(255,255,255,0.03)', color:'rgba(100,100,180,0.25)' },
+  { type:'custom',           label:'Custom Zone',          layer:'neutral',    w:20, h:10,  x:40,y:40,  bg:'rgba(60,60,60,0.28)',    border:'rgba(150,150,150,0.35)', color:'rgba(200,200,200,0.5)'  },
+];
+
+const TOYBOX_ITEMS = [
+  // ── Shapes ──
+  { cat:'Shapes', label:'Rect',      icon:'▭', w:25, h:12, layer:'neutral', bg:'rgba(60,60,80,0.3)', border:'rgba(150,150,180,0.45)', color:'rgba(200,200,220,0.55)', type:'toy-rect' },
+  { cat:'Shapes', label:'Card',      icon:'🃏', w:4.5,h:7.5,layer:'neutral', bg:'rgba(20,20,40,0.55)', border:'rgba(100,100,150,0.55)', color:'rgba(200,200,200,0.45)', type:'toy-card', borderRadius:'4px' },
+  { cat:'Shapes', label:'Circle',    icon:'○', w:6,  h:8,  layer:'neutral', bg:'rgba(60,60,80,0.3)', border:'rgba(150,150,180,0.45)', color:'rgba(200,200,220,0.55)', type:'toy-circle', borderRadius:'50%' },
+  { cat:'Shapes', label:'H-Line',    icon:'—', w:45, h:0.5,layer:'neutral', bg:'rgba(180,180,180,0.4)', border:'transparent', color:'rgba(255,255,255,0)', type:'toy-hline' },
+  { cat:'Shapes', label:'V-Line',    icon:'|', w:0.5,h:30, layer:'neutral', bg:'rgba(180,180,180,0.4)', border:'transparent', color:'rgba(255,255,255,0)', type:'toy-vline' },
+  { cat:'Shapes', label:'Path Strip',icon:'═', w:65, h:7,  layer:'neutral', bg:'rgba(30,20,8,0.4)',  border:'rgba(120,80,30,0.45)',  color:'rgba(180,140,60,0.5)', type:'toy-pathstrip' },
+  { cat:'Shapes', label:'Site Card', icon:'📍',w:5,  h:8,  layer:'neutral', bg:'rgba(20,15,5,0.6)',  border:'rgba(140,100,30,0.5)',  color:'rgba(200,160,60,0.6)', type:'toy-site' },
+  { cat:'Shapes', label:'Arrow →',   icon:'→', w:12, h:3,  layer:'neutral', bg:'rgba(100,100,100,0.2)', border:'rgba(150,150,150,0.35)', color:'rgba(220,220,220,0.55)', type:'toy-arrow' },
+  { cat:'Shapes', label:'Label',     icon:'Aa',w:18, h:5,  layer:'interface', bg:'transparent', border:'none', color:'rgba(200,180,120,0.7)', type:'toy-label', textContent:'Label' },
+  // ── Icons ──
+  { cat:'Icons', label:'Ring',     icon:'⭕', w:5,  h:7,  layer:'interface', bg:'transparent', border:'rgba(186,117,23,0.3)', color:'rgba(186,117,23,0.8)', type:'toy-ring',     isIcon:true, svgType:'ring' },
+  { cat:'Icons', label:'Eye',      icon:'👁', w:7,  h:5,  layer:'interface', bg:'transparent', border:'rgba(200,50,30,0.3)',  color:'rgba(200,50,30,0.8)',  type:'toy-eye',      isIcon:true, svgType:'eye' },
+  { cat:'Icons', label:'Sword',    icon:'⚔', w:3.5,h:9,  layer:'interface', bg:'transparent', border:'rgba(180,180,200,0.3)',color:'rgba(180,180,200,0.75)',type:'toy-sword',   isIcon:true, svgType:'sword' },
+  { cat:'Icons', label:'Shield',   icon:'🛡', w:5,  h:6,  layer:'interface', bg:'transparent', border:'rgba(100,150,220,0.3)',color:'rgba(100,150,220,0.75)',type:'toy-shield',  isIcon:true, svgType:'shield' },
+  { cat:'Icons', label:'Mountain', icon:'⛰', w:8,  h:6,  layer:'interface', bg:'transparent', border:'rgba(140,120,90,0.3)', color:'rgba(140,120,90,0.75)', type:'toy-mountain',isIcon:true, svgType:'mountain' },
+  { cat:'Icons', label:'Tree',     icon:'🌲', w:4,  h:7,  layer:'interface', bg:'transparent', border:'rgba(40,140,60,0.3)',  color:'rgba(40,140,60,0.75)',  type:'toy-tree',    isIcon:true, svgType:'tree' },
+  { cat:'Icons', label:'Flame',    icon:'🔥', w:4,  h:7,  layer:'interface', bg:'transparent', border:'rgba(220,100,20,0.3)', color:'rgba(220,100,20,0.8)',  type:'toy-flame',   isIcon:true, svgType:'flame' },
+  { cat:'Icons', label:'Tower',    icon:'🗼', w:4,  h:9,  layer:'landscape', bg:'transparent', border:'rgba(60,40,30,0.3)',   color:'rgba(120,80,50,0.7)',   type:'toy-tower',   isIcon:true, svgType:'tower' },
+  { cat:'Icons', label:'Crown',    icon:'👑', w:6,  h:4,  layer:'interface', bg:'transparent', border:'rgba(186,140,30,0.3)', color:'rgba(186,140,30,0.8)',  type:'toy-crown',   isIcon:true, svgType:'crown' },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+let state = {
+  layers: LAYER_DEFS.map(l => ({ ...l, visible: true, expanded: true })),
+  components: [],
+  selectedIds: [],
+  boardRatio: '16:9',
+  burdens: 0,
+  view: 'fellowship',
+  nextId: 1,
+  horizonY: 42,
+  showHorizon: true,
+  showNegSpace: false,
+  showGrid: false,
+  boardTiltX: 0,
+  boardTiltY: 0,
+  perspectiveDepth: 900,
+  leftTab: 'layers',
+  undoStack: [],
+  redoStack: [],
+};
+
+// ═══════════════════════════════════════════════════════════════
+// UNDO / REDO
+// ═══════════════════════════════════════════════════════════════
+
+function saveUndo() {
+  state.undoStack.push(JSON.stringify(state.components));
+  if (state.undoStack.length > 60) state.undoStack.shift();
+  state.redoStack = [];
+}
+
+function undo() {
+  if (!state.undoStack.length) { setStatus('Nothing to undo.'); return; }
+  state.redoStack.push(JSON.stringify(state.components));
+  state.components = JSON.parse(state.undoStack.pop());
+  state.selectedIds = [];
+  renderAll();
+  setStatus('Undone.');
+}
+
+function redo() {
+  if (!state.redoStack.length) { setStatus('Nothing to redo.'); return; }
+  state.undoStack.push(JSON.stringify(state.components));
+  state.components = JSON.parse(state.redoStack.pop());
+  state.selectedIds = [];
+  renderAll();
+  setStatus('Redone.');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOARD SIZING & TILT
+// ═══════════════════════════════════════════════════════════════
+
+const ratios = { '16:9': 16/9, '2:1': 2/1, '16:10': 16/10 };
+
+function resizeBoard() {
+  const wrap = document.getElementById('board-wrap');
+  const board = document.getElementById('board');
+  const ratio = ratios[state.boardRatio] || 16/9;
+  const ww = wrap.clientWidth - 30;
+  const wh = wrap.clientHeight - 30;
+  let bw = ww, bh = ww / ratio;
+  if (bh > wh) { bh = wh; bw = wh * ratio; }
+  board.style.width  = bw + 'px';
+  board.style.height = bh + 'px';
+
+  // Update ratio buttons
+  ['16:9','2:1','16:10'].forEach(r => {
+    const btn = document.getElementById('btn-' + r.replace(':',''));
+    if (btn) btn.classList.toggle('active', r === state.boardRatio);
+  });
+
+  applyBoardTilt();
+  renderAll();
+}
+
+function setBoardRatio(r) { state.boardRatio = r; resizeBoard(); }
+
+function applyBoardTilt() {
+  const outer = document.getElementById('board-outer');
+  const tx = state.boardTiltX || 0;
+  const ty = state.boardTiltY || 0;
+  const d  = state.perspectiveDepth || 900;
+  if (tx === 0 && ty === 0) {
+    outer.style.transform = 'none';
+    outer.style.perspective = 'none';
+  } else {
+    outer.style.perspective = d + 'px';
+    outer.style.transform = `rotateX(${tx}deg) rotateY(${ty}deg)`;
+  }
+}
+
+function resetTilt() {
+  state.boardTiltX = 0;
+  state.boardTiltY = 0;
+  document.getElementById('tilt-x-slider').value = 0;
+  document.getElementById('tilt-y-slider').value = 0;
+  document.getElementById('tilt-x-val').textContent = '0°';
+  document.getElementById('tilt-y-val').textContent = '0°';
+  applyBoardTilt();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COORDINATE UTILS
+// ═══════════════════════════════════════════════════════════════
+
+function boardPx() {
+  const b = document.getElementById('board');
+  return { w: b.clientWidth, h: b.clientHeight };
+}
+
+function pctToPx(comp) {
+  const { w, h } = boardPx();
+  return { x: comp.x/100*w, y: comp.y/100*h, w: comp.w/100*w, h: comp.h/100*h };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+
+function renderAll() {
+  document.querySelectorAll('.comp').forEach(el => el.remove());
+  const layerOrder = state.layers.map(l => l.id);
+  const sorted = [...state.components].sort((a, b) => {
+    const la = layerOrder.indexOf(a.layer);
+    const lb = layerOrder.indexOf(b.layer);
+    return la !== lb ? la - lb : (a.zIndex||0) - (b.zIndex||0);
+  });
+  sorted.forEach(comp => renderComp(comp));
+  renderLayerPanel();
+  renderPropsPanel();
+  renderLandscape();
+  renderHorizonLine();
+  renderGridOverlay();
+  updateNegSpaceCanvas();
+  updateAlignGroup();
+}
+
+function getLayerVisible(layerId) {
+  const l = state.layers.find(l => l.id === layerId);
+  return l ? l.visible : true;
+}
+
+function renderComp(comp) {
+  const board = document.getElementById('board');
+  const px = pctToPx(comp);
+  const layerVis = getLayerVisible(comp.layer);
+  const isSelected = state.selectedIds.includes(comp.id);
+  const opacity = comp.opacity !== undefined ? comp.opacity : 1;
+  const rotation = comp.rotation || 0;
+  const skewX = comp.skewX || 0;
+  const skewY = comp.skewY || 0;
+
+  const el = document.createElement('div');
+  el.className = 'comp' + (!comp.visible || !layerVis ? ' hidden' : '') + (isSelected ? ' selected' : '');
+  el.dataset.id = comp.id;
+  el.style.left   = px.x + 'px';
+  el.style.top    = px.y + 'px';
+  el.style.width  = px.w + 'px';
+  el.style.height = px.h + 'px';
+  el.style.opacity = opacity;
+  el.style.zIndex  = state.layers.findIndex(l => l.id === comp.layer) * 10 + (comp.zIndex||0) + 1;
+
+  let transform = '';
+  if (rotation || skewX || skewY) {
+    transform = `rotate(${rotation}deg) skewX(${skewX}deg) skewY(${skewY}deg)`;
+  }
+  if (transform) el.style.transform = transform;
+
+  const inner = document.createElement('div');
+  inner.className = 'comp-inner';
+  inner.style.background   = comp.bg;
+  inner.style.borderRadius = comp.borderRadius || '4px';
+  if (comp.border && comp.border !== 'none') {
+    inner.style.border = '0.5px ' + (comp.dashed ? 'dashed' : 'solid') + ' ' + comp.border;
+  }
+
+  // Specialized rendering
+  if (comp.type === 'baradur') {
+    inner.innerHTML = renderBaradur(comp);
+  } else if (comp.type === 'hand-fan') {
+    inner.innerHTML = renderFanArc(comp, px);
+  } else if (comp.type === 'twilight-pool') {
+    inner.innerHTML = renderTwilightPool(comp);
+  } else if (comp.type === 'pass-btn') {
+    inner.innerHTML = `<div style="font-size:9px;color:${comp.color};font-family:Georgia,serif;letter-spacing:1px;">↷ PASS</div>`;
+    inner.style.borderRadius = '20px';
+  } else if (comp.type === 'phase-tracker') {
+    inner.innerHTML = renderPhaseTracker(comp);
+    inner.style.borderRadius = '20px';
+  } else if (comp.type === 'opp-hand') {
+    inner.innerHTML = renderOppHand(comp);
+  } else if (comp.type === 'ring-spinner') {
+    inner.innerHTML = renderRingSpinner(comp);
+    inner.style.background = 'transparent';
+    inner.style.border = 'none';
+  } else if (comp.isIcon && comp.svgType) {
+    inner.innerHTML = renderSVGIcon(comp.svgType, comp.color);
+  } else if (comp.type === 'toy-arrow') {
+    inner.innerHTML = `<div style="width:100%;display:flex;align-items:center;justify-content:center;color:${comp.color};font-size:11px;">→</div>`;
+  } else if (comp.textContent) {
+    const lbl = document.createElement('div');
+    lbl.className = 'comp-inner-label';
+    lbl.style.color = comp.color;
+    lbl.textContent = comp.textContent || comp.label;
+    inner.appendChild(lbl);
+  } else {
+    const lbl = document.createElement('div');
+    lbl.className = 'comp-inner-label';
+    lbl.style.color = comp.color;
+    lbl.textContent = comp.label;
+    inner.appendChild(lbl);
+  }
+
+  el.appendChild(inner);
+
+  // Resize handles
+  ['tl','tm','tr','ml','mr','bl','bm','br'].forEach(pos => {
+    const h = document.createElement('div');
+    h.className = `rh rh-${pos}`;
+    h.dataset.handle = pos;
+    el.appendChild(h);
+  });
+
+  // Rotate handle
+  const rh = document.createElement('div');
+  rh.className = 'rotate-handle';
+  el.appendChild(rh);
+
+  board.appendChild(el);
+  attachDrag(el, comp);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SPECIALIZED COMPONENT RENDERERS
+// ═══════════════════════════════════════════════════════════════
+
+function renderPhaseTracker(comp) {
+  const phases = ['Fellowship','Shadow','Maneuver','Archery','Assignment','Skirmish','Regroup'];
+  return `<div style="display:flex;align-items:center;gap:3px;padding:0 8px;">
+    ${phases.map((p,i) => `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1px;">
+        <div style="width:5px;height:5px;border-radius:50%;${i===0?'background:rgba(186,140,30,0.85);box-shadow:0 0 4px rgba(186,140,30,0.5);':'border:0.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.05);'}"></div>
+        <div style="font-size:5px;color:${i===0?'rgba(186,140,30,0.9)':'rgba(255,255,255,0.25)'};font-family:Georgia,serif;white-space:nowrap;">${p}</div>
+      </div>
+      ${i<phases.length-1?'<div style="width:5px;height:0.5px;background:rgba(255,255,255,0.08);flex-shrink:0;"></div>':''}`).join('')}
+  </div>`;
+}
+
+function renderTwilightPool(comp) {
+  const coins = Math.min(state.burdens*2+1, 9);
+  return `<div style="text-align:center;pointer-events:none;padding:2px;">
+    <div style="font-size:9px;color:${comp.color};font-family:Georgia,serif;margin-bottom:2px;">${state.burdens > 0 ? state.burdens * 2 : 5}</div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1px;max-width:30px;margin:0 auto;">
+      ${[...Array(coins)].map(()=>`<div style="width:5px;height:5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(100,160,240,0.75),rgba(10,20,80,0.9));border:0.5px solid rgba(80,140,220,0.55);"></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderOppHand(comp) {
+  return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:3px;">
+    <div style="position:relative;width:14px;height:20px;">
+      <div style="position:absolute;top:-2px;left:2px;width:12px;height:18px;background:rgba(40,20,65,0.5);border:0.5px solid rgba(80,50,120,0.3);border-radius:2px;"></div>
+      <div style="position:absolute;top:-1px;left:1px;width:12px;height:18px;background:rgba(45,25,70,0.55);border:0.5px solid rgba(80,50,120,0.4);border-radius:2px;"></div>
+      <div style="position:absolute;inset:0;background:rgba(50,30,80,0.7);border:0.5px solid rgba(100,60,150,0.6);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(180,150,220,0.9);font-family:Georgia,serif;">7</div>
+    </div>
+    <div style="font-size:7px;color:rgba(140,110,180,0.45);font-family:Georgia,serif;">shadow hand</div>
+  </div>`;
+}
+
+function renderRingSpinner(comp) {
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <svg width="22" height="22" viewBox="0 0 22 22" style="animation:ringspin 4s linear infinite;">
+      <circle cx="11" cy="11" r="9" fill="none" stroke="rgba(186,117,23,0.6)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <circle cx="11" cy="11" r="4" fill="none" stroke="rgba(186,117,23,0.3)" stroke-width="0.8"/>
+    </svg>
+    <div style="font-size:6px;color:rgba(186,117,23,0.45);font-family:Georgia,serif;letter-spacing:0.5px;">RB</div>
+  </div>`;
+}
+
+function renderBaradur(comp) {
+  const b = state.burdens;
+  const maxH = 80;
+  const h = b === 0 ? 0 : Math.max(8, (b/12)*maxH);
+  const w = 6 + b * 1.2;
+  const glow = 20 + b * 7;
+  const op = b === 0 ? 0 : Math.min(0.3 + (b/12)*0.7, 1);
+  return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;padding-bottom:2px;position:relative;">
+    <div style="position:absolute;top:-${glow/2}px;left:50%;transform:translateX(-50%);width:${glow}px;height:${glow}px;border-radius:50%;background:radial-gradient(circle,rgba(200,50,10,0.22) 0%,transparent 70%);opacity:${op};pointer-events:none;"></div>
+    <div style="width:${w}px;height:${h}px;background:linear-gradient(180deg,#1a0808,#2d0a0a);border-radius:2px 2px 0 0;border:0.5px solid rgba(150,30,30,0.5);opacity:${op};position:relative;">
+      <div style="position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:${Math.max(4,w*0.4)}px;height:${Math.max(4,w*0.4)}px;border-radius:50%;background:radial-gradient(circle,rgba(220,60,20,${op*0.9}) 0%,transparent 70%);"></div>
+    </div>
+    <div style="width:${w+8}px;height:3px;background:rgba(100,20,20,0.6);border-radius:1px;opacity:${op};"></div>
+    ${b>0?`<div style="font-size:6px;color:rgba(200,80,50,0.55);font-family:Georgia,serif;margin-top:2px;">${b} burden${b!==1?'s':''}</div>`:'<div style="font-size:6px;color:rgba(255,255,255,0.18);font-family:Georgia,serif;">no burdens</div>'}
+  </div>`;
+}
+
+function renderFanArc(comp, px) {
+  const w = px.w, h = px.h;
+  const count = 8;
+  const originX = w;
+  const originY = h;
+  const radius = Math.min(w, h) * 0.82;
+  const startAngle = Math.PI * 1.15;
+  const endAngle   = Math.PI * 1.72;
+  const cw = radius * 0.20;
+  const ch = cw * 1.42;
+  const cols = [
+    {bg:'rgba(29,90,60,0.6)',  bd:'rgba(29,158,117,0.6)', shimmer:false},
+    {bg:'rgba(80,55,10,0.6)',  bd:'rgba(186,140,30,0.6)', shimmer:true},
+    {bg:'rgba(40,20,70,0.6)',  bd:'rgba(80,50,130,0.55)', shimmer:false},
+    {bg:'rgba(80,55,10,0.6)',  bd:'rgba(186,140,30,0.6)', shimmer:true},
+    {bg:'rgba(29,90,60,0.6)',  bd:'rgba(29,158,117,0.55)',shimmer:false},
+    {bg:'rgba(40,20,70,0.6)',  bd:'rgba(80,50,130,0.55)', shimmer:false},
+    {bg:'rgba(80,55,10,0.55)', bd:'rgba(186,140,30,0.5)', shimmer:false},
+    {bg:'rgba(50,50,50,0.45)', bd:'rgba(100,100,100,0.4)',shimmer:false},
+  ];
+  let svgCards = '';
+  for (let i = 0; i < count; i++) {
+    const t = i / (count - 1);
+    const angle = startAngle + t * (endAngle - startAngle);
+    const cardX = originX + radius * Math.cos(angle);
+    const cardY = originY + radius * Math.sin(angle);
+    const deg = (angle + Math.PI/2) * 180 / Math.PI;
+    const col = cols[i];
+    svgCards += `<g transform="translate(${cardX},${cardY}) rotate(${deg})">
+      <rect x="${-cw/2}" y="${-ch}" width="${cw}" height="${ch}" rx="2" fill="${col.bg}" stroke="${col.shimmer?'rgba(80,220,120,0.75)':col.bd}" stroke-width="${col.shimmer?1.2:0.7}"/>
+      ${col.shimmer?`<rect x="${-cw/2+1}" y="${-ch+1}" width="${cw-2}" height="${ch-2}" rx="1.5" fill="rgba(80,220,120,0.07)"/>`:``}
+      <rect x="${-cw/2+2}" y="${-ch+2}" width="${cw-4}" height="${ch*0.55}" rx="1" fill="rgba(255,255,255,0.04)"/>
+    </g>`;
+  }
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="position:absolute;inset:0;overflow:visible;">${svgCards}</svg>
+    <div style="position:absolute;bottom:4px;right:8px;font-size:8px;color:rgba(255,255,255,0.18);font-family:Georgia,serif;text-align:right;line-height:1.4;">your hand<br>hover · drag</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SVG ICON LIBRARY
+// ═══════════════════════════════════════════════════════════════
+
+function renderSVGIcon(type, color) {
+  const c = color || 'rgba(200,200,200,0.7)';
+  const icons = {
+    ring: `<svg viewBox="0 0 40 56" width="100%" height="100%">
+      <ellipse cx="20" cy="20" rx="16" ry="16" fill="none" stroke="${c}" stroke-width="3" opacity="0.85"/>
+      <ellipse cx="20" cy="20" rx="8" ry="8" fill="none" stroke="${c}" stroke-width="1" opacity="0.4"/>
+      <line x1="20" y1="36" x2="20" y2="52" stroke="${c}" stroke-width="0.8" opacity="0.3"/>
+      <text x="20" y="52" text-anchor="middle" font-size="7" fill="${c}" opacity="0.5" font-family="Georgia,serif">ᚱ</text>
+    </svg>`,
+    eye: `<svg viewBox="0 0 56 40" width="100%" height="100%">
+      <path d="M4,20 Q28,2 52,20 Q28,38 4,20Z" fill="none" stroke="${c}" stroke-width="1.5" opacity="0.8"/>
+      <circle cx="28" cy="20" r="7" fill="none" stroke="${c}" stroke-width="1.5" opacity="0.8"/>
+      <circle cx="28" cy="20" r="3" fill="${c}" opacity="0.6"/>
+      <path d="M4,20 Q28,2 52,20 Q28,38 4,20Z" fill="${c}" opacity="0.04"/>
+    </svg>`,
+    sword: `<svg viewBox="0 0 28 72" width="100%" height="100%">
+      <line x1="14" y1="4" x2="14" y2="52" stroke="${c}" stroke-width="1.8" opacity="0.85"/>
+      <polygon points="14,4 10,18 14,14 18,18" fill="${c}" opacity="0.7"/>
+      <line x1="5" y1="46" x2="23" y2="46" stroke="${c}" stroke-width="1.5" opacity="0.7"/>
+      <rect x="11" y="52" width="6" height="14" rx="2" fill="${c}" opacity="0.4"/>
+    </svg>`,
+    shield: `<svg viewBox="0 0 40 50" width="100%" height="100%">
+      <path d="M20,3 L36,10 L36,28 Q36,42 20,47 Q4,42 4,28 L4,10 Z" fill="${c}" opacity="0.12" stroke="${c}" stroke-width="1.5" opacity="0.8"/>
+      <path d="M20,10 L20,40 M10,20 L30,20" stroke="${c}" stroke-width="0.8" opacity="0.4"/>
+    </svg>`,
+    mountain: `<svg viewBox="0 0 64 48" width="100%" height="100%">
+      <polygon points="32,4 6,44 58,44" fill="${c}" opacity="0.1" stroke="${c}" stroke-width="1.3" opacity="0.75"/>
+      <polygon points="48,14 34,44 62,44" fill="${c}" opacity="0.07" stroke="${c}" stroke-width="1" opacity="0.5"/>
+      <line x1="32" y1="4" x2="26" y2="16" stroke="white" stroke-width="0.8" opacity="0.2"/>
+      <line x1="32" y1="4" x2="38" y2="18" stroke="white" stroke-width="0.8" opacity="0.2"/>
+    </svg>`,
+    tree: `<svg viewBox="0 0 32 56" width="100%" height="100%">
+      <polygon points="16,4 2,26 30,26" fill="${c}" opacity="0.15" stroke="${c}" stroke-width="1.2" opacity="0.75"/>
+      <polygon points="16,14 3,36 29,36" fill="${c}" opacity="0.12" stroke="${c}" stroke-width="1.2" opacity="0.7"/>
+      <rect x="13" y="36" width="6" height="16" rx="1" fill="${c}" opacity="0.4"/>
+    </svg>`,
+    flame: `<svg viewBox="0 0 32 56" width="100%" height="100%">
+      <path d="M16,52 Q2,40 6,26 Q10,16 16,8 Q18,20 22,22 Q28,14 24,4 Q36,18 28,36 Q26,44 16,52Z" fill="${c}" opacity="0.2" stroke="${c}" stroke-width="1.2" opacity="0.8"/>
+      <path d="M16,44 Q8,36 12,26 Q14,20 16,16 Q18,24 20,26 Q24,20 22,12 Q30,24 22,36 Q20,42 16,44Z" fill="${c}" opacity="0.15"/>
+    </svg>`,
+    tower: `<svg viewBox="0 0 32 72" width="100%" height="100%">
+      <rect x="10" y="6" width="12" height="60" fill="${c}" opacity="0.15" stroke="${c}" stroke-width="1" opacity="0.7"/>
+      <rect x="6" y="4" width="4" height="12" rx="1" fill="${c}" opacity="0.5"/>
+      <rect x="14" y="2" width="4" height="14" rx="1" fill="${c}" opacity="0.5"/>
+      <rect x="22" y="4" width="4" height="12" rx="1" fill="${c}" opacity="0.5"/>
+      <rect x="8" y="16" width="16" height="50" fill="${c}" opacity="0.12" stroke="${c}" stroke-width="1" opacity="0.65"/>
+      <ellipse cx="16" cy="12" rx="5" ry="3" fill="${c}" opacity="0.3"/>
+    </svg>`,
+    crown: `<svg viewBox="0 0 48 32" width="100%" height="100%">
+      <path d="M4,28 L4,12 L14,22 L24,4 L34,22 L44,12 L44,28 Z" fill="${c}" opacity="0.15" stroke="${c}" stroke-width="1.5" opacity="0.8"/>
+      <line x1="4" y1="28" x2="44" y2="28" stroke="${c}" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="24" cy="4" r="2.5" fill="${c}" opacity="0.7"/>
+      <circle cx="4" cy="12" r="2" fill="${c}" opacity="0.5"/>
+      <circle cx="44" cy="12" r="2" fill="${c}" opacity="0.5"/>
+    </svg>`,
+  };
+  return icons[type] || `<div style="font-size:10px;color:${c};">${type}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NEGATIVE SPACE CANVAS
+// ═══════════════════════════════════════════════════════════════
+
+function updateNegSpaceCanvas() {
+  const canvas = document.getElementById('negspace-canvas');
+  const { w: bw, h: bh } = boardPx();
+  if (canvas.width !== bw || canvas.height !== bh) {
+    canvas.width = bw;
+    canvas.height = bh;
+  }
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, bw, bh);
+
+  if (!state.showNegSpace) return;
+
+  // Fill with warm golden shimmer — this is the "exposed landscape" signal
+  ctx.fillStyle = 'rgba(186, 140, 30, 0.20)';
+  ctx.fillRect(0, 0, bw, bh);
+
+  // Punch out areas covered by visible components (destination-out)
+  ctx.globalCompositeOperation = 'destination-out';
+  state.components.forEach(comp => {
+    if (!comp.visible || !getLayerVisible(comp.layer)) return;
+    const px = pctToPx(comp);
+    const rot = comp.rotation || 0;
+    const skX = comp.skewX || 0;
+    const skY = comp.skewY || 0;
+    const cx = px.x + px.w/2;
+    const cy = px.y + px.h/2;
+    ctx.save();
+    ctx.translate(cx, cy);
+    if (rot) ctx.rotate(rot * Math.PI / 180);
+    if (skX) ctx.transform(1, Math.tan(skY*Math.PI/180), Math.tan(skX*Math.PI/180), 1, 0, 0);
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillRect(-px.w/2, -px.h/2, px.w, px.h);
+    ctx.restore();
+  });
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Add subtle bright edge highlight on the golden areas
+  // (A second pass: add a very faint white highlight to emphasize the exposed regions)
+  ctx.globalCompositeOperation = 'source-atop';
+  ctx.fillStyle = 'rgba(255,240,180,0.06)';
+  ctx.fillRect(0, 0, bw, bh);
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HORIZON LINE
+// ═══════════════════════════════════════════════════════════════
+
+function renderHorizonLine() {
+  const board = document.getElementById('board');
+  const hl = document.getElementById('horizon-line');
+  const { h } = boardPx();
+  hl.style.top = (state.horizonY / 100 * h) + 'px';
+  hl.className = state.showHorizon ? '' : 'hidden-horizon';
+}
+
+function initHorizonDrag() {
+  const hl = document.getElementById('horizon-line');
+  const drag = hl.querySelector('.hl-drag');
+  let dragging = false;
+  drag.addEventListener('mousedown', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragging = true;
+    saveUndo();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const board = document.getElementById('board');
+    const rect = board.getBoundingClientRect();
+    const y = Math.max(0, Math.min(100, (e.clientY - rect.top) / rect.height * 100));
+    state.horizonY = y;
+    renderHorizonLine();
+    if (state.showNegSpace) updateNegSpaceCanvas();
+  });
+  document.addEventListener('mouseup', () => { dragging = false; });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GRID OVERLAY
+// ═══════════════════════════════════════════════════════════════
+
+function renderGridOverlay() {
+  const svg = document.getElementById('grid-overlay');
+  const { w, h } = boardPx();
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  svg.innerHTML = '';
+  if (!state.showGrid) return;
+
+  const lines = [
+    // Rule of thirds — horizontal
+    { x1:0, y1:h/3,   x2:w, y2:h/3,   col:'rgba(186,140,30,0.18)' },
+    { x1:0, y1:h*2/3, x2:w, y2:h*2/3, col:'rgba(186,140,30,0.18)' },
+    // Rule of thirds — vertical
+    { x1:w/3,   y1:0, x2:w/3,   y2:h, col:'rgba(186,140,30,0.18)' },
+    { x1:w*2/3, y1:0, x2:w*2/3, y2:h, col:'rgba(186,140,30,0.18)' },
+    // Center crosshair
+    { x1:w/2, y1:0, x2:w/2, y2:h, col:'rgba(255,255,255,0.08)' },
+    { x1:0, y1:h/2, x2:w, y2:h/2, col:'rgba(255,255,255,0.08)' },
+  ];
+
+  lines.forEach(ln => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg','line');
+    el.setAttribute('x1', ln.x1); el.setAttribute('y1', ln.y1);
+    el.setAttribute('x2', ln.x2); el.setAttribute('y2', ln.y2);
+    el.setAttribute('stroke', ln.col);
+    el.setAttribute('stroke-width', '0.5');
+    svg.appendChild(el);
+  });
+
+  // Corner markers
+  const d = 20;
+  [[0,0],[w,0],[0,h],[w,h]].forEach(([cx,cy]) => {
+    const dx = cx === 0 ? 1 : -1;
+    const dy = cy === 0 ? 1 : -1;
+    const l1 = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l1.setAttribute('x1',cx); l1.setAttribute('y1',cy); l1.setAttribute('x2',cx+dx*d); l1.setAttribute('y2',cy);
+    l1.setAttribute('stroke','rgba(255,255,255,0.15)'); l1.setAttribute('stroke-width','0.8');
+    const l2 = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l2.setAttribute('x1',cx); l2.setAttribute('y1',cy); l2.setAttribute('x2',cx); l2.setAttribute('y2',cy+dy*d);
+    l2.setAttribute('stroke','rgba(255,255,255,0.15)'); l2.setAttribute('stroke-width','0.8');
+    svg.appendChild(l1); svg.appendChild(l2);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LANDSCAPE BACKGROUND
+// ═══════════════════════════════════════════════════════════════
+
+function renderLandscape() {
+  const bg = document.getElementById('bg-landscape');
+  bg.innerHTML = `
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#080614 0%,#100c22 35%,#180e06 65%,#0a0a0a 100%);"></div>
+    <svg style="position:absolute;left:0;right:0;top:12%;width:100%;height:50%;pointer-events:none;" viewBox="0 0 1920 420" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,420 200,75 380,215 520,55 700,175 900,35 1100,155 1300,45 1500,165 1700,65 1920,125 1920,420" fill="#0c091a" opacity="0.92"/>
+      <polygon points="0,420 100,155 280,275 500,125 720,245 950,95 1180,225 1400,105 1620,235 1920,145 1920,420" fill="#140e28" opacity="0.87"/>
+      <polygon points="0,420 0,295 150,215 400,285 650,195 900,265 1150,185 1400,255 1650,195 1920,235 1920,420" fill="#161006" opacity="0.9"/>
+      <polygon points="0,420 0,360 250,340 600,355 950,340 1300,355 1650,340 1920,350 1920,420" fill="#100c04"/>
+      <!-- Stars -->
+      <circle cx="120" cy="40" r="0.8" fill="rgba(255,255,255,0.35)"/>
+      <circle cx="380" cy="20" r="0.6" fill="rgba(255,255,255,0.25)"/>
+      <circle cx="640" cy="55" r="0.8" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="900" cy="15" r="0.7" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="1200" cy="35" r="0.6" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="1500" cy="25" r="0.8" fill="rgba(255,255,255,0.25)"/>
+      <circle cx="1750" cy="45" r="0.7" fill="rgba(255,255,255,0.35)"/>
+    </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DRAG, RESIZE & ROTATE
+// ═══════════════════════════════════════════════════════════════
+
+let dragState = null;
+
+function attachDrag(el, comp) {
+  el.addEventListener('mousedown', e => {
+    // Rotate handle
+    if (e.target.classList.contains('rotate-handle')) {
+      e.preventDefault(); e.stopPropagation();
+      saveUndo();
+      const board = document.getElementById('board');
+      const rect = board.getBoundingClientRect();
+      const px = pctToPx(comp);
+      const cx = rect.left + px.x + px.w/2;
+      const cy = rect.top  + px.y + px.h/2;
+      const startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI;
+      const startRot = comp.rotation || 0;
+      dragState = { type:'rotate', comp, cx, cy, startAngle, startRot };
+      return;
+    }
+    // Resize handle
+    if (e.target.classList.contains('rh')) return;
+    e.preventDefault(); e.stopPropagation();
+
+    if (!e.shiftKey) {
+      if (!state.selectedIds.includes(comp.id)) {
+        state.selectedIds = [comp.id];
+        renderAll();
+      }
+    } else {
+      if (!state.selectedIds.includes(comp.id)) state.selectedIds.push(comp.id);
+      renderAll();
+    }
+
+    const bpx = boardPx();
+    const startPositions = state.selectedIds.map(id => {
+      const c = state.components.find(c => c.id === id);
+      return { id, x: c.x, y: c.y };
+    });
+    saveUndo();
+    dragState = { type:'move', startMouse:{x:e.clientX,y:e.clientY}, startPositions, bpx };
+  });
+
+  el.querySelectorAll('.rh').forEach(rh => {
+    rh.addEventListener('mousedown', e => {
+      e.preventDefault(); e.stopPropagation();
+      saveUndo();
+      dragState = {
+        type:'resize', handle:rh.dataset.handle, comp,
+        startMouse:{x:e.clientX,y:e.clientY},
+        startComp:{x:comp.x,y:comp.y,w:comp.w,h:comp.h},
+        bpx: boardPx(),
+      };
+    });
+  });
+}
+
+document.addEventListener('mousemove', e => {
+  if (!dragState) return;
+
+  if (dragState.type === 'rotate') {
+    const angle = Math.atan2(e.clientY - dragState.cy, e.clientX - dragState.cx) * 180 / Math.PI;
+    const delta = angle - dragState.startAngle;
+    let newRot = (dragState.startRot + delta) % 360;
+    if (e.shiftKey) newRot = Math.round(newRot / 15) * 15; // snap to 15°
+    dragState.comp.rotation = newRot;
+    const el = document.querySelector(`.comp[data-id="${dragState.comp.id}"]`);
+    if (el) {
+      const rot = dragState.comp.rotation || 0;
+      const skX = dragState.comp.skewX || 0;
+      const skY = dragState.comp.skewY || 0;
+      el.style.transform = `rotate(${rot}deg) skewX(${skX}deg) skewY(${skY}deg)`;
+    }
+    renderPropsPanel();
+    return;
+  }
+
+  const dx = (e.clientX - dragState.startMouse.x) / dragState.bpx.w * 100;
+  const dy = (e.clientY - dragState.startMouse.y) / dragState.bpx.h * 100;
+
+  if (dragState.type === 'move') {
+    dragState.startPositions.forEach(sp => {
+      const c = state.components.find(c => c.id === sp.id);
+      if (!c) return;
+      c.x = Math.max(0, Math.min(100-c.w, sp.x + dx));
+      c.y = Math.max(0, Math.min(100-c.h, sp.y + dy));
+    });
+    state.selectedIds.forEach(id => {
+      const c = state.components.find(c => c.id === id);
+      const el = document.querySelector(`.comp[data-id="${id}"]`);
+      if (!el || !c) return;
+      const bpx = boardPx();
+      el.style.left = c.x/100*bpx.w + 'px';
+      el.style.top  = c.y/100*bpx.h + 'px';
+    });
+    if (state.showNegSpace) updateNegSpaceCanvas();
+    renderPropsPanel();
+  }
+
+  if (dragState.type === 'resize') {
+    const sc = dragState.startComp;
+    const h = dragState.handle;
+    const c = dragState.comp;
+    let nx = sc.x, ny = sc.y, nw = sc.w, nh = sc.h;
+    const MIN = 0.5;
+    if (h.includes('r')) nw = Math.max(MIN, sc.w + dx);
+    if (h.includes('l')) { const d = Math.min(dx, sc.w-MIN); nx=sc.x+d; nw=sc.w-d; }
+    if (h==='bm'||h==='bl'||h==='br') nh = Math.max(MIN, sc.h + dy);
+    if (h==='tm'||h==='tl'||h==='tr') { const d=Math.min(dy,sc.h-MIN); ny=sc.y+d; nh=sc.h-d; }
+    c.x=Math.max(0,nx); c.y=Math.max(0,ny);
+    c.w=Math.min(100-c.x,nw); c.h=Math.min(100-c.y,nh);
+    const el = document.querySelector(`.comp[data-id="${c.id}"]`);
+    if (el) {
+      const bpx = boardPx();
+      el.style.left=c.x/100*bpx.w+'px'; el.style.top=c.y/100*bpx.h+'px';
+      el.style.width=c.w/100*bpx.w+'px'; el.style.height=c.h/100*bpx.h+'px';
+    }
+    if (state.showNegSpace) updateNegSpaceCanvas();
+    renderPropsPanel();
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (dragState) { dragState = null; renderAll(); }
+});
+
+document.getElementById('board').addEventListener('mousedown', e => {
+  if (e.target === e.currentTarget || e.target.id==='bg-landscape' || e.target.closest('#bg-landscape') || e.target.closest('#grid-overlay')) {
+    state.selectedIds = [];
+    renderAll();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// ALIGNMENT TOOLS
+// ═══════════════════════════════════════════════════════════════
+
+function updateAlignGroup() {
+  const ag = document.getElementById('align-group');
+  ag.classList.toggle('visible', state.selectedIds.length > 1);
+}
+
+function alignSelected(mode) {
+  if (state.selectedIds.length < 2) return;
+  saveUndo();
+  const comps = state.selectedIds.map(id => state.components.find(c => c.id === id)).filter(Boolean);
+
+  if (mode === 'left') {
+    const minX = Math.min(...comps.map(c=>c.x));
+    comps.forEach(c => c.x = minX);
+  } else if (mode === 'right') {
+    const maxX = Math.max(...comps.map(c=>c.x+c.w));
+    comps.forEach(c => c.x = maxX - c.w);
+  } else if (mode === 'centerH') {
+    const avgX = comps.reduce((s,c)=>s+c.x+c.w/2,0) / comps.length;
+    comps.forEach(c => c.x = avgX - c.w/2);
+  } else if (mode === 'top') {
+    const minY = Math.min(...comps.map(c=>c.y));
+    comps.forEach(c => c.y = minY);
+  } else if (mode === 'bottom') {
+    const maxY = Math.max(...comps.map(c=>c.y+c.h));
+    comps.forEach(c => c.y = maxY - c.h);
+  } else if (mode === 'centerV') {
+    const avgY = comps.reduce((s,c)=>s+c.y+c.h/2,0) / comps.length;
+    comps.forEach(c => c.y = avgY - c.h/2);
+  } else if (mode === 'distributeH') {
+    comps.sort((a,b) => a.x-b.x);
+    const totalGap = comps[comps.length-1].x - comps[0].x - comps.slice(0,-1).reduce((s,c)=>s+c.w,0);
+    const gap = totalGap / (comps.length - 1);
+    let cur = comps[0].x + comps[0].w;
+    for (let i = 1; i < comps.length - 1; i++) { comps[i].x = cur + gap; cur = comps[i].x + comps[i].w; }
+  } else if (mode === 'distributeV') {
+    comps.sort((a,b) => a.y-b.y);
+    const totalGap = comps[comps.length-1].y - comps[0].y - comps.slice(0,-1).reduce((s,c)=>s+c.h,0);
+    const gap = totalGap / (comps.length - 1);
+    let cur = comps[0].y + comps[0].h;
+    for (let i = 1; i < comps.length - 1; i++) { comps[i].y = cur + gap; cur = comps[i].y + comps[i].h; }
+  }
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LAYER PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function renderLayerPanel() {
+  const list = document.getElementById('layers-list');
+  list.innerHTML = '';
+  state.layers.forEach(layer => {
+    const group = document.createElement('div');
+    group.className = 'layer-group';
+    const header = document.createElement('div');
+    header.className = 'layer-header';
+    header.innerHTML = `
+      <div class="layer-vis ${layer.visible?'':'hidden'}" onclick="toggleLayerVis('${layer.id}',event)">●</div>
+      <div class="layer-dot" style="background:${layer.color};"></div>
+      <div class="layer-name">${layer.name}</div>
+      <div class="layer-caret">${layer.expanded?'▾':'▸'}</div>`;
+    header.addEventListener('click', () => { layer.expanded = !layer.expanded; renderLayerPanel(); });
+    group.appendChild(header);
+
+    if (layer.expanded) {
+      const items = document.createElement('div');
+      items.className = 'layer-items';
+      state.components.filter(c=>c.layer===layer.id).forEach(comp => {
+        const row = document.createElement('div');
+        row.className = 'comp-row' + (state.selectedIds.includes(comp.id)?' selected':'');
+        row.innerHTML = `
+          <div class="comp-vis ${comp.visible?'':'hidden'}" onclick="toggleCompVis(${comp.id},event)">●</div>
+          <div class="comp-name">${comp.label}</div>`;
+        row.addEventListener('click', e => {
+          if (e.target.classList.contains('comp-vis')) return;
+          state.selectedIds = [comp.id];
+          renderAll();
+        });
+        items.appendChild(row);
+      });
+      group.appendChild(items);
+    }
+    list.appendChild(group);
+  });
+}
+
+function toggleLayerVis(layerId, e) {
+  e.stopPropagation();
+  const l = state.layers.find(l=>l.id===layerId);
+  if (l) { l.visible = !l.visible; renderAll(); }
+}
+
+function toggleCompVis(compId, e) {
+  e.stopPropagation();
+  const c = state.components.find(c=>c.id===compId);
+  if (c) { c.visible = !c.visible; renderAll(); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEFT PANEL TAB SWITCH
+// ═══════════════════════════════════════════════════════════════
+
+function switchLeftTab(tab) {
+  state.leftTab = tab;
+  document.getElementById('tab-layers').classList.toggle('active', tab==='layers');
+  document.getElementById('tab-toybox').classList.toggle('active', tab==='toybox');
+  document.getElementById('layers-content').style.display = tab==='layers' ? 'flex' : 'none';
+  document.getElementById('toybox-content').style.display  = tab==='toybox'  ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOYBOX
+// ═══════════════════════════════════════════════════════════════
+
+function buildToybox() {
+  const box = document.getElementById('toybox-content');
+  box.innerHTML = '';
+  const categories = [...new Set(TOYBOX_ITEMS.map(i=>i.cat))];
+  categories.forEach(cat => {
+    const catDiv = document.createElement('div');
+    catDiv.className = 'toy-category';
+    catDiv.textContent = cat.toUpperCase();
+    box.appendChild(catDiv);
+    const grid = document.createElement('div');
+    grid.className = 'toy-grid';
+    TOYBOX_ITEMS.filter(i=>i.cat===cat).forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'toy-item';
+      el.innerHTML = `<div class="toy-icon">${item.icon}</div><div class="toy-label">${item.label}</div>`;
+      el.addEventListener('click', () => addToyboxItem(item));
+      grid.appendChild(el);
+    });
+    box.appendChild(grid);
+  });
+}
+
+function addToyboxItem(template) {
+  saveUndo();
+  const comp = {
+    ...template,
+    id: state.nextId++,
+    visible: true,
+    zIndex: state.components.filter(c=>c.layer===template.layer).length,
+    x: 40 + (Math.random()*10-5),
+    y: 40 + (Math.random()*10-5),
+    rotation: 0,
+    opacity: 1,
+    skewX: 0,
+    skewY: 0,
+  };
+  state.components.push(comp);
+  state.selectedIds = [comp.id];
+  renderAll();
+  setStatus(`Added: ${template.label}`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADD ZONE BUTTONS
+// ═══════════════════════════════════════════════════════════════
+
+function buildAddButtons() {
+  const grid = document.getElementById('add-grid');
+  grid.innerHTML = '';
+  COMP_TEMPLATES.forEach(t => {
+    const btn = document.createElement('div');
+    btn.className = 'add-btn';
+    btn.textContent = t.label;
+    btn.addEventListener('click', () => addComponent(t));
+    grid.appendChild(btn);
+  });
+}
+
+function addComponent(template) {
+  saveUndo();
+  const comp = {
+    ...template,
+    id: state.nextId++,
+    visible: true,
+    zIndex: state.components.filter(c=>c.layer===template.layer).length,
+    x: template.x + (Math.random()*4-2),
+    y: template.y + (Math.random()*4-2),
+    rotation: 0,
+    opacity: 1,
+    skewX: 0,
+    skewY: 0,
+  };
+  state.components.push(comp);
+  state.selectedIds = [comp.id];
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROPERTIES PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function renderPropsPanel() {
+  const body = document.getElementById('props-body');
+
+  if (state.selectedIds.length === 0) {
+    // Board controls
+    body.innerHTML = `
+      <div class="prop-section">BOARD</div>
+      <div class="prop-row">
+        <div class="prop-label">HORIZON LINE (${state.horizonY.toFixed(0)}%)</div>
+        <div class="prop-val-row">
+          <input type="range" min="5" max="95" value="${state.horizonY.toFixed(0)}" class="prop-slider" style="flex:1;"
+            oninput="state.horizonY=parseFloat(this.value);renderHorizonLine();if(state.showNegSpace)updateNegSpaceCanvas();">
+          <span class="prop-val">${state.horizonY.toFixed(0)}%</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" ${state.showHorizon?'checked':''} onchange="state.showHorizon=this.checked;renderHorizonLine();">
+        <span>Show horizon line</span>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" ${state.showNegSpace?'checked':''} onchange="state.showNegSpace=this.checked;updateNegSpaceCanvas();document.getElementById('btn-negspace').classList.toggle('active',this.checked);">
+        <span>Neg. space golden glow</span>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" ${state.showGrid?'checked':''} onchange="state.showGrid=this.checked;renderGridOverlay();document.getElementById('btn-grid').classList.toggle('active',this.checked);">
+        <span>Rule-of-thirds grid</span>
+      </div>
+      <div class="prop-section">PERSPECTIVE</div>
+      <div class="prop-note">Use bottom bar sliders for tilt X/Y/Depth.<br>Hold Shift while rotating a component to snap to 15°.</div>
+      <div class="prop-section">STATS</div>
+      <div class="prop-note">${state.components.length} components · ${state.components.filter(c=>c.visible).length} visible</div>
+      <div class="prop-section">QUICK ACTIONS</div>
+      <button class="prop-btn" onclick="selectAll(true)">Select all</button>
+      <button class="prop-btn" onclick="loadDefault()">Reset to default</button>
+      <button class="prop-btn danger" onclick="if(confirm('Clear all?')){saveUndo();state.components=[];state.selectedIds=[];renderAll();}">Clear all</button>
+    `;
+    return;
+  }
+
+  if (state.selectedIds.length > 1) {
+    body.innerHTML = `
+      <div class="prop-note">${state.selectedIds.length} components selected.</div>
+      <div class="prop-section">ALIGNMENT</div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('left')">← Left</button>
+        <button class="prop-btn" onclick="alignSelected('right')">Right →</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('top')">↑ Top</button>
+        <button class="prop-btn" onclick="alignSelected('bottom')">Bottom ↓</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('centerH')">⟺ Ctr H</button>
+        <button class="prop-btn" onclick="alignSelected('centerV')">⟷ Ctr V</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('distributeH')">Dist. H</button>
+        <button class="prop-btn" onclick="alignSelected('distributeV')">Dist. V</button>
+      </div>
+      <div style="height:8px;"></div>
+      <button class="prop-btn danger" onclick="deleteSelected()">Delete all selected</button>
+    `;
+    return;
+  }
+
+  const comp = state.components.find(c=>c.id===state.selectedIds[0]);
+  if (!comp) return;
+  const rot = (comp.rotation||0).toFixed(1);
+  const op  = ((comp.opacity!==undefined?comp.opacity:1)*100).toFixed(0);
+  const skX = (comp.skewX||0).toFixed(1);
+  const skY = (comp.skewY||0).toFixed(1);
+
+  body.innerHTML = `
+    <div class="prop-row">
+      <div class="prop-label">LABEL</div>
+      <input class="prop-input" value="${comp.label}" onchange="updateComp(${comp.id},'label',this.value)">
+    </div>
+    <div class="prop-section">POSITION & SIZE (%)</div>
+    <div class="prop-row-2">
+      <div><div class="prop-label">X</div>
+        <input class="prop-input" type="number" step="0.1" value="${comp.x.toFixed(1)}" onchange="updateComp(${comp.id},'x',parseFloat(this.value))"></div>
+      <div><div class="prop-label">Y</div>
+        <input class="prop-input" type="number" step="0.1" value="${comp.y.toFixed(1)}" onchange="updateComp(${comp.id},'y',parseFloat(this.value))"></div>
+    </div>
+    <div class="prop-row-2">
+      <div><div class="prop-label">W</div>
+        <input class="prop-input" type="number" step="0.1" value="${comp.w.toFixed(1)}" onchange="updateComp(${comp.id},'w',parseFloat(this.value))"></div>
+      <div><div class="prop-label">H</div>
+        <input class="prop-input" type="number" step="0.1" value="${comp.h.toFixed(1)}" onchange="updateComp(${comp.id},'h',parseFloat(this.value))"></div>
+    </div>
+    <div class="prop-section">TRANSFORM</div>
+    <div class="prop-row">
+      <div class="prop-label">ROTATION (${rot}°) — blue handle or type</div>
+      <div class="prop-val-row">
+        <input type="range" min="-180" max="180" step="1" value="${rot}" class="prop-slider" style="flex:1;"
+          oninput="updateComp(${comp.id},'rotation',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(0)+'°';">
+        <span class="prop-val">${parseFloat(rot).toFixed(0)}°</span>
+      </div>
+      <input class="prop-input" type="number" step="1" value="${rot}" style="margin-top:3px;"
+        onchange="updateComp(${comp.id},'rotation',parseFloat(this.value))">
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">SKEW X (${skX}°) — zone perspective</div>
+      <div class="prop-val-row">
+        <input type="range" min="-45" max="45" step="0.5" value="${skX}" class="prop-slider" style="flex:1;"
+          oninput="updateComp(${comp.id},'skewX',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(0)+'°';">
+        <span class="prop-val">${parseFloat(skX).toFixed(0)}°</span>
+      </div>
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">SKEW Y (${skY}°)</div>
+      <div class="prop-val-row">
+        <input type="range" min="-45" max="45" step="0.5" value="${skY}" class="prop-slider" style="flex:1;"
+          oninput="updateComp(${comp.id},'skewY',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(0)+'°';">
+        <span class="prop-val">${parseFloat(skY).toFixed(0)}°</span>
+      </div>
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">OPACITY (${op}%)</div>
+      <div class="prop-val-row">
+        <input type="range" min="0" max="100" step="1" value="${op}" class="prop-slider" style="flex:1;"
+          oninput="updateComp(${comp.id},'opacity',parseFloat(this.value)/100);this.nextElementSibling.textContent=this.value+'%';if(state.showNegSpace)updateNegSpaceCanvas();">
+        <span class="prop-val">${op}%</span>
+      </div>
+    </div>
+    <div class="prop-section">APPEARANCE</div>
+    <div class="prop-row">
+      <div class="prop-label">LAYER</div>
+      <select class="prop-input" onchange="updateComp(${comp.id},'layer',this.value)">
+        ${state.layers.map(l=>`<option value="${l.id}" ${l.id===comp.layer?'selected':''}>${l.name}</option>`).join('')}
+      </select>
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">BACKGROUND</div>
+      <input class="prop-input" value="${comp.bg}" onchange="updateComp(${comp.id},'bg',this.value)">
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">BORDER COLOR</div>
+      <input class="prop-input" value="${comp.border||''}" onchange="updateComp(${comp.id},'border',this.value)">
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">TEXT COLOR</div>
+      <input class="prop-input" value="${comp.color||''}" onchange="updateComp(${comp.id},'color',this.value)">
+    </div>
+    <div class="prop-row">
+      <div class="prop-label">BORDER RADIUS</div>
+      <input class="prop-input" value="${comp.borderRadius||'4px'}" onchange="updateComp(${comp.id},'borderRadius',this.value)">
+    </div>
+    <div class="toggle-row">
+      <input type="checkbox" ${comp.dashed?'checked':''} onchange="updateComp(${comp.id},'dashed',this.checked)">
+      <span>Dashed border</span>
+    </div>
+    <div style="height:8px;"></div>
+    <button class="prop-btn" onclick="duplicateComp(${comp.id})">Duplicate</button>
+    <button class="prop-btn" onclick="bringForward(${comp.id})">Bring forward</button>
+    <button class="prop-btn" onclick="sendBackward(${comp.id})">Send backward</button>
+    <button class="prop-btn danger" onclick="deleteComp(${comp.id})">Delete</button>
+  `;
+}
+
+function updateComp(id, key, val) {
+  const comp = state.components.find(c=>c.id===id);
+  if (!comp) return;
+  comp[key] = val;
+  renderAll();
+}
+
+function duplicateComp(id) {
+  const comp = state.components.find(c=>c.id===id);
+  if (!comp) return;
+  saveUndo();
+  const nc = { ...comp, id:state.nextId++, x:comp.x+2, y:comp.y+2 };
+  state.components.push(nc);
+  state.selectedIds = [nc.id];
+  renderAll();
+}
+
+function deleteComp(id) {
+  state.components = state.components.filter(c=>c.id!==id);
+  state.selectedIds = state.selectedIds.filter(i=>i!==id);
+  renderAll();
+}
+
+function deleteSelected() {
+  saveUndo();
+  state.selectedIds.forEach(id => { state.components = state.components.filter(c=>c.id!==id); });
+  state.selectedIds = [];
+  renderAll();
+}
+
+function bringForward(id) {
+  const comp = state.components.find(c=>c.id===id);
+  if (comp) { comp.zIndex = (comp.zIndex||0)+1; renderAll(); }
+}
+
+function sendBackward(id) {
+  const comp = state.components.find(c=>c.id===id);
+  if (comp) { comp.zIndex = Math.max(0,(comp.zIndex||0)-1); renderAll(); }
+}
+
+function selectAll(val) {
+  state.selectedIds = val ? state.components.map(c=>c.id) : [];
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VIEW / BURDENS / TOGGLES
+// ═══════════════════════════════════════════════════════════════
+
+function setView(view) {
+  state.view = view;
+  const sc = state.components.find(c=>c.type==='shadow-zone');
+  const fc = state.components.find(c=>c.type==='fellowship-zone');
+  if (sc && fc) {
+    if (view === 'fellowship') {
+      fc.border='rgba(186,140,30,0.65)'; fc.bg='rgba(80,55,10,0.45)';
+      sc.border='rgba(80,50,120,0.28)';  sc.bg='rgba(28,12,48,0.2)';
+    } else {
+      sc.border='rgba(80,50,120,0.7)';  sc.bg='rgba(28,12,48,0.48)';
+      fc.border='rgba(186,140,30,0.28)'; fc.bg='rgba(80,55,10,0.2)';
+    }
+  }
+  renderAll();
+}
+
+function setBurdens(val) {
+  state.burdens = parseInt(val);
+  document.getElementById('burden-val').textContent = val;
+  document.querySelectorAll('.comp').forEach(el => {
+    const id = parseInt(el.dataset.id);
+    const comp = state.components.find(c=>c.id===id);
+    if (!comp) return;
+    if (comp.type === 'baradur') {
+      const inner = el.querySelector('.comp-inner');
+      if (inner) inner.innerHTML = renderBaradur(comp);
+    }
+    if (comp.type === 'twilight-pool') {
+      const inner = el.querySelector('.comp-inner');
+      if (inner) inner.innerHTML = renderTwilightPool(comp);
+    }
+  });
+}
+
+function toggleNegSpace() {
+  state.showNegSpace = !state.showNegSpace;
+  document.getElementById('btn-negspace').classList.toggle('active', state.showNegSpace);
+  updateNegSpaceCanvas();
+}
+
+function toggleGrid() {
+  state.showGrid = !state.showGrid;
+  document.getElementById('btn-grid').classList.toggle('active', state.showGrid);
+  const svg = document.getElementById('grid-overlay');
+  svg.classList.toggle('visible', state.showGrid);
+  renderGridOverlay();
+}
+
+function toggleHorizon() {
+  state.showHorizon = !state.showHorizon;
+  document.getElementById('btn-horizon').classList.toggle('active', state.showHorizon);
+  renderHorizonLine();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SAVE / LOAD
+// ═══════════════════════════════════════════════════════════════
+
+function exportJSON() {
+  const data = JSON.stringify({ components:state.components, layers:state.layers, boardRatio:state.boardRatio, nextId:state.nextId, horizonY:state.horizonY }, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='lotr_tcg_layout.json'; a.click();
+}
+
+function importJSON() {
+  const input = document.createElement('input'); input.type='file'; input.accept='.json';
+  input.onchange = e => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.components) state.components = data.components;
+        if (data.layers) state.layers = data.layers;
+        if (data.boardRatio) state.boardRatio = data.boardRatio;
+        if (data.nextId) state.nextId = data.nextId;
+        if (data.horizonY !== undefined) state.horizonY = data.horizonY;
+        renderAll(); setStatus('Layout loaded.');
+      } catch(err) { setStatus('Error loading JSON.'); }
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  input.click();
+}
+
+function saveLayout() {
+  const stateJson = JSON.stringify({ components:state.components, layers:state.layers, boardRatio:state.boardRatio, nextId:state.nextId, horizonY:state.horizonY });
+  const currentHTML = document.documentElement.outerHTML;
+  const savedHTML = currentHTML
+    .replace('// ── INIT ──', `// ── SAVED STATE ──\nconst SAVED = ${stateJson};\n// ── INIT ──`)
+    .replace(
+      'buildAddButtons();\nbuildToybox();\ninitHorizonDrag();\nresizeBoard();',
+      `buildAddButtons();\nbuildToybox();\ninitHorizonDrag();\nif(typeof SAVED!=='undefined'){state.components=SAVED.components;state.layers=SAVED.layers;state.boardRatio=SAVED.boardRatio;state.nextId=SAVED.nextId;if(SAVED.horizonY!==undefined)state.horizonY=SAVED.horizonY;}\nresizeBoard();`
+    );
+  const blob = new Blob([savedHTML], {type:'text/html'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='lotr_tcg_board_layout_v3.html'; a.click();
+  setStatus('Saved! Open downloaded file to continue.');
+}
+
+function setStatus(msg) {
+  document.getElementById('status-msg').textContent = msg;
+  setTimeout(()=>{ document.getElementById('status-msg').textContent='Click to select · Drag to move · Corner handles to resize · Blue handle to rotate'; }, 4000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════════════════════
+
+document.addEventListener('keydown', e => {
+  const inInput = ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName);
+
+  // Undo / redo
+  if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return; }
+  if ((e.metaKey || e.ctrlKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) { e.preventDefault(); redo(); return; }
+  // Duplicate
+  if ((e.metaKey || e.ctrlKey) && e.key === 'd') { e.preventDefault(); if(state.selectedIds.length===1) duplicateComp(state.selectedIds[0]); return; }
+
+  if (inInput) return;
+
+  if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected();
+  if (e.key === 'Escape') { selectAll(false); }
+
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) {
+    e.preventDefault();
+    const d = e.shiftKey ? 0.5 : 0.1;
+    state.selectedIds.forEach(id => {
+      const c = state.components.find(c=>c.id===id);
+      if (!c) return;
+      if (e.key==='ArrowLeft')  c.x = Math.max(0, c.x-d);
+      if (e.key==='ArrowRight') c.x = Math.min(100-c.w, c.x+d);
+      if (e.key==='ArrowUp')    c.y = Math.max(0, c.y-d);
+      if (e.key==='ArrowDown')  c.y = Math.min(100-c.h, c.y+d);
+    });
+    renderAll();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// DEFAULT LAYOUT
+// ═══════════════════════════════════════════════════════════════
+
+function loadDefault() {
+  state.components = [];
+  state.selectedIds = [];
+  state.nextId = 1;
+  const defaults = [
+    'sky-bg','terrain-bg','baradur',
+    'phase-tracker',
+    'shadow-zone','opp-hand','opp-piles','ring-spinner',
+    'skirmish-left','skirmish-right','twilight-pool',
+    'adventure-path',
+    'fellowship-zone','your-piles',
+    'hand-fan','pass-btn',
+    'action-log','left-dock','right-dock'
+  ];
+  const overrides = {
+    'hand-fan':         { x:52, y:55, w:48, h:45 },
+    'pass-btn':         { x:45, y:94, w:10, h:5  },
+    'shadow-zone':      { x:1,  y:8,  w:98, h:11 },
+    'fellowship-zone':  { x:1,  y:38, w:98, h:13 },
+    'skirmish-left':    { x:1,  y:21, w:41, h:15 },
+    'skirmish-right':   { x:58, y:21, w:41, h:15 },
+    'twilight-pool':    { x:43, y:21, w:14, h:15 },
+    'adventure-path':   { x:10, y:53, w:68, h:7  },
+    'baradur':          { x:82, y:5,  w:4,  h:14 },
+  };
+  defaults.forEach(type => {
+    const t = COMP_TEMPLATES.find(t=>t.type===type);
+    if (!t) return;
+    addComponent({ ...t, ...(overrides[type]||{}) });
+  });
+  state.selectedIds = [];
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+buildAddButtons();
+buildToybox();
+initHorizonDrag();
+resizeBoard();
+if (typeof SAVED === 'undefined') { setTimeout(loadDefault, 80); }
+else {
+  document.getElementById('tilt-x-slider').value = state.boardTiltX;
+  document.getElementById('tilt-y-slider').value = state.boardTiltY;
+}
+
+window.addEventListener('resize', () => resizeBoard());
+</script>
+</body>
+</html>

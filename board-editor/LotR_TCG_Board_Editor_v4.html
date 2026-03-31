@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LotR TCG — Board Layout Editor v4</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0e;font-family:Georgia,serif;overflow:hidden;width:100vw;height:100vh;display:flex;flex-direction:column;}
+
+/* ── TOP BAR (minimal) ── */
+#topbar{height:36px;background:#08080f;border-bottom:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0;z-index:200;}
+#topbar h1{font-size:11px;color:rgba(186,140,30,0.85);letter-spacing:2px;margin-right:8px;white-space:nowrap;}
+.tb-btn{background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:3px;color:rgba(255,255,255,0.55);font-size:10px;padding:3px 9px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.tb-btn:hover{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.9);}
+.tb-btn.active{background:rgba(186,140,30,0.18);border-color:rgba(186,140,30,0.5);color:rgba(186,140,30,0.9);}
+.tb-btn.gold{border-color:rgba(186,140,30,0.4);color:rgba(186,140,30,0.75);}
+.tb-btn.gold:hover{background:rgba(186,140,30,0.12);}
+.tb-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.08);margin:0 2px;flex-shrink:0;}
+.tb-check{display:flex;align-items:center;gap:3px;font-size:9px;color:rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:Georgia,serif;}
+.tb-check input{accent-color:rgba(186,140,30,0.8);margin:0;}
+.tb-label{font-size:9px;color:rgba(255,255,255,0.25);white-space:nowrap;flex-shrink:0;}
+#status-msg{font-size:9px;color:rgba(255,255,255,0.22);margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── MAIN LAYOUT ── */
+#main{flex:1;display:flex;overflow:hidden;position:relative;}
+
+/* ── CHECKLIST FLY-OUT (left) ── */
+#checklist-trigger{position:absolute;left:0;top:0;bottom:0;width:24px;z-index:150;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(186,140,30,0.04);border-right:1px solid rgba(186,140,30,0.08);transition:background .2s;}
+#checklist-trigger:hover{background:rgba(186,140,30,0.1);}
+#checklist-trigger .trigger-label{writing-mode:vertical-rl;text-orientation:mixed;font-size:9px;color:rgba(186,140,30,0.45);letter-spacing:2px;transform:rotate(180deg);}
+#checklist-panel{position:absolute;left:24px;top:0;bottom:0;width:280px;background:#090912;border-right:0.5px solid rgba(255,255,255,0.1);z-index:140;display:flex;flex-direction:column;overflow:hidden;transform:translateX(-304px);transition:transform .25s ease;pointer-events:none;box-shadow:4px 0 20px rgba(0,0,0,0.5);}
+#checklist-panel.open{transform:translateX(0);pointer-events:all;}
+#checklist-header{padding:10px 12px 8px;border-bottom:0.5px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:8px;}
+#checklist-header h2{font-size:10px;color:rgba(186,140,30,0.75);letter-spacing:1.5px;flex:1;}
+#checklist-stats{font-size:9px;color:rgba(255,255,255,0.25);}
+#checklist-body{flex:1;overflow-y:auto;padding:4px 0;}
+.cl-category{font-size:8px;color:rgba(186,140,30,0.5);letter-spacing:1.2px;padding:10px 12px 4px;border-bottom:0.5px solid rgba(186,140,30,0.1);}
+.cl-item{display:flex;align-items:center;padding:5px 12px;gap:8px;cursor:pointer;transition:background .1s;user-select:none;}
+.cl-item:hover{background:rgba(255,255,255,0.04);}
+.cl-item.placed .cl-status{background:rgba(80,200,120,0.7);border-color:rgba(80,200,120,0.3);}
+.cl-status{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .2s;}
+.cl-name{font-size:10px;color:rgba(255,255,255,0.55);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cl-item.placed .cl-name{color:rgba(80,200,120,0.7);}
+.cl-type-badge{font-size:7px;color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:2px;padding:1px 5px;flex-shrink:0;letter-spacing:0.5px;}
+
+/* ── LAYERS PANEL (right) ── */
+#right-trigger{position:absolute;right:0;top:0;bottom:0;width:24px;z-index:150;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(186,140,30,0.04);border-left:1px solid rgba(186,140,30,0.08);transition:background .2s;}
+#right-trigger:hover{background:rgba(186,140,30,0.1);}
+#right-trigger .trigger-label{writing-mode:vertical-rl;text-orientation:mixed;font-size:9px;color:rgba(186,140,30,0.45);letter-spacing:2px;}
+#right-panels{position:absolute;right:24px;top:0;bottom:0;display:flex;flex-shrink:0;z-index:140;transform:translateX(340px);transition:transform .25s ease;pointer-events:none;box-shadow:-4px 0 20px rgba(0,0,0,0.5);}
+#right-panels.open{transform:translateX(0);pointer-events:all;}
+#right-panels.collapsed{width:0!important;overflow:hidden;opacity:0;pointer-events:none;}
+#layers-panel{width:160px;background:#090912;border-left:0.5px solid rgba(255,255,255,0.07);flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;}
+#layers-title{font-size:9px;color:rgba(186,140,30,0.7);letter-spacing:1.5px;padding:7px 10px 5px;border-bottom:0.5px solid rgba(255,255,255,0.06);}
+#layers-list{flex:1;overflow-y:auto;padding:4px 0;}
+.layer-group{border-bottom:0.5px solid rgba(255,255,255,0.04);}
+.layer-header{display:flex;align-items:center;padding:5px 8px;cursor:pointer;gap:4px;transition:background .1s;}
+.layer-header:hover{background:rgba(255,255,255,0.03);}
+.layer-vis{width:13px;height:13px;border:0.5px solid rgba(255,255,255,0.18);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:7px;color:rgba(255,255,255,0.55);}
+.layer-vis.hidden{opacity:0.25;}
+.layer-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.layer-name{font-size:10px;color:rgba(255,255,255,0.55);flex:1;}
+.layer-caret{font-size:8px;color:rgba(255,255,255,0.2);}
+.layer-items{padding:0 0 2px 18px;}
+.comp-row{display:flex;align-items:center;padding:3px 8px;cursor:pointer;gap:4px;border-radius:2px;}
+.comp-row:hover{background:rgba(255,255,255,0.03);}
+.comp-row.selected{background:rgba(186,140,30,0.1);}
+.comp-vis{width:11px;height:11px;border:0.5px solid rgba(255,255,255,0.14);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:6px;color:rgba(255,255,255,0.45);}
+.comp-vis.hidden{opacity:0.2;}
+.comp-name{font-size:9px;color:rgba(255,255,255,0.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.comp-row.selected .comp-name{color:rgba(186,140,30,0.8);}
+
+/* ── PROPERTIES PANEL (far right) ── */
+#props-panel{width:175px;background:#090912;border-left:0.5px solid rgba(255,255,255,0.07);flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;}
+#props-title{font-size:9px;color:rgba(186,140,30,0.7);letter-spacing:1.5px;padding:7px 10px 5px;border-bottom:0.5px solid rgba(255,255,255,0.06);}
+#props-body{flex:1;overflow-y:auto;padding:8px;}
+.prop-row{margin-bottom:7px;}
+.prop-section{font-size:8px;color:rgba(186,140,30,0.5);letter-spacing:1px;margin:10px 0 5px;padding-bottom:3px;border-bottom:0.5px solid rgba(186,140,30,0.15);}
+.prop-label{font-size:8px;color:rgba(255,255,255,0.3);letter-spacing:0.7px;margin-bottom:3px;}
+.prop-input{width:100%;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.1);border-radius:3px;color:rgba(255,255,255,0.7);font-size:10px;padding:3px 6px;font-family:Georgia,serif;}
+.prop-input:focus{outline:none;border-color:rgba(186,140,30,0.45);}
+.prop-slider{width:100%;accent-color:rgba(186,140,30,0.8);height:3px;}
+.prop-row-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.prop-note{font-size:8px;color:rgba(255,255,255,0.18);line-height:1.5;margin-top:6px;}
+.prop-btn{width:100%;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:3px;color:rgba(255,255,255,0.45);font-size:9px;padding:4px;cursor:pointer;font-family:Georgia,serif;margin-bottom:4px;text-align:center;}
+.prop-btn:hover{background:rgba(255,255,255,0.09);color:rgba(255,255,255,0.8);}
+.prop-btn.danger{border-color:rgba(200,50,50,0.35);color:rgba(200,100,100,0.55);}
+.prop-btn.danger:hover{background:rgba(200,50,50,0.12);color:rgba(220,100,100,0.9);}
+.prop-val-row{display:flex;align-items:center;gap:5px;}
+.prop-val{font-size:10px;color:rgba(186,140,30,0.7);min-width:28px;text-align:right;}
+.toggle-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;cursor:pointer;}
+.toggle-row input{accent-color:rgba(186,140,30,0.8);}
+.toggle-row span{font-size:9px;color:rgba(255,255,255,0.4);}
+
+/* ── BOARD WRAP ── */
+#board-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 34px 10px 34px;overflow:hidden;background:#0a0a0e;position:relative;}
+#board-outer{position:relative;transform-style:preserve-3d;transition:transform 0.3s ease;}
+#board{position:relative;background:#2c2c2c;overflow:hidden;cursor:default;flex-shrink:0;}
+#bg-landscape{position:absolute;inset:0;pointer-events:none;z-index:0;}
+#horizon-line{position:absolute;left:0;right:0;height:1px;cursor:ns-resize;z-index:8;pointer-events:all;}
+#horizon-line .hl-line{height:0.5px;background:rgba(186,140,30,0.4);position:absolute;left:0;right:0;}
+#horizon-line .hl-label{position:absolute;right:6px;top:-9px;font-size:8px;color:rgba(186,140,30,0.45);letter-spacing:1px;font-family:Georgia,serif;white-space:nowrap;}
+#horizon-line .hl-drag{position:absolute;left:0;right:0;top:-5px;height:11px;cursor:ns-resize;}
+#horizon-line.hidden-horizon{display:none;}
+#grid-overlay{position:absolute;inset:0;pointer-events:none;z-index:7;display:none;}
+#grid-overlay.visible{display:block;}
+#negspace-canvas{position:absolute;inset:0;pointer-events:none;z-index:600;}
+
+/* ── COMPONENTS ── */
+.comp{position:absolute;cursor:move;user-select:none;transform-origin:center center;}
+.comp-inner{position:absolute;inset:0;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:visible;}
+.comp-inner-label{font-size:11px;font-family:Georgia,serif;text-align:center;line-height:1.4;pointer-events:none;padding:3px;text-shadow:0 0 6px rgba(0,0,0,0.8);}
+.comp.selected>.comp-inner{outline:1.5px solid rgba(186,140,30,0.85);outline-offset:0px;}
+.comp.hidden>.comp-inner{opacity:0.1;}
+.rh{display:none;position:absolute;width:8px;height:8px;background:rgba(186,140,30,0.85);border:0.5px solid rgba(0,0,0,0.5);border-radius:1px;z-index:700;}
+.comp.selected .rh{display:block;}
+.rh-tl{top:-4px;left:-4px;cursor:nw-resize;}
+.rh-tm{top:-4px;left:calc(50% - 4px);cursor:n-resize;}
+.rh-tr{top:-4px;right:-4px;cursor:ne-resize;}
+.rh-ml{top:calc(50% - 4px);left:-4px;cursor:w-resize;}
+.rh-mr{top:calc(50% - 4px);right:-4px;cursor:e-resize;}
+.rh-bl{bottom:-4px;left:-4px;cursor:sw-resize;}
+.rh-bm{bottom:-4px;left:calc(50% - 4px);cursor:s-resize;}
+.rh-br{bottom:-4px;right:-4px;cursor:se-resize;}
+.rotate-handle{display:none;position:absolute;width:10px;height:10px;background:rgba(100,180,255,0.8);border:0.5px solid rgba(0,0,0,0.5);border-radius:50%;z-index:700;top:-18px;left:calc(50% - 5px);cursor:crosshair;}
+.comp.selected .rotate-handle{display:block;}
+
+/* ── CONTEXT MENU ── */
+#ctx-menu{position:fixed;z-index:9000;background:#0f0f1a;border:0.5px solid rgba(186,140,30,0.3);border-radius:5px;min-width:180px;padding:4px 0;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.7),0 0 1px rgba(186,140,30,0.2);font-family:Georgia,serif;}
+#ctx-menu.show{display:block;}
+.ctx-item{padding:6px 14px;font-size:10px;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .1s;}
+.ctx-item:hover{background:rgba(186,140,30,0.12);color:rgba(255,255,255,0.9);}
+.ctx-item.danger:hover{background:rgba(200,50,50,0.15);color:rgba(200,100,100,0.9);}
+.ctx-item .ctx-key{margin-left:auto;font-size:8px;color:rgba(255,255,255,0.2);letter-spacing:0.5px;}
+.ctx-sep{height:0.5px;background:rgba(255,255,255,0.06);margin:3px 0;}
+.ctx-submenu{position:relative;}
+.ctx-submenu>.ctx-sub-items{position:absolute;left:100%;top:-4px;background:#0f0f1a;border:0.5px solid rgba(186,140,30,0.3);border-radius:5px;min-width:140px;padding:4px 0;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.7);}
+.ctx-submenu:hover>.ctx-sub-items{display:block;}
+.ctx-item .ctx-arrow{margin-left:auto;font-size:8px;color:rgba(255,255,255,0.2);}
+.ctx-slider-row{padding:4px 14px 6px;display:flex;align-items:center;gap:6px;}
+.ctx-slider-row label{font-size:9px;color:rgba(255,255,255,0.4);min-width:48px;}
+.ctx-slider-row input[type=range]{flex:1;accent-color:rgba(186,140,30,0.8);height:3px;}
+.ctx-slider-row span{font-size:9px;color:rgba(186,140,30,0.6);min-width:28px;text-align:right;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px;}
+
+/* ── ANIMATIONS ── */
+@keyframes ringspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes negspace-pulse{0%,100%{opacity:0.18}50%{opacity:0.28}}
+@keyframes baradur-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.negspace-active{animation:negspace-pulse 3s ease-in-out infinite;}
+
+/* ── HOVER TOOLTIP ── */
+#hover-tooltip{position:fixed;z-index:10000;background:#0f0f1a;border:0.5px solid rgba(186,140,30,0.4);border-radius:4px;padding:6px 10px;pointer-events:none;display:none;max-width:280px;box-shadow:0 4px 16px rgba(0,0,0,0.7);font-family:Georgia,serif;}
+#hover-tooltip.visible{display:block;}
+.ht-name{font-size:10px;color:rgba(186,140,30,0.9);margin-bottom:3px;font-weight:bold;}
+.ht-row{font-size:8px;color:rgba(255,255,255,0.4);line-height:1.6;}
+.ht-val{color:rgba(255,255,255,0.65);}
+
+/* ── MASTER LIST MODAL ── */
+#master-modal{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;}
+#master-modal.visible{display:flex;}
+#master-inner{background:#0a0a14;border:0.5px solid rgba(186,140,30,0.3);border-radius:8px;width:700px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,0.8);}
+#master-header{display:flex;align-items:center;padding:12px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);}
+#master-header h2{font-size:12px;color:rgba(186,140,30,0.85);letter-spacing:2px;flex:1;font-family:Georgia,serif;}
+#master-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;padding:4px 8px;}
+#master-close:hover{color:rgba(255,255,255,0.8);}
+#master-body{flex:1;overflow-y:auto;padding:8px 0;}
+.ml-category{font-size:8px;color:rgba(186,140,30,0.55);letter-spacing:1.5px;padding:12px 16px 4px;border-bottom:0.5px solid rgba(186,140,30,0.1);}
+.ml-item{display:flex;align-items:center;padding:6px 16px;gap:10px;transition:background .1s;cursor:default;}
+.ml-item:hover{background:rgba(255,255,255,0.03);}
+.ml-check{width:14px;height:14px;border-radius:3px;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;}
+.ml-check.placed{background:rgba(80,200,120,0.15);border-color:rgba(80,200,120,0.5);color:rgba(80,200,120,0.9);}
+.ml-check.missing{background:rgba(200,80,50,0.1);border-color:rgba(200,80,50,0.35);}
+.ml-check.nonboard{background:rgba(100,150,255,0.1);border-color:rgba(100,150,255,0.3);color:rgba(100,150,255,0.7);}
+.ml-name{font-size:10px;color:rgba(255,255,255,0.6);flex:1;}
+.ml-desc{font-size:8px;color:rgba(255,255,255,0.25);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ml-type{font-size:7px;color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:2px;padding:1px 5px;flex-shrink:0;}
+.ml-item.has-warning .ml-name{color:rgba(200,160,50,0.75);}
+
+/* ── WARNING BADGE ── */
+.warning-badge{background:rgba(200,80,50,0.7);color:#fff;font-size:8px;min-width:16px;height:16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;font-family:Georgia,serif;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.warning-badge:hover{background:rgba(200,80,50,0.9);}
+.warning-badge.zero{background:rgba(80,200,120,0.25);color:rgba(80,200,120,0.8);}
+
+/* ── SHAPE CLIP PATHS ── */
+.shape-circle>.comp-inner{border-radius:50%!important;}
+.shape-triangle>.comp-inner{clip-path:polygon(50% 0%,100% 100%,0% 100%)!important;border-radius:0!important;}
+.shape-diamond>.comp-inner{clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%)!important;border-radius:0!important;}
+.shape-hexagon>.comp-inner{clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%)!important;border-radius:0!important;}
+.shape-arc>.comp-inner{border-radius:100% 0 0 0!important;overflow:hidden!important;}
+.shape-pentagon>.comp-inner{clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)!important;border-radius:0!important;}
+.shape-quarter-bl>.comp-inner{border-radius:0 0 0 100%!important;overflow:hidden!important;}
+.shape-quarter-br>.comp-inner{border-radius:0 0 100% 0!important;overflow:hidden!important;}
+.shape-quarter-tl>.comp-inner{border-radius:100% 0 0 0!important;overflow:hidden!important;}
+
+/* ── BETTER SELECT DROPDOWN ── */
+select.prop-input{appearance:auto;background:#0f0f1a;cursor:pointer;min-height:22px;}
+select.prop-input option{background:#0f0f1a;color:rgba(255,255,255,0.8);padding:6px 8px;font-size:11px;}
+
+/* ── CHECKLIST CHECKBOX ── */
+.cl-checkbox{width:12px;height:12px;border-radius:2px;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;color:transparent;transition:all .2s;}
+.cl-item.placed .cl-checkbox{background:rgba(80,200,120,0.15);border-color:rgba(80,200,120,0.5);color:rgba(80,200,120,0.9);}
+.cl-item.nonboard .cl-checkbox{background:rgba(100,150,255,0.1);border-color:rgba(100,150,255,0.3);color:rgba(100,150,255,0.7);}
+.cl-location{font-size:7px;color:rgba(100,150,255,0.5);font-style:italic;white-space:nowrap;}
+
+/* ── LANDSCAPE FOCUS MODE ── */
+.landscape-dimmed{opacity:0.12!important;filter:grayscale(1) brightness(0.5);pointer-events:none;transition:opacity .3s,filter .3s;}
+.landscape-dimmed.selected>.comp-inner{outline-color:rgba(100,100,100,0.3);}
+.cl-item.landscape-grayed .cl-name{color:rgba(255,255,255,0.18)!important;}
+.cl-item.landscape-grayed .cl-status{opacity:0.2;}
+.cl-item.landscape-grayed .cl-checkbox{opacity:0.2;}
+.cl-item.landscape-grayed .cl-type-badge{opacity:0.2;}
+.cl-item.landscape-grayed .cl-location{opacity:0.2;}
+.cl-item.landscape-grayed{pointer-events:none;}
+.cl-category.landscape-grayed,.ml-category.landscape-grayed{color:rgba(255,255,255,0.1)!important;}
+.ml-item.landscape-grayed .ml-name{color:rgba(255,255,255,0.15)!important;}
+.ml-item.landscape-grayed .ml-desc{color:rgba(255,255,255,0.08)!important;}
+.ml-item.landscape-grayed .ml-type{opacity:0.15;}
+.ml-item.landscape-grayed .ml-check{opacity:0.15;}
+.ml-item.landscape-grayed{pointer-events:none;}
+.comp-row.landscape-grayed .comp-name{color:rgba(255,255,255,0.15)!important;}
+.comp-row.landscape-grayed .comp-vis{opacity:0.15;}
+.layer-header.landscape-grayed .layer-name{color:rgba(255,255,255,0.15)!important;}
+.layer-header.landscape-grayed .layer-dot{opacity:0.15;}
+.layer-header.landscape-grayed .layer-vis{opacity:0.15;}
+
+/* ── ISO READOUT ── */
+.iso-readout{font-size:9px;color:rgba(186,140,30,0.65);text-align:center;margin:2px 0 6px;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <h1>LotR TCG ∙ Board Editor v4</h1>
+  <div class="tb-sep"></div>
+  <span class="tb-label">Ratio:</span>
+  <button class="tb-btn" id="btn-169" onclick="setBoardRatio('16:9')">16:9</button>
+  <button class="tb-btn" id="btn-21" onclick="setBoardRatio('2:1')">2:1</button>
+  <button class="tb-btn" id="btn-1610" onclick="setBoardRatio('16:10')">16:10</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" onclick="undo()" title="Ctrl+Z">↩ Undo</button>
+  <button class="tb-btn" onclick="redo()" title="Ctrl+Shift+Z">↪ Redo</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn gold" onclick="exportJSON()">⬇ Save</button>
+  <button class="tb-btn" onclick="exportJSONAs()">⬇ Save As</button>
+  <button class="tb-btn" onclick="importJSON()">⬆ Load</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn gold" onclick="exportCompositionGuide()" title="Export Midjourney composition template">MJ Guide</button>
+  <div class="tb-sep"></div>
+  <label class="tb-check" title="Rule-of-thirds grid"><input type="checkbox" onchange="state.showGrid=this.checked;renderGridOverlay();document.getElementById('grid-overlay').classList.toggle('visible',this.checked);"> Grid</label>
+  <label class="tb-check" title="Horizon line"><input type="checkbox" checked onchange="state.showHorizon=this.checked;renderHorizonLine();"> Horizon</label>
+  <label class="tb-check" title="Vanishing point"><input type="checkbox" onchange="state.showVanishPoint=this.checked;renderVanishPoint();"> VP</label>
+  <div class="tb-sep"></div>
+  <label class="tb-check" title="Hide UI elements, show only landscape zones"><input type="checkbox" id="landscape-toggle" onchange="state.landscapeMode=this.checked;renderAll();buildChecklist();"> Landscape Only</label>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" onclick="showMasterModal()" title="All game elements inventory">☰ Master List</button>
+  <span class="warning-badge" id="warning-badge" onclick="showMasterModal()" title="Missing / needs attention">0</span>
+  <span id="status-msg">Right-click for options · Hover left edge for checklist</span>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- CHECKLIST TRIGGER (thin left strip) -->
+  <div id="checklist-trigger">
+    <span class="trigger-label">ELEMENTS</span>
+  </div>
+
+  <!-- CHECKLIST FLY-OUT PANEL -->
+  <div id="checklist-panel">
+    <div id="checklist-header">
+      <h2>GAME ELEMENTS</h2>
+      <span id="checklist-stats">0/0</span>
+    </div>
+    <div id="checklist-body"></div>
+  </div>
+
+  <!-- BOARD WRAP -->
+  <div id="board-wrap">
+    <div id="board-outer">
+      <div id="board">
+        <div id="bg-landscape"></div>
+        <canvas id="negspace-canvas"></canvas>
+        <svg id="grid-overlay"></svg>
+        <div id="horizon-line">
+          <div class="hl-line"></div>
+          <div class="hl-label">HORIZON</div>
+          <div class="hl-drag"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANELS (hover fly-out) -->
+  <div id="right-trigger" onmouseenter="document.getElementById('right-panels').classList.add('open')" onmouseleave="if(!document.getElementById('right-panels').matches(':hover'))document.getElementById('right-panels').classList.remove('open')">
+    <span class="trigger-label">PANELS</span>
+  </div>
+  <div id="right-panels" onmouseenter="this.classList.add('open')" onmouseleave="this.classList.remove('open')"
+    <!-- LAYERS PANEL -->
+    <div id="layers-panel">
+      <div id="layers-title">LAYERS</div>
+      <div id="layers-list"></div>
+    </div>
+
+    <!-- PROPERTIES PANEL -->
+    <div id="props-panel">
+      <div id="props-title">PROPERTIES</div>
+      <div id="props-body"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONTEXT MENU -->
+<div id="ctx-menu"></div>
+
+<!-- HOVER TOOLTIP -->
+<div id="hover-tooltip">
+  <div class="ht-name" id="ht-name"></div>
+  <div id="ht-props"></div>
+</div>
+
+<!-- MASTER LIST MODAL -->
+<div id="master-modal" onclick="if(event.target===this)hideMasterModal()">
+  <div id="master-inner">
+    <div id="master-header">
+      <h2>ALL GAME ELEMENTS</h2>
+      <button id="master-close" onclick="hideMasterModal()">✕</button>
+    </div>
+    <div id="master-body"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+
+const LAYER_DEFS = [
+  { id:'landscape',  name:'Landscape',  color:'#2a4a1a', locked:true  },
+  { id:'shadow',     name:'Shadow',     color:'#4a2a6a', locked:false },
+  { id:'neutral',    name:'Neutral',    color:'#2a3a5a', locked:false },
+  { id:'fellowship', name:'Fellowship', color:'#6a4a10', locked:false },
+  { id:'interface',  name:'Interface',  color:'#3a3a3a', locked:false },
+  { id:'hand',       name:'Hand',       color:'#1a4a2a', locked:false },
+];
+
+// coverType: 'opaque' = solid UI, never see-through
+//            'dynamic' = cards move in/out, landscape sometimes visible
+//            'translucent' = landscape always visible through this zone
+const COMP_TEMPLATES = [
+  { type:'phase-tracker',    label:'Phase Tracker',        layer:'interface',  w:62, h:5,   x:19,y:1,   bg:'rgba(12,12,28,0.9)',     border:'rgba(255,255,255,0.35)', color:'rgba(255,255,255,0.8)',   coverType:'opaque'      },
+  { type:'shadow-zone',      label:'Shadow Zone',          layer:'shadow',     w:98, h:11,  x:1, y:8,   bg:'rgba(40,18,70,0.45)',    border:'rgba(120,80,180,0.7)',   color:'rgba(190,160,240,0.9)',  coverType:'dynamic'     },
+  { type:'fellowship-zone',  label:'Fellowship Zone',      layer:'fellowship', w:98, h:13,  x:1, y:38,  bg:'rgba(100,70,15,0.45)',   border:'rgba(220,170,40,0.7)',   color:'rgba(255,220,120,0.9)',  coverType:'dynamic'     },
+  { type:'twilight-pool',    label:'Twilight Pool',        layer:'neutral',    w:13, h:11,  x:43,y:23,  bg:'rgba(55,138,221,0.35)',  border:'rgba(70,160,240,0.7)',   color:'rgba(150,210,255,0.9)',  coverType:'opaque'      },
+  { type:'adventure-path',   label:'Adventure Path',       layer:'neutral',    w:70, h:8,   x:15,y:52,  bg:'rgba(40,28,10,0.55)',    border:'rgba(160,110,40,0.65)',  color:'rgba(210,170,80,0.8)',   coverType:'translucent' },
+  { type:'hand-fan',         label:'Hand (fan)',            layer:'hand',       w:38, h:38,  x:62,y:62,  bg:'rgba(20,65,45,0.2)',     border:'rgba(100,186,130,0.35)', color:'rgba(200,220,200,0.6)',  coverType:'translucent' },
+  { type:'pass-btn',         label:'Pass Button',          layer:'interface',  w:9,  h:5,   x:45,y:93,  bg:'rgba(10,10,22,0.88)',    border:'rgba(255,255,255,0.35)', color:'rgba(255,255,255,0.7)',  coverType:'opaque'      },
+  { type:'opp-hand',         label:'Shadow Hand Count',    layer:'shadow',     w:4,  h:5,   x:1, y:9,   bg:'rgba(60,35,100,0.75)',   border:'rgba(130,80,190,0.7)',   color:'rgba(200,170,240,0.9)',  coverType:'opaque'      },
+  { type:'action-log',       label:'Action Log',           layer:'interface',  w:18, h:6,   x:80,y:9,   bg:'rgba(0,0,0,0.45)',       border:'rgba(255,255,255,0.2)',  color:'rgba(120,240,150,0.85)', coverType:'opaque'      },
+  { type:'left-dock',        label:'Left Dock',            layer:'interface',  w:4,  h:42,  x:0, y:10,  bg:'rgba(0,0,0,0.08)',       border:'rgba(255,255,255,0.2)',  color:'rgba(255,255,255,0.5)',  coverType:'translucent',dashed:true },
+  { type:'right-dock',       label:'Right Dock',           layer:'interface',  w:4,  h:42,  x:96,y:10,  bg:'rgba(0,0,0,0.08)',       border:'rgba(255,255,255,0.2)',  color:'rgba(255,255,255,0.5)',  coverType:'translucent',dashed:true },
+  { type:'baradur',          label:'Barad-dûr',            layer:'landscape',  w:4,  h:10,  x:93,y:1,   bg:'rgba(10,3,3,0.12)',      border:'rgba(150,30,30,0.3)',    color:'rgba(230,100,70,0.8)',   coverType:'translucent' },
+  { type:'opp-piles',        label:'Opp. Piles',           layer:'shadow',     w:8,  h:8,   x:91,y:9,   bg:'rgba(60,35,100,0.55)',   border:'rgba(130,80,190,0.55)',  color:'rgba(190,160,230,0.8)',  coverType:'opaque'      },
+  { type:'your-piles',       label:'Your Piles',           layer:'fellowship', w:8,  h:8,   x:91,y:44,  bg:'rgba(35,100,65,0.55)',   border:'rgba(50,190,140,0.55)',  color:'rgba(130,220,180,0.8)',  coverType:'opaque'      },
+  { type:'ring-spinner',     label:'Ring / RB Portrait',   layer:'interface',  w:5,  h:7,   x:94,y:10,  bg:'rgba(0,0,0,0)',          border:'rgba(220,150,30,0.6)',   color:'rgba(220,150,30,0.8)',   coverType:'opaque'      },
+  { type:'custom',           label:'Custom Zone',          layer:'neutral',    w:20, h:10,  x:40,y:40,  bg:'rgba(70,70,70,0.35)',    border:'rgba(180,180,180,0.5)',  color:'rgba(220,220,220,0.7)',  coverType:'dynamic'     },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// COMPREHENSIVE GAME ELEMENTS CHECKLIST
+// ═══════════════════════════════════════════════════════════════
+
+const DISPLAY_TYPES = ['Board Zone','HUD','Sidebar','Modal','Settings','Hidden'];
+
+const GAME_ELEMENTS = [
+  // ── Core Board Zones ──
+  { id:'el-fellowship-zone',   name:'Fellowship Zone',           cat:'Board Zones',    templateType:'fellowship-zone',  desc:'Companions in play (FP player)', displayType:'Board Zone' },
+  { id:'el-shadow-zone',       name:'Shadow Zone',               cat:'Board Zones',    templateType:'shadow-zone',      desc:'Minions in play (Shadow player)', displayType:'Board Zone' },
+  { id:'el-adventure-path',    name:'Adventure Path',            cat:'Board Zones',    templateType:'adventure-path',   desc:'9 site cards in sequence', displayType:'Board Zone' },
+  { id:'el-skirmish-overlay',  name:'Skirmish Overlay',          cat:'Combat',         templateType:null,               desc:'Pop-up overlay for skirmish resolution (not a board zone)', displayType:'Modal' },
+  { id:'el-support-area-fp',   name:'FP Support Area',           cat:'Board Zones',    templateType:'custom',           desc:'Free Peoples conditions, allies not attached', displayType:'Board Zone' },
+  { id:'el-support-area-sh',   name:'Shadow Support Area',       cat:'Board Zones',    templateType:'custom',           desc:'Shadow conditions not attached to minions', displayType:'Board Zone' },
+  { id:'el-twilight-pool',     name:'Twilight Pool',             cat:'Board Zones',    templateType:'twilight-pool',    desc:'Twilight token display', displayType:'Board Zone' },
+
+  // ── Card Piles & Hand ──
+  { id:'el-hand',              name:'Player Hand',               cat:'Cards & Piles',  templateType:'hand-fan',         desc:'Your cards (fan layout)', displayType:'Board Zone' },
+  { id:'el-opp-hand',          name:'Opponent Hand Count',       cat:'Cards & Piles',  templateType:'opp-hand',         desc:'Number of cards in opponent hand', displayType:'Board Zone' },
+  { id:'el-draw-deck',         name:'Draw Deck',                 cat:'Cards & Piles',  templateType:'custom',           desc:'Face-down stack, card count', displayType:'Board Zone' },
+  { id:'el-discard-pile',      name:'Discard Pile',              cat:'Cards & Piles',  templateType:'custom',           desc:'Side panel browser, last 5-7 visible', displayType:'Sidebar' },
+  { id:'el-dead-pile',         name:'Dead Pile',                 cat:'Cards & Piles',  templateType:'custom',           desc:'Killed companions/minions', displayType:'Board Zone' },
+  { id:'el-opp-piles',         name:'Opponent Piles',            cat:'Cards & Piles',  templateType:'opp-piles',        desc:'Opponent draw/discard/dead piles', displayType:'Board Zone' },
+  { id:'el-your-piles',        name:'Your Piles',                cat:'Cards & Piles',  templateType:'your-piles',       desc:'Your draw/discard/dead piles', displayType:'Board Zone' },
+
+  // ── Ring-bearer & Corruption ──
+  { id:'el-ring-bearer',       name:'Ring-bearer Portrait',      cat:'Ring-bearer',    templateType:'ring-spinner',     desc:'Frodo/Sam with ornate frame', displayType:'Board Zone' },
+  { id:'el-one-ring',          name:'The One Ring',              cat:'Ring-bearer',    templateType:null,               desc:'One Ring card display', displayType:'Board Zone' },
+  { id:'el-burden-tracker',    name:'Burden/Corruption Tracker', cat:'Ring-bearer',    templateType:'baradur',          desc:'Visual burden count (Barad-dûr tower)', displayType:'Board Zone' },
+  { id:'el-corruption-signal', name:'Corruption Urgency Signal', cat:'Ring-bearer',    templateType:null,               desc:'High burden alert (screen color shift? sound?)', displayType:'HUD', openQ:8 },
+  { id:'el-resistance-meter',  name:'Resistance Meter',          cat:'Ring-bearer',    templateType:null,               desc:'Ring-bearer resistance vs burdens', displayType:'HUD' },
+
+  // ── Phase & Turn ──
+  { id:'el-phase-tracker',     name:'Phase Tracker',             cat:'Phase & Turn',   templateType:'phase-tracker',    desc:'7-phase icon bar with active highlight', displayType:'HUD' },
+  { id:'el-turn-counter',      name:'Turn Counter',              cat:'Phase & Turn',   templateType:null,               desc:'Current turn number', displayType:'HUD' },
+  { id:'el-priority-indicator',name:'Priority Indicator',        cat:'Phase & Turn',   templateType:null,               desc:'Whose turn to act (visual signal)', displayType:'HUD', openQ:7 },
+  { id:'el-pass-button',       name:'Pass Button',               cat:'Phase & Turn',   templateType:'pass-btn',         desc:'Pass priority button', displayType:'Board Zone' },
+  { id:'el-phase-transition',  name:'Phase Transition Anim.',    cat:'Phase & Turn',   templateType:null,               desc:'Visual/audio cue for phase change', displayType:'HUD' },
+
+  // ── Combat & Tokens ──
+  { id:'el-wound-tokens',      name:'Wound Tokens',              cat:'Tokens & Markers', templateType:null,             desc:'Wound display on characters', displayType:'Board Zone', openQ:1 },
+  { id:'el-twilight-tokens',   name:'Twilight Token Visual',     cat:'Tokens & Markers', templateType:null,             desc:'Physical coins? Glowing orbs? Number?', displayType:'Board Zone', openQ:2 },
+  { id:'el-strength-counter',  name:'Strength Counters',         cat:'Tokens & Markers', templateType:null,             desc:'Modified strength shown on characters', displayType:'Board Zone' },
+  { id:'el-vitality-counter',  name:'Vitality Counters',         cat:'Tokens & Markers', templateType:null,             desc:'Vitality/HP shown on characters', displayType:'Board Zone' },
+  { id:'el-exerted-marker',    name:'Exerted State Marker',      cat:'Tokens & Markers', templateType:null,             desc:'Visual for exhausted/exerted characters', displayType:'Board Zone' },
+  { id:'el-archery-counter',   name:'Archery Total Display',     cat:'Tokens & Markers', templateType:null,             desc:'FP and Shadow archery totals', displayType:'HUD' },
+  { id:'el-culture-shimmer',   name:'Culture Shimmer (Playable)',cat:'Tokens & Markers', templateType:null,             desc:'Glow on playable cards, culture-specific color', displayType:'Board Zone' },
+
+  // ── Fellowship Progress ──
+  { id:'el-fellowship-pos',    name:'Fellowship Position',       cat:'Adventure',      templateType:null,               desc:'Current site progress indicator', displayType:'HUD', openQ:5 },
+  { id:'el-site-background',   name:'Site Background',           cat:'Adventure',      templateType:null,               desc:'Cinemagraph video background per site', displayType:'Board Zone' },
+  { id:'el-site-advance-anim', name:'Site Advance Animation',    cat:'Adventure',      templateType:null,               desc:'Visual for moving to next site', displayType:'HUD' },
+
+  // ── Assignment & Skirmish ──
+  { id:'el-assignment-arrows', name:'Assignment Arrows/Lines',   cat:'Combat',         templateType:null,               desc:'Visual links between assigned minions and companions', displayType:'Board Zone' },
+  { id:'el-assignment-overlay',name:'Assignment Phase Overlay',  cat:'Combat',         templateType:null,               desc:'Mist/atmosphere overlay during assignment', displayType:'Board Zone' },
+  { id:'el-death-animation',   name:'Character Death Animation', cat:'Combat',         templateType:null,               desc:'Visual when a companion is killed', displayType:'HUD', openQ:6 },
+  { id:'el-overwhelm-flash',   name:'Overwhelm Flash',           cat:'Combat',         templateType:null,               desc:'Visual for overwhelm (strength >= 2x)', displayType:'HUD' },
+
+  // ── UI & Interface ──
+  { id:'el-action-log',        name:'Game Log',                  cat:'Interface',      templateType:'action-log',       desc:'Event history panel', displayType:'Sidebar', openQ:4 },
+  { id:'el-card-detail',       name:'Card Detail Popup',         cat:'Interface',      templateType:null,               desc:'Full card view on hover/click', displayType:'Modal' },
+  { id:'el-keyword-tooltips',  name:'Keyword Tooltips',          cat:'Interface',      templateType:null,               desc:'Hover definitions for keywords', displayType:'Modal' },
+  { id:'el-rulebook',          name:'Rulebook Window',           cat:'Interface',      templateType:null,               desc:'Searchable Comprehensive Rules 4.1', displayType:'Modal' },
+  { id:'el-player-names',      name:'Player Name/Role Display',  cat:'Interface',      templateType:null,               desc:'Who is FP vs Shadow this turn', displayType:'HUD' },
+  { id:'el-concede-btn',       name:'Concede Button',            cat:'Interface',      templateType:null,               desc:'Surrender/quit option', displayType:'Settings' },
+  { id:'el-settings-btn',      name:'Settings Button',           cat:'Interface',      templateType:null,               desc:'Access game settings', displayType:'HUD' },
+  { id:'el-left-dock',         name:'Left Dock',                 cat:'Interface',      templateType:'left-dock',        desc:'Collapsible side panel area', displayType:'Board Zone' },
+  { id:'el-right-dock',        name:'Right Dock',                cat:'Interface',      templateType:'right-dock',       desc:'Collapsible side panel area', displayType:'Board Zone' },
+
+  // ── Audio & Effects ──
+  { id:'el-music-controls',    name:'Music Controls',            cat:'Audio & Effects',templateType:null,               desc:'Howard Shore OST playback', displayType:'Settings' },
+  { id:'el-sfx-toggle',        name:'SFX Toggle',                cat:'Audio & Effects',templateType:null,               desc:'Sound effects on/off', displayType:'Settings' },
+  { id:'el-voice-toggle',      name:'Voice Lines Toggle',        cat:'Audio & Effects',templateType:null,               desc:'Character catchphrase on/off', displayType:'Settings' },
+  { id:'el-event-flash-art',   name:'Event Flash Art',           cat:'Audio & Effects',templateType:null,               desc:'Full-bleed dramatic illustrations for major events', displayType:'HUD' },
+
+  // ── Multiplayer ──
+  { id:'el-waiting-state',     name:'Multiplayer Waiting State', cat:'Multiplayer',    templateType:null,               desc:'Visual while waiting for opponent', displayType:'Modal', openQ:3 },
+  { id:'el-timer',             name:'Turn Timer',                cat:'Multiplayer',    templateType:null,               desc:'Optional time limit per action', displayType:'HUD' },
+  { id:'el-chat',              name:'Chat/Emotes',               cat:'Multiplayer',    templateType:null,               desc:'Communication between players', displayType:'Sidebar' },
+];
+
+// Shape options for components
+const SHAPE_OPTIONS = [
+  { id:'rect',        label:'Rectangle' },
+  { id:'circle',      label:'Circle' },
+  { id:'arc',         label:'Arc (quarter TL)' },
+  { id:'quarter-bl',  label:'Arc (quarter BL)' },
+  { id:'quarter-br',  label:'Arc (quarter BR)' },
+  { id:'triangle',    label:'Triangle' },
+  { id:'diamond',     label:'Diamond' },
+  { id:'hexagon',     label:'Hexagon' },
+  { id:'pentagon',    label:'Pentagon' },
+];
+
+// Visual type options (presentation style, not function)
+const VISUAL_TYPES = [
+  { id:'zone',    label:'Zone (default)' },
+  { id:'banner',  label:'Banner' },
+  { id:'icon',    label:'Icon' },
+  { id:'badge',   label:'Badge' },
+  { id:'card',    label:'Card' },
+  { id:'panel',   label:'Panel' },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// LANDSCAPE FOCUS — which component types matter for landscape composition
+// ═══════════════════════════════════════════════════════════════
+
+const LANDSCAPE_COMP_TYPES = new Set([
+  'fellowship-zone', 'shadow-zone', 'adventure-path', 'twilight-pool', 'baradur',
+]);
+
+// Game element IDs that are landscape-relevant (matching the above + non-template landscape items)
+const LANDSCAPE_ELEMENT_IDS = new Set([
+  'el-fellowship-zone', 'el-shadow-zone', 'el-adventure-path', 'el-twilight-pool',
+  'el-burden-tracker', 'el-support-area-fp', 'el-support-area-sh',
+  'el-site-background', 'el-site-advance-anim',
+]);
+
+// Categories where ALL items are landscape-relevant
+const LANDSCAPE_CATEGORIES = new Set([
+  'Adventure',
+]);
+
+function isCompLandscapeRelevant(comp) {
+  return LANDSCAPE_COMP_TYPES.has(comp.type);
+}
+
+function isElementLandscapeRelevant(elem) {
+  return LANDSCAPE_ELEMENT_IDS.has(elem.id) || LANDSCAPE_CATEGORIES.has(elem.cat);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+let state = {
+  layers: LAYER_DEFS.map(l => ({ ...l, visible: true, expanded: true })),
+  components: [],
+  selectedIds: [],
+  boardRatio: '16:9',
+  burdens: 0,
+  view: 'fellowship',
+  nextId: 1,
+  horizonY: 42,
+  showHorizon: true,
+  showNegSpace: false,
+  showGrid: false,
+  boardTiltX: 0,
+  boardTiltY: 0,
+  perspectiveDepth: 900,
+  vanishX: 50,
+  vanishY: 50,
+  showVanishPoint: false,
+  boardZoom: 1.0,
+  landscapeMode: false,
+  showRightPanels: true,
+  undoStack: [],
+  redoStack: [],
+  elementConfig: {},
+  loadedLayoutName: null,
+  loadedLayoutData: null,
+};
+
+// ═══════════════════════════════════════════════════════════════
+// UNDO / REDO
+// ═══════════════════════════════════════════════════════════════
+
+function saveUndo() {
+  state.undoStack.push(JSON.stringify(state.components));
+  if (state.undoStack.length > 60) state.undoStack.shift();
+  state.redoStack = [];
+}
+
+function undo() {
+  if (!state.undoStack.length) { setStatus('Nothing to undo.'); return; }
+  state.redoStack.push(JSON.stringify(state.components));
+  state.components = JSON.parse(state.undoStack.pop());
+  state.selectedIds = [];
+  renderAll();
+  setStatus('Undone.');
+}
+
+function redo() {
+  if (!state.redoStack.length) { setStatus('Nothing to redo.'); return; }
+  state.undoStack.push(JSON.stringify(state.components));
+  state.components = JSON.parse(state.redoStack.pop());
+  state.selectedIds = [];
+  renderAll();
+  setStatus('Redone.');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOARD SIZING & TILT
+// ═══════════════════════════════════════════════════════════════
+
+const ratios = { '16:9': 16/9, '2:1': 2/1, '16:10': 16/10 };
+
+function resizeBoard() {
+  const wrap = document.getElementById('board-wrap');
+  const board = document.getElementById('board');
+  const ratio = ratios[state.boardRatio] || 16/9;
+  const ww = wrap.clientWidth - 30;
+  const wh = wrap.clientHeight - 30;
+  let bw = ww, bh = ww / ratio;
+  if (bh > wh) { bh = wh; bw = wh * ratio; }
+  board.style.width  = bw + 'px';
+  board.style.height = bh + 'px';
+  ['16:9','2:1','16:10'].forEach(r => {
+    const btn = document.getElementById('btn-' + r.replace(':',''));
+    if (btn) btn.classList.toggle('active', r === state.boardRatio);
+  });
+  applyBoardTilt();
+  renderAll();
+}
+
+function setBoardRatio(r) { state.boardRatio = r; resizeBoard(); }
+
+function applyBoardTilt() {
+  const outer = document.getElementById('board-outer');
+  const tx = state.boardTiltX || 0;
+  const ty = state.boardTiltY || 0;
+  const d  = state.perspectiveDepth || 900;
+  const vx = state.vanishX !== undefined ? state.vanishX : 50;
+  const vy = state.vanishY !== undefined ? state.vanishY : 50;
+  const zoom = state.boardZoom || 1.0;
+  outer.style.perspectiveOrigin = `${vx}% ${vy}%`;
+  if (tx === 0 && ty === 0 && zoom === 1.0) { outer.style.transform = 'none'; outer.style.perspective = 'none'; }
+  else {
+    outer.style.perspective = d + 'px';
+    outer.style.transform = `scale(${zoom}) rotateX(${tx}deg) rotateY(${ty}deg)`;
+  }
+}
+
+function renderVanishPoint() {
+  let vp = document.getElementById('vanish-point');
+  if (!state.showVanishPoint) { if (vp) vp.style.display = 'none'; return; }
+  const board = document.getElementById('board');
+  if (!vp) {
+    vp = document.createElement('div');
+    vp.id = 'vanish-point';
+    vp.style.cssText = 'position:absolute;z-index:50;pointer-events:none;';
+    board.appendChild(vp);
+  }
+  const vx = state.vanishX !== undefined ? state.vanishX : 50;
+  const vy = state.vanishY !== undefined ? state.vanishY : 50;
+  const bp = boardPx();
+  const px = vx / 100 * bp.w, py = vy / 100 * bp.h;
+  const lineLen = Math.max(bp.w, bp.h) * 1.5;
+  vp.style.display = 'block';
+  vp.innerHTML = `
+    <svg style="position:absolute;left:0;top:0;width:${bp.w}px;height:${bp.h}px;pointer-events:none;overflow:visible;">
+      <!-- Convergence lines from corners -->
+      <line x1="0" y1="0" x2="${px}" y2="${py}" stroke="rgba(100,180,255,0.15)" stroke-width="0.5" stroke-dasharray="6 4"/>
+      <line x1="${bp.w}" y1="0" x2="${px}" y2="${py}" stroke="rgba(100,180,255,0.15)" stroke-width="0.5" stroke-dasharray="6 4"/>
+      <line x1="0" y1="${bp.h}" x2="${px}" y2="${py}" stroke="rgba(100,180,255,0.15)" stroke-width="0.5" stroke-dasharray="6 4"/>
+      <line x1="${bp.w}" y1="${bp.h}" x2="${px}" y2="${py}" stroke="rgba(100,180,255,0.15)" stroke-width="0.5" stroke-dasharray="6 4"/>
+      <!-- Crosshair at vanishing point -->
+      <line x1="${px-12}" y1="${py}" x2="${px+12}" y2="${py}" stroke="rgba(100,180,255,0.6)" stroke-width="1"/>
+      <line x1="${px}" y1="${py-12}" x2="${px}" y2="${py+12}" stroke="rgba(100,180,255,0.6)" stroke-width="1"/>
+      <circle cx="${px}" cy="${py}" r="5" fill="none" stroke="rgba(100,180,255,0.5)" stroke-width="1"/>
+      <circle cx="${px}" cy="${py}" r="2" fill="rgba(100,180,255,0.7)"/>
+      <text x="${px+10}" y="${py-10}" font-size="8" fill="rgba(100,180,255,0.5)" font-family="Georgia,serif">VP ${vx.toFixed(0)}%, ${vy.toFixed(0)}%</text>
+    </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COORDINATE UTILS
+// ═══════════════════════════════════════════════════════════════
+
+function boardPx() {
+  const b = document.getElementById('board');
+  return { w: b.clientWidth, h: b.clientHeight };
+}
+
+function pctToPx(comp) {
+  const { w, h } = boardPx();
+  return { x: comp.x/100*w, y: comp.y/100*h, w: comp.w/100*w, h: comp.h/100*h };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+
+function renderAll() {
+  document.querySelectorAll('.comp').forEach(el => el.remove());
+  const layerOrder = state.layers.map(l => l.id);
+  const sorted = [...state.components].sort((a, b) => {
+    const la = layerOrder.indexOf(a.layer);
+    const lb = layerOrder.indexOf(b.layer);
+    return la !== lb ? la - lb : (a.zIndex||0) - (b.zIndex||0);
+  });
+  sorted.forEach(comp => renderComp(comp));
+  renderLayerPanel();
+  renderPropsPanel();
+  renderLandscape();
+  renderHorizonLine();
+  renderGridOverlay();
+  updateNegSpaceCanvas();
+  updateChecklistStats();
+  updateWarningBadge();
+}
+
+function getLayerVisible(layerId) {
+  const l = state.layers.find(l => l.id === layerId);
+  return l ? l.visible : true;
+}
+
+function renderComp(comp) {
+  const board = document.getElementById('board');
+  const px = pctToPx(comp);
+  const layerVis = getLayerVisible(comp.layer);
+  const isSelected = state.selectedIds.includes(comp.id);
+  const opacity = comp.opacity !== undefined ? comp.opacity : 1;
+  const rotation = comp.rotation || 0;
+  const skewX = comp.skewX || 0;
+  const skewY = comp.skewY || 0;
+
+  const el = document.createElement('div');
+  let cls = 'comp';
+  if (!comp.visible || !layerVis) cls += ' hidden';
+  if (isSelected) cls += ' selected';
+  if (state.landscapeMode && !isCompLandscapeRelevant(comp)) cls += ' landscape-dimmed';
+  if (comp.shape && comp.shape !== 'rect') cls += ` shape-${comp.shape}`;
+  el.className = cls;
+  el.dataset.id = comp.id;
+  el.style.left   = px.x + 'px';
+  el.style.top    = px.y + 'px';
+  el.style.width  = px.w + 'px';
+  el.style.height = px.h + 'px';
+  el.style.opacity = opacity;
+  el.style.zIndex  = state.layers.findIndex(l => l.id === comp.layer) * 10 + (comp.zIndex||0) + 1;
+
+  let transform = '';
+  if (rotation || skewX || skewY) transform = `rotate(${rotation}deg) skewX(${skewX}deg) skewY(${skewY}deg)`;
+  if (transform) el.style.transform = transform;
+
+  const inner = document.createElement('div');
+  inner.className = 'comp-inner';
+  inner.style.background   = comp.bg;
+  inner.style.borderRadius = comp.borderRadius || '4px';
+  // Cover type visual distinction
+  const ct = comp.coverType || 'dynamic';
+  if (ct === 'opaque') {
+    // Solid fill, solid border — landscape never visible
+    inner.style.background = comp.bg;
+    if (comp.border && comp.border !== 'none') inner.style.border = '2px solid ' + comp.border;
+  } else if (ct === 'dynamic') {
+    // Translucent fill + crosshatch overlay, thick solid border
+    inner.style.background = 'transparent';
+    inner.style.backgroundImage = `linear-gradient(0deg,${comp.bg || 'rgba(0,0,0,0.15)'},${comp.bg || 'rgba(0,0,0,0.15)'}),repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,0.06) 6px,rgba(255,255,255,0.06) 7px),repeating-linear-gradient(-45deg,transparent,transparent 6px,rgba(255,255,255,0.06) 6px,rgba(255,255,255,0.06) 7px)`;
+    if (comp.border && comp.border !== 'none') inner.style.border = '2px solid ' + comp.border;
+  } else if (ct === 'translucent') {
+    // Translucent fill, dashed border — landscape always visible
+    inner.style.background = comp.bg;
+    if (comp.border && comp.border !== 'none') inner.style.border = '1.5px dashed ' + comp.border;
+  } else {
+    inner.style.background = comp.bg;
+    if (comp.border && comp.border !== 'none') inner.style.border = '1.5px ' + (comp.dashed ? 'dashed' : 'solid') + ' ' + comp.border;
+  }
+
+  // Visual type styling
+  if (comp.visualType === 'banner') {
+    inner.style.borderRadius = '2px';
+    inner.style.borderBottom = '2px solid ' + (comp.border || 'rgba(186,140,30,0.5)');
+  } else if (comp.visualType === 'badge') {
+    inner.style.borderRadius = '20px';
+    inner.style.padding = '2px 8px';
+  } else if (comp.visualType === 'card') {
+    inner.style.borderRadius = '6px';
+    inner.style.boxShadow = '0 2px 8px rgba(0,0,0,0.4)';
+  } else if (comp.visualType === 'panel') {
+    inner.style.borderRadius = '0';
+    inner.style.borderLeft = '2px solid ' + (comp.border || 'rgba(186,140,30,0.5)');
+  }
+
+  // Specialized rendering
+  if (comp.type === 'baradur') inner.innerHTML = renderBaradur(comp);
+  else if (comp.type === 'hand-fan') {
+    inner.innerHTML = renderFanArc(comp, px);
+    inner.style.borderRadius = '100% 0 0 0';
+    inner.style.overflow = 'hidden';
+    inner.style.border = '1.5px solid ' + (comp.border || 'rgba(100,186,130,0.35)');
+  }
+  else if (comp.type === 'twilight-pool') inner.innerHTML = renderTwilightPool(comp);
+  else if (comp.type === 'pass-btn') { inner.innerHTML = `<div style="font-size:9px;color:${comp.color};font-family:Georgia,serif;letter-spacing:1px;">↷ PASS</div>`; inner.style.borderRadius='20px'; }
+  else if (comp.type === 'phase-tracker') { inner.innerHTML = renderPhaseTracker(comp); inner.style.borderRadius='20px'; }
+  else if (comp.type === 'opp-hand') inner.innerHTML = renderOppHand(comp);
+  else if (comp.type === 'ring-spinner') { inner.innerHTML = renderRingSpinner(comp); inner.style.background='transparent'; inner.style.border='none'; }
+  else if (comp.isIcon && comp.svgType) inner.innerHTML = renderSVGIcon(comp.svgType, comp.color);
+  else if (comp.type === 'toy-arrow') inner.innerHTML = `<div style="width:100%;display:flex;align-items:center;justify-content:center;color:${comp.color};font-size:11px;">→</div>`;
+  else if (comp.textContent) { const lbl=document.createElement('div'); lbl.className='comp-inner-label'; lbl.style.color=comp.color; lbl.textContent=comp.textContent||comp.label; inner.appendChild(lbl); }
+  else { const lbl=document.createElement('div'); lbl.className='comp-inner-label'; lbl.style.color=comp.color; lbl.textContent=comp.label; inner.appendChild(lbl); }
+
+  el.appendChild(inner);
+
+  // Resize handles
+  ['tl','tm','tr','ml','mr','bl','bm','br'].forEach(pos => {
+    const h = document.createElement('div');
+    h.className = `rh rh-${pos}`;
+    h.dataset.handle = pos;
+    el.appendChild(h);
+  });
+
+  // Rotate handle
+  const rh = document.createElement('div');
+  rh.className = 'rotate-handle';
+  el.appendChild(rh);
+
+  board.appendChild(el);
+  attachDrag(el, comp);
+
+  // Hover tooltip
+  el.addEventListener('mouseenter', e => showHoverTooltip(comp, e));
+  el.addEventListener('mousemove', e => moveHoverTooltip(e));
+  el.addEventListener('mouseleave', () => hideHoverTooltip());
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SPECIALIZED COMPONENT RENDERERS
+// ═══════════════════════════════════════════════════════════════
+
+function renderPhaseTracker(comp) {
+  const phases = ['Fellowship','Shadow','Maneuver','Archery','Assignment','Skirmish','Regroup'];
+  return `<div style="display:flex;align-items:center;gap:3px;padding:0 8px;">
+    ${phases.map((p,i) => `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1px;">
+        <div style="width:5px;height:5px;border-radius:50%;${i===0?'background:rgba(186,140,30,0.85);box-shadow:0 0 4px rgba(186,140,30,0.5);':'border:0.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.05);'}"></div>
+        <div style="font-size:5px;color:${i===0?'rgba(186,140,30,0.9)':'rgba(255,255,255,0.25)'};font-family:Georgia,serif;white-space:nowrap;">${p}</div>
+      </div>
+      ${i<phases.length-1?'<div style="width:5px;height:0.5px;background:rgba(255,255,255,0.08);flex-shrink:0;"></div>':''}`).join('')}
+  </div>`;
+}
+
+function renderTwilightPool(comp) {
+  const coins = Math.min(state.burdens*2+1, 9);
+  return `<div style="text-align:center;pointer-events:none;padding:2px;">
+    <div style="font-size:9px;color:${comp.color};font-family:Georgia,serif;margin-bottom:2px;">${state.burdens > 0 ? state.burdens * 2 : 5}</div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1px;max-width:30px;margin:0 auto;">
+      ${[...Array(coins)].map(()=>`<div style="width:5px;height:5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(100,160,240,0.75),rgba(10,20,80,0.9));border:0.5px solid rgba(80,140,220,0.55);"></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderOppHand(comp) {
+  return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:3px;">
+    <div style="position:relative;width:14px;height:20px;">
+      <div style="position:absolute;top:-2px;left:2px;width:12px;height:18px;background:rgba(40,20,65,0.5);border:0.5px solid rgba(80,50,120,0.3);border-radius:2px;"></div>
+      <div style="position:absolute;top:-1px;left:1px;width:12px;height:18px;background:rgba(45,25,70,0.55);border:0.5px solid rgba(80,50,120,0.4);border-radius:2px;"></div>
+      <div style="position:absolute;inset:0;background:rgba(50,30,80,0.7);border:0.5px solid rgba(100,60,150,0.6);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(180,150,220,0.9);font-family:Georgia,serif;">7</div>
+    </div>
+    <div style="font-size:7px;color:rgba(140,110,180,0.45);font-family:Georgia,serif;">shadow hand</div>
+  </div>`;
+}
+
+function renderRingSpinner(comp) {
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <svg width="22" height="22" viewBox="0 0 22 22" style="animation:ringspin 4s linear infinite;">
+      <circle cx="11" cy="11" r="9" fill="none" stroke="rgba(186,117,23,0.6)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <circle cx="11" cy="11" r="4" fill="none" stroke="rgba(186,117,23,0.3)" stroke-width="0.8"/>
+    </svg>
+    <div style="font-size:6px;color:rgba(186,117,23,0.45);font-family:Georgia,serif;letter-spacing:0.5px;">RB</div>
+  </div>`;
+}
+
+function renderBaradur(comp) {
+  const b = state.burdens;
+  const t = Math.min(b / 12, 1); // 0..1 progression
+
+  // Camera concept:
+  // t=0: distant, straight-on, full tower visible, faint
+  // t=0.5: mid-range, camera lifting, tower fills more, Eye visible
+  // t=1: close-up, camera above, looking down at Eye, tower drops below
+
+  // Overall opacity: faint at start, fully present by mid, intense at end
+  const masterOp = 0.25 + t * 0.75;
+
+  // Eye size relative to container: starts tiny (distant), grows to dominate
+  const eyeSize = 12 + t * 55; // % of container width
+  // Eye vertical position: starts near top, stays top-center as camera lifts
+  const eyeY = 8 + t * 15; // % from top
+
+  // Tower body: starts as full thin tower, progressively only lower portion visible
+  // as camera lifts above, tower tapers away below the Eye
+  const towerTopY = eyeY + eyeSize * 0.35; // tower starts just below eye
+  const towerVisible = Math.max(0, 1 - t * 0.6); // less tower visible at high burden
+  const towerWidth = 15 + t * 25; // widens as it gets closer
+  const towerHeight = (100 - towerTopY) * (0.3 + towerVisible * 0.7); // shrinks from bottom as camera lifts
+
+  // Glow: atmospheric red haze, grows dramatically
+  const glowSize = 30 + t * 120;
+  const glowIntensity = 0.08 + t * 0.45;
+
+  // Red vignette at high burden
+  const vignetteOp = Math.max(0, (t - 0.5) * 0.6);
+
+  // Burden label
+  const labelColor = t > 0.7 ? `rgba(255,${Math.round(120 - t*80)},${Math.round(50 - t*40)},0.9)` : 'rgba(200,80,50,0.7)';
+
+  // Screen shake hint at max
+  const shake = t > 0.9 ? 'animation: baradur-pulse 1.5s ease-in-out infinite;' : '';
+
+  return `<div style="position:relative;width:100%;height:100%;overflow:visible;opacity:${masterOp};${shake}">
+    <!-- Atmospheric glow -->
+    <div style="position:absolute;top:${eyeY - glowSize*0.3}%;left:50%;transform:translateX(-50%);width:${glowSize}%;height:${glowSize}%;border-radius:50%;background:radial-gradient(ellipse,rgba(180,30,10,${glowIntensity}) 0%,rgba(120,15,5,${glowIntensity*0.4}) 40%,transparent 70%);pointer-events:none;z-index:0;"></div>
+
+    <!-- Tower body — dark spire tapering upward -->
+    <div style="position:absolute;top:${towerTopY}%;left:50%;transform:translateX(-50%);width:${towerWidth}%;height:${towerHeight}%;z-index:1;">
+      <div style="width:100%;height:100%;background:linear-gradient(180deg,#1a0808 0%,#0d0404 60%,rgba(5,2,2,${0.3+t*0.4}) 100%);clip-path:polygon(${25-t*8}% 0%,${75+t*8}% 0%,${60+t*5}% 100%,${40-t*5}% 100%);border:1px solid rgba(150,30,30,${0.3+t*0.3});"></div>
+      <!-- Tower segments / battlements -->
+      ${t < 0.7 ? `
+        <div style="position:absolute;top:15%;left:20%;right:20%;height:1px;background:rgba(150,30,30,${0.2+t*0.2});"></div>
+        <div style="position:absolute;top:40%;left:15%;right:15%;height:1px;background:rgba(150,30,30,${0.15+t*0.15});"></div>
+        <div style="position:absolute;top:65%;left:10%;right:10%;height:1px;background:rgba(120,20,20,${0.1+t*0.1});"></div>
+      ` : ''}
+    </div>
+
+    <!-- The Eye of Sauron -->
+    <div style="position:absolute;top:${eyeY}%;left:50%;transform:translate(-50%,-50%);width:${eyeSize}%;height:${eyeSize * 0.55}%;z-index:2;">
+      <!-- Outer flame -->
+      <div style="position:absolute;inset:-20%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,80,10,${0.15+t*0.35}) 0%,rgba(200,40,5,${0.1+t*0.2}) 50%,transparent 75%);"></div>
+      <!-- Eye slit shape -->
+      <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 50% 50%,rgba(255,160,20,${0.4+t*0.6}) 0%,rgba(220,60,10,${0.3+t*0.5}) 35%,rgba(150,20,5,${0.2+t*0.3}) 60%,transparent 80%);overflow:hidden;">
+        <!-- Pupil slit -->
+        <div style="position:absolute;top:15%;bottom:15%;left:42%;right:42%;background:rgba(0,0,0,${0.6+t*0.4});border-radius:50%;box-shadow:0 0 ${3+t*8}px rgba(255,100,10,${0.3+t*0.5});"></div>
+      </div>
+      <!-- Inner fire ring -->
+      <div style="position:absolute;inset:10%;border-radius:50%;border:${1+t*2}px solid rgba(255,120,20,${0.2+t*0.5});box-shadow:0 0 ${4+t*12}px rgba(255,80,10,${0.2+t*0.5}),inset 0 0 ${2+t*6}px rgba(255,60,10,${0.15+t*0.3});"></div>
+    </div>
+
+    <!-- Red vignette overlay at high burden -->
+    ${vignetteOp > 0 ? `<div style="position:absolute;inset:-50%;border-radius:0;background:radial-gradient(ellipse,transparent 30%,rgba(100,10,5,${vignetteOp}) 100%);pointer-events:none;z-index:3;"></div>` : ''}
+
+    <!-- Burden count -->
+    <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:${7+t*3}px;color:${labelColor};font-family:Georgia,serif;white-space:nowrap;z-index:4;text-shadow:0 0 ${4+t*8}px rgba(200,40,10,${0.3+t*0.5});">${b > 0 ? b + ' burden' + (b!==1?'s':'') : 'no burdens'}</div>
+  </div>`;
+}
+
+function renderFanArc(comp, px) {
+  const w = px.w, h = px.h, count = 8;
+  // Quarter circle: origin at bottom-right, cards fan toward top-left
+  // The zone's CSS border-radius (100% 0 0 0) creates a quarter-ellipse
+  // centered at (0,0) from (w,0) to (0,h). The arc must match exactly.
+  const tickCount = 8;
+  const tickLen = Math.min(w, h) * 0.04;
+
+  let svgContent = '';
+  // Arc line tracing the zone's quarter-ellipse boundary
+  svgContent += `<path d="M ${w} 0 A ${w} ${h} 0 0 0 0 ${h}" fill="none" stroke="rgba(186,140,30,0.35)" stroke-width="1.5"/>`;
+  // Tick marks along the elliptical arc
+  for (let i = 0; i < tickCount; i++) {
+    const t = i / (tickCount - 1);
+    const angle = t * Math.PI / 2; // 0 to π/2
+    const cx = w * Math.cos(angle);
+    const cy = h * Math.sin(angle);
+    // Normal direction (outward from center) for the ellipse
+    const nx = Math.cos(angle) / w;
+    const ny = Math.sin(angle) / h;
+    const nl = Math.sqrt(nx * nx + ny * ny);
+    const nnx = nx / nl, nny = ny / nl;
+    svgContent += `<line x1="${cx - nnx * tickLen}" y1="${cy - nny * tickLen}" x2="${cx + nnx * tickLen}" y2="${cy + nny * tickLen}" stroke="rgba(186,140,30,0.45)" stroke-width="1.2"/>`;
+  }
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="position:absolute;inset:0;overflow:visible;">${svgContent}</svg>
+    <div style="position:absolute;bottom:6px;right:10px;font-size:8px;color:rgba(255,255,255,0.22);font-family:Georgia,serif;text-align:right;line-height:1.4;">your hand</div>`;
+}
+
+function renderSVGIcon(type, color) {
+  const c = color || 'rgba(200,200,200,0.7)';
+  const icons = {
+    ring: `<svg viewBox="0 0 40 56" width="100%" height="100%"><ellipse cx="20" cy="20" rx="16" ry="16" fill="none" stroke="${c}" stroke-width="3" opacity="0.85"/><ellipse cx="20" cy="20" rx="8" ry="8" fill="none" stroke="${c}" stroke-width="1" opacity="0.4"/></svg>`,
+    eye: `<svg viewBox="0 0 56 40" width="100%" height="100%"><path d="M4,20 Q28,2 52,20 Q28,38 4,20Z" fill="none" stroke="${c}" stroke-width="1.5" opacity="0.8"/><circle cx="28" cy="20" r="7" fill="none" stroke="${c}" stroke-width="1.5" opacity="0.8"/><circle cx="28" cy="20" r="3" fill="${c}" opacity="0.6"/></svg>`,
+    sword: `<svg viewBox="0 0 28 72" width="100%" height="100%"><line x1="14" y1="4" x2="14" y2="52" stroke="${c}" stroke-width="1.8" opacity="0.85"/><polygon points="14,4 10,18 14,14 18,18" fill="${c}" opacity="0.7"/><line x1="5" y1="46" x2="23" y2="46" stroke="${c}" stroke-width="1.5" opacity="0.7"/><rect x="11" y="52" width="6" height="14" rx="2" fill="${c}" opacity="0.4"/></svg>`,
+    shield: `<svg viewBox="0 0 40 50" width="100%" height="100%"><path d="M20,3 L36,10 L36,28 Q36,42 20,47 Q4,42 4,28 L4,10 Z" fill="${c}" opacity="0.12" stroke="${c}" stroke-width="1.5"/></svg>`,
+    mountain: `<svg viewBox="0 0 64 48" width="100%" height="100%"><polygon points="32,4 6,44 58,44" fill="${c}" opacity="0.1" stroke="${c}" stroke-width="1.3"/><polygon points="48,14 34,44 62,44" fill="${c}" opacity="0.07" stroke="${c}" stroke-width="1"/></svg>`,
+    tree: `<svg viewBox="0 0 32 56" width="100%" height="100%"><polygon points="16,4 2,26 30,26" fill="${c}" opacity="0.15" stroke="${c}" stroke-width="1.2"/><polygon points="16,14 3,36 29,36" fill="${c}" opacity="0.12" stroke="${c}" stroke-width="1.2"/><rect x="13" y="36" width="6" height="16" rx="1" fill="${c}" opacity="0.4"/></svg>`,
+    flame: `<svg viewBox="0 0 32 56" width="100%" height="100%"><path d="M16,52 Q2,40 6,26 Q10,16 16,8 Q18,20 22,22 Q28,14 24,4 Q36,18 28,36 Q26,44 16,52Z" fill="${c}" opacity="0.2" stroke="${c}" stroke-width="1.2"/></svg>`,
+    tower: `<svg viewBox="0 0 32 72" width="100%" height="100%"><rect x="10" y="6" width="12" height="60" fill="${c}" opacity="0.15" stroke="${c}" stroke-width="1"/><rect x="8" y="16" width="16" height="50" fill="${c}" opacity="0.12" stroke="${c}" stroke-width="1"/></svg>`,
+    crown: `<svg viewBox="0 0 48 32" width="100%" height="100%"><path d="M4,28 L4,12 L14,22 L24,4 L34,22 L44,12 L44,28 Z" fill="${c}" opacity="0.15" stroke="${c}" stroke-width="1.5"/><line x1="4" y1="28" x2="44" y2="28" stroke="${c}" stroke-width="1.5" opacity="0.7"/></svg>`,
+  };
+  return icons[type] || `<div style="font-size:10px;color:${c};">${type}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CANVAS FEATURES (neg space, grid, horizon, landscape)
+// ═══════════════════════════════════════════════════════════════
+
+function updateNegSpaceCanvas() {
+  const canvas = document.getElementById('negspace-canvas');
+  const { w: bw, h: bh } = boardPx();
+  if (canvas.width !== bw || canvas.height !== bh) { canvas.width = bw; canvas.height = bh; }
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, bw, bh);
+  if (!state.showNegSpace) return;
+  ctx.fillStyle = 'rgba(186, 140, 30, 0.20)';
+  ctx.fillRect(0, 0, bw, bh);
+  ctx.globalCompositeOperation = 'destination-out';
+  state.components.forEach(comp => {
+    if (!comp.visible || !getLayerVisible(comp.layer)) return;
+    const px = pctToPx(comp);
+    const rot=comp.rotation||0, skX=comp.skewX||0, skY=comp.skewY||0;
+    const cx=px.x+px.w/2, cy=px.y+px.h/2;
+    ctx.save(); ctx.translate(cx,cy);
+    if (rot) ctx.rotate(rot*Math.PI/180);
+    if (skX) ctx.transform(1,Math.tan(skY*Math.PI/180),Math.tan(skX*Math.PI/180),1,0,0);
+    ctx.fillStyle='rgba(0,0,0,1)'; ctx.fillRect(-px.w/2,-px.h/2,px.w,px.h);
+    ctx.restore();
+  });
+  ctx.globalCompositeOperation = 'source-atop';
+  ctx.fillStyle = 'rgba(255,240,180,0.06)';
+  ctx.fillRect(0, 0, bw, bh);
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function renderHorizonLine() {
+  const hl = document.getElementById('horizon-line');
+  const { h } = boardPx();
+  const topPx = state.horizonY / 100 * h;
+  const offScreen = state.horizonY < 0 || state.horizonY > 100;
+  hl.className = state.showHorizon ? '' : 'hidden-horizon';
+
+  if (offScreen && state.showHorizon) {
+    // Clamp the line to the edge of the board, show indicator
+    hl.style.top = (state.horizonY < 0 ? 0 : h) + 'px';
+    const lbl = hl.querySelector('.hl-label');
+    const arrow = state.horizonY < 0 ? '↑' : '↓';
+    if (lbl) lbl.textContent = `${arrow} HORIZON ${state.horizonY.toFixed(0)}% (off-screen)`;
+  } else {
+    hl.style.top = topPx + 'px';
+    const lbl = hl.querySelector('.hl-label');
+    if (lbl) lbl.textContent = `HORIZON ${state.horizonY.toFixed(0)}%`;
+  }
+}
+
+function initHorizonDrag() {
+  const drag = document.getElementById('horizon-line').querySelector('.hl-drag');
+  let dragging = false;
+  drag.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); dragging=true; saveUndo(); });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const board=document.getElementById('board'), rect=board.getBoundingClientRect();
+    state.horizonY = Math.max(-100,Math.min(200,(e.clientY-rect.top)/rect.height*100));
+    renderHorizonLine();
+    renderPropsPanel();
+    if (state.showNegSpace) updateNegSpaceCanvas();
+  });
+  document.addEventListener('mouseup', () => { dragging=false; });
+}
+
+function renderGridOverlay() {
+  const svg = document.getElementById('grid-overlay');
+  const { w, h } = boardPx();
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`); svg.setAttribute('width',w); svg.setAttribute('height',h);
+  svg.innerHTML = '';
+  if (!state.showGrid) return;
+  const lines = [
+    {x1:0,y1:h/3,x2:w,y2:h/3,col:'rgba(186,140,30,0.18)'},
+    {x1:0,y1:h*2/3,x2:w,y2:h*2/3,col:'rgba(186,140,30,0.18)'},
+    {x1:w/3,y1:0,x2:w/3,y2:h,col:'rgba(186,140,30,0.18)'},
+    {x1:w*2/3,y1:0,x2:w*2/3,y2:h,col:'rgba(186,140,30,0.18)'},
+    {x1:w/2,y1:0,x2:w/2,y2:h,col:'rgba(255,255,255,0.08)'},
+    {x1:0,y1:h/2,x2:w,y2:h/2,col:'rgba(255,255,255,0.08)'},
+  ];
+  lines.forEach(ln => {
+    const el=document.createElementNS('http://www.w3.org/2000/svg','line');
+    el.setAttribute('x1',ln.x1);el.setAttribute('y1',ln.y1);el.setAttribute('x2',ln.x2);el.setAttribute('y2',ln.y2);
+    el.setAttribute('stroke',ln.col);el.setAttribute('stroke-width','0.5');svg.appendChild(el);
+  });
+  const d=20;
+  [[0,0],[w,0],[0,h],[w,h]].forEach(([cx,cy])=>{
+    const dx=cx===0?1:-1,dy=cy===0?1:-1;
+    const l1=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l1.setAttribute('x1',cx);l1.setAttribute('y1',cy);l1.setAttribute('x2',cx+dx*d);l1.setAttribute('y2',cy);
+    l1.setAttribute('stroke','rgba(255,255,255,0.15)');l1.setAttribute('stroke-width','0.8');
+    const l2=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l2.setAttribute('x1',cx);l2.setAttribute('y1',cy);l2.setAttribute('x2',cx);l2.setAttribute('y2',cy+dy*d);
+    l2.setAttribute('stroke','rgba(255,255,255,0.15)');l2.setAttribute('stroke-width','0.8');
+    svg.appendChild(l1);svg.appendChild(l2);
+  });
+}
+
+function renderLandscape() {
+  document.getElementById('bg-landscape').innerHTML = '';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DRAG, RESIZE & ROTATE
+// ═══════════════════════════════════════════════════════════════
+
+let dragState = null;
+
+function attachDrag(el, comp) {
+  el.addEventListener('mousedown', e => {
+    if (e.button === 2) return;
+    if (e.target.classList.contains('rotate-handle')) {
+      e.preventDefault(); e.stopPropagation(); saveUndo();
+      const board=document.getElementById('board'), rect=board.getBoundingClientRect();
+      const px=pctToPx(comp);
+      const cx=rect.left+px.x+px.w/2, cy=rect.top+px.y+px.h/2;
+      dragState={type:'rotate',comp,cx,cy,startAngle:Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI,startRot:comp.rotation||0};
+      return;
+    }
+    if (e.target.classList.contains('rh')) return;
+    e.preventDefault(); e.stopPropagation();
+    if (!e.shiftKey) { if (!state.selectedIds.includes(comp.id)) { state.selectedIds=[comp.id]; renderAll(); } }
+    else { if (!state.selectedIds.includes(comp.id)) state.selectedIds.push(comp.id); renderAll(); }
+    saveUndo();
+    dragState={type:'move',startMouse:{x:e.clientX,y:e.clientY},startPositions:state.selectedIds.map(id=>{const c=state.components.find(c=>c.id===id);return{id,x:c.x,y:c.y};}),bpx:boardPx()};
+  });
+  el.querySelectorAll('.rh').forEach(rh => {
+    rh.addEventListener('mousedown', e => {
+      e.preventDefault(); e.stopPropagation(); saveUndo();
+      dragState={type:'resize',handle:rh.dataset.handle,comp,startMouse:{x:e.clientX,y:e.clientY},startComp:{x:comp.x,y:comp.y,w:comp.w,h:comp.h},bpx:boardPx()};
+    });
+  });
+}
+
+document.addEventListener('mousemove', e => {
+  if (!dragState) return;
+  if (dragState.type === 'rotate') {
+    const angle=Math.atan2(e.clientY-dragState.cy,e.clientX-dragState.cx)*180/Math.PI;
+    let newRot=(dragState.startRot+(angle-dragState.startAngle))%360;
+    if (e.shiftKey) newRot=Math.round(newRot/15)*15;
+    dragState.comp.rotation=newRot;
+    const el=document.querySelector(`.comp[data-id="${dragState.comp.id}"]`);
+    if (el) el.style.transform=`rotate(${newRot}deg) skewX(${dragState.comp.skewX||0}deg) skewY(${dragState.comp.skewY||0}deg)`;
+    renderPropsPanel(); return;
+  }
+  const dx=(e.clientX-dragState.startMouse.x)/dragState.bpx.w*100;
+  const dy=(e.clientY-dragState.startMouse.y)/dragState.bpx.h*100;
+  if (dragState.type === 'move') {
+    dragState.startPositions.forEach(sp=>{const c=state.components.find(c=>c.id===sp.id);if(c){c.x=Math.max(0,Math.min(100-c.w,sp.x+dx));c.y=Math.max(0,Math.min(100-c.h,sp.y+dy));}});
+    state.selectedIds.forEach(id=>{const c=state.components.find(c=>c.id===id);const el=document.querySelector(`.comp[data-id="${id}"]`);if(el&&c){const bpx=boardPx();el.style.left=c.x/100*bpx.w+'px';el.style.top=c.y/100*bpx.h+'px';}});
+    if (state.showNegSpace) updateNegSpaceCanvas();
+    renderPropsPanel();
+  }
+  if (dragState.type === 'resize') {
+    const sc=dragState.startComp, h=dragState.handle, c=dragState.comp;
+    let nx=sc.x,ny=sc.y,nw=sc.w,nh=sc.h; const MIN=0.5;
+    if (h.includes('r')) nw=Math.max(MIN,sc.w+dx);
+    if (h.includes('l')) {const d=Math.min(dx,sc.w-MIN);nx=sc.x+d;nw=sc.w-d;}
+    if (h==='bm'||h==='bl'||h==='br') nh=Math.max(MIN,sc.h+dy);
+    if (h==='tm'||h==='tl'||h==='tr') {const d=Math.min(dy,sc.h-MIN);ny=sc.y+d;nh=sc.h-d;}
+    c.x=Math.max(0,nx);c.y=Math.max(0,ny);c.w=Math.min(100-c.x,nw);c.h=Math.min(100-c.y,nh);
+    const el=document.querySelector(`.comp[data-id="${c.id}"]`);
+    if (el){const bpx=boardPx();el.style.left=c.x/100*bpx.w+'px';el.style.top=c.y/100*bpx.h+'px';el.style.width=c.w/100*bpx.w+'px';el.style.height=c.h/100*bpx.h+'px';}
+    if (state.showNegSpace) updateNegSpaceCanvas();
+    renderPropsPanel();
+  }
+});
+
+document.addEventListener('mouseup', () => { if (dragState) { dragState=null; renderAll(); } });
+document.getElementById('board').addEventListener('mousedown', e => {
+  if (e.button===2) return;
+  if (e.target===e.currentTarget || e.target.id==='bg-landscape' || e.target.closest('#bg-landscape') || e.target.closest('#grid-overlay')) { state.selectedIds=[]; renderAll(); }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// HOVER TOOLTIP
+// ═══════════════════════════════════════════════════════════════
+
+let hoverTooltipTimeout = null;
+
+function showHoverTooltip(comp, e) {
+  if (dragState) return;
+  clearTimeout(hoverTooltipTimeout);
+  hoverTooltipTimeout = setTimeout(() => {
+    const tt = document.getElementById('hover-tooltip');
+    const nameEl = document.getElementById('ht-name');
+    const propsEl = document.getElementById('ht-props');
+    const layerObj = state.layers.find(l => l.id === comp.layer);
+    nameEl.textContent = comp.label;
+    propsEl.innerHTML = `
+      <div class="ht-row">Layer: <span class="ht-val">${layerObj ? layerObj.name : comp.layer}</span></div>
+      <div class="ht-row">Position: <span class="ht-val">${comp.x.toFixed(1)}%, ${comp.y.toFixed(1)}%</span></div>
+      <div class="ht-row">Size: <span class="ht-val">${comp.w.toFixed(1)}% × ${comp.h.toFixed(1)}%</span></div>
+      <div class="ht-row">Rotation: <span class="ht-val">${(comp.rotation||0).toFixed(1)}°</span></div>
+      <div class="ht-row">Opacity: <span class="ht-val">${((comp.opacity!==undefined?comp.opacity:1)*100).toFixed(0)}%</span></div>
+      ${comp.shape && comp.shape !== 'rect' ? `<div class="ht-row">Shape: <span class="ht-val">${comp.shape}</span></div>` : ''}
+      ${comp.visualType && comp.visualType !== 'zone' ? `<div class="ht-row">Type: <span class="ht-val">${comp.visualType}</span></div>` : ''}`;
+    tt.style.left = (e.clientX + 14) + 'px';
+    tt.style.top = (e.clientY + 14) + 'px';
+    tt.classList.add('visible');
+  }, 350);
+}
+
+function moveHoverTooltip(e) {
+  const tt = document.getElementById('hover-tooltip');
+  if (tt.classList.contains('visible')) {
+    tt.style.left = Math.min(e.clientX + 14, window.innerWidth - 290) + 'px';
+    tt.style.top = Math.min(e.clientY + 14, window.innerHeight - 160) + 'px';
+  }
+}
+
+function hideHoverTooltip() {
+  clearTimeout(hoverTooltipTimeout);
+  document.getElementById('hover-tooltip').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTEXT MENU SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+const ctxMenu = document.getElementById('ctx-menu');
+
+function showContextMenu(x, y, items) {
+  let html = '';
+  for (const item of items) {
+    if (item.sep) { html += '<div class="ctx-sep"></div>'; continue; }
+    if (item.slider) {
+      html += `<div class="ctx-slider-row">
+        <label>${item.label}</label>
+        <input type="range" min="${item.min||0}" max="${item.max||100}" step="${item.step||1}" value="${item.value||0}"
+          oninput="${item.oninput}">
+        <span id="${item.spanId||''}">${item.valueLabel||''}</span>
+      </div>`;
+      continue;
+    }
+    if (item.submenu) {
+      html += `<div class="ctx-submenu"><div class="ctx-item">${item.label}<span class="ctx-arrow">▸</span></div>
+        <div class="ctx-sub-items">`;
+      for (const sub of item.submenu) {
+        if (sub.sep) { html += '<div class="ctx-sep"></div>'; continue; }
+        html += `<div class="ctx-item${sub.danger?' danger':''}" onclick="${sub.action}">${sub.label}${sub.active?'  ✓':''}</div>`;
+      }
+      html += '</div></div>';
+      continue;
+    }
+    html += `<div class="ctx-item${item.danger?' danger':''}" onclick="${item.action}">${item.label}${item.key?`<span class="ctx-key">${item.key}</span>`:''}${item.active?'  ✓':''}</div>`;
+  }
+  ctxMenu.innerHTML = html;
+  ctxMenu.style.display = 'block';
+  ctxMenu.style.left = '0px';
+  ctxMenu.style.top = '0px';
+  const menuRect = ctxMenu.getBoundingClientRect();
+  const menuW = menuRect.width, menuH = menuRect.height;
+  ctxMenu.style.left = Math.min(x, window.innerWidth - menuW - 8) + 'px';
+  ctxMenu.style.top  = Math.min(y, window.innerHeight - menuH - 8) + 'px';
+  ctxMenu.classList.add('show');
+}
+
+function hideContextMenu() { ctxMenu.classList.remove('show'); ctxMenu.style.display = 'none'; }
+document.addEventListener('click', e => { if (!ctxMenu.contains(e.target)) hideContextMenu(); });
+document.addEventListener('mousedown', e => { if (!ctxMenu.contains(e.target)) hideContextMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideContextMenu(); });
+
+// Component right-click
+document.getElementById('board').addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const compEl = e.target.closest('.comp');
+  if (compEl) {
+    const comp = state.components.find(c => c.id === parseInt(compEl.dataset.id));
+    if (!comp) return;
+    if (!state.selectedIds.includes(comp.id)) { state.selectedIds = [comp.id]; renderAll(); }
+    showComponentContextMenu(e.clientX, e.clientY, comp);
+  } else {
+    showBoardContextMenu(e.clientX, e.clientY);
+  }
+});
+
+function showComponentContextMenu(x, y, comp) {
+  const op = ((comp.opacity !== undefined ? comp.opacity : 1) * 100).toFixed(0);
+  const currentShape = comp.shape || 'rect';
+  const currentVisType = comp.visualType || 'zone';
+
+  const items = [
+    { label: `<b style="color:rgba(186,140,30,0.8)">${comp.label}</b>`, action: '' },
+    { sep: true },
+    { slider: true, label: 'Opacity', min: 0, max: 100, step: 5, value: op, spanId: 'ctx-op-val', valueLabel: op + '%',
+      oninput: `(function(v){const c=state.components.find(c=>c.id===${comp.id});if(c){c.opacity=v/100;const el=document.querySelector('.comp[data-id=\\'${comp.id}\\']');if(el)el.style.opacity=v/100;document.getElementById('ctx-op-val').textContent=v+'%';if(state.showNegSpace)updateNegSpaceCanvas();}})(this.value)` },
+    { sep: true },
+    { label: 'Change Shape', submenu: SHAPE_OPTIONS.map(s => ({
+      label: s.label, active: s.id === currentShape,
+      action: `hideContextMenu();changeCompShape(${comp.id},'${s.id}')`
+    }))},
+    { label: 'Change Type', submenu: VISUAL_TYPES.map(vt => ({
+      label: vt.label, active: vt.id === currentVisType,
+      action: `hideContextMenu();changeCompVisualType(${comp.id},'${vt.id}')`
+    }))},
+    { sep: true },
+    { label: 'Center Horizontally', action: `hideContextMenu();saveUndo();centerComp(${comp.id},'h')` },
+    { label: 'Center Vertically', action: `hideContextMenu();saveUndo();centerComp(${comp.id},'v')` },
+    { sep: true },
+    { label: 'Duplicate', action: `hideContextMenu();duplicateComp(${comp.id})`, key: 'Ctrl+D' },
+    { label: 'Bring Forward', action: `hideContextMenu();bringForward(${comp.id})` },
+    { label: 'Send Backward', action: `hideContextMenu();sendBackward(${comp.id})` },
+    { sep: true },
+    { label: 'Move to Layer', submenu: state.layers.map(l => ({
+      label: l.name, active: l.id === comp.layer,
+      action: `hideContextMenu();updateComp(${comp.id},'layer','${l.id}')`
+    }))},
+    { sep: true },
+    { label: 'Reset to Original', action: `hideContextMenu();resetToOriginal(${comp.id})` },
+    { label: 'Toggle Visibility', action: `hideContextMenu();toggleCompVis(${comp.id},event)` },
+    { label: 'Delete', action: `hideContextMenu();saveUndo();deleteComp(${comp.id})`, key: 'Del', danger: true },
+  ];
+  showContextMenu(x, y, items);
+}
+
+function showBoardContextMenu(x, y) {
+  const addSubmenu = [
+    { label: '── Zones ──', action: '' },
+    ...COMP_TEMPLATES.filter(t=>!t.type.startsWith('toy-')&&t.type!=='custom'&&t.type!=='terrain-bg'&&t.type!=='sky-bg').map(t => {
+      const placed = state.components.some(c => c.type === t.type);
+      return {
+        label: (placed ? '✓ ' : '  ') + t.label,
+        action: `hideContextMenu();addComponent(COMP_TEMPLATES.find(t=>t.type==='${t.type}'))`
+      };
+    }),
+    { sep: true },
+    { label: '── Backgrounds ──', action: '' },
+    { label: (state.components.some(c=>c.type==='terrain-bg') ? '✓ ' : '  ') + 'Terrain BG', action: `hideContextMenu();addComponent(COMP_TEMPLATES.find(t=>t.type==='terrain-bg'))` },
+    { label: (state.components.some(c=>c.type==='sky-bg') ? '✓ ' : '  ') + 'Sky BG', action: `hideContextMenu();addComponent(COMP_TEMPLATES.find(t=>t.type==='sky-bg'))` },
+    { sep: true },
+    { label: 'Custom Zone', action: `hideContextMenu();addComponent(COMP_TEMPLATES.find(t=>t.type==='custom'))` },
+  ];
+
+  const items = [
+    { label: 'Add Zone', submenu: addSubmenu },
+    { sep: true },
+    { label: (state.showGrid ? '✓ ' : '') + 'Rule-of-Thirds Grid', action: 'hideContextMenu();toggleGrid()' },
+    { label: (state.showNegSpace ? '✓ ' : '') + 'Negative Space Glow', action: 'hideContextMenu();toggleNegSpace()' },
+    { label: (state.showHorizon ? '✓ ' : '') + 'Horizon Line', action: 'hideContextMenu();toggleHorizon()' },
+    { sep: true },
+    { label: 'Select All', action: 'hideContextMenu();selectAll(true)', key: 'Ctrl+A' },
+    { label: state.loadedLayoutName ? 'Reset to: ' + state.loadedLayoutName : 'Reset to Default Layout', action: 'hideContextMenu();loadDefault()' },
+  ];
+  showContextMenu(x, y, items);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SHAPE, VISUAL TYPE, RESET
+// ═══════════════════════════════════════════════════════════════
+
+function changeCompShape(id, shape) {
+  saveUndo();
+  const comp = state.components.find(c => c.id === id);
+  if (!comp) return;
+  comp.shape = shape;
+  renderAll();
+  setStatus(`${comp.label}: shape → ${shape}`);
+}
+
+function changeCompVisualType(id, vtype) {
+  saveUndo();
+  const comp = state.components.find(c => c.id === id);
+  if (!comp) return;
+  comp.visualType = vtype;
+  renderAll();
+  setStatus(`${comp.label}: visual type → ${vtype}`);
+}
+
+function resetToOriginal(id) {
+  saveUndo();
+  const comp = state.components.find(c => c.id === id);
+  if (!comp) return;
+  const template = COMP_TEMPLATES.find(t => t.type === comp.type);
+  if (!template) { setStatus('No template found for this component.'); return; }
+  // Preserve id and restore template values
+  const keepId = comp.id;
+  comp.x = template.x;
+  comp.y = template.y;
+  comp.w = template.w;
+  comp.h = template.h;
+  comp.bg = template.bg;
+  comp.border = template.border;
+  comp.color = template.color;
+  comp.borderRadius = template.borderRadius || '4px';
+  comp.dashed = template.dashed || false;
+  comp.rotation = 0;
+  comp.skewX = 0;
+  comp.skewY = 0;
+  comp.opacity = 1;
+  comp.shape = undefined;
+  comp.visualType = undefined;
+  renderAll();
+  setStatus(`${comp.label}: reset to original`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RIGHT PANEL TOGGLE
+// ═══════════════════════════════════════════════════════════════
+
+function toggleRightPanels() {
+  state.showRightPanels = !state.showRightPanels;
+  const panels = document.getElementById('right-panels');
+  const btn = document.getElementById('btn-panels');
+  panels.classList.toggle('collapsed', !state.showRightPanels);
+  btn.classList.toggle('active', !state.showRightPanels);
+  setTimeout(() => resizeBoard(), 280);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WARNING BADGE
+// ═══════════════════════════════════════════════════════════════
+
+function updateWarningBadge() {
+  const badge = document.getElementById('warning-badge');
+  let count = 0;
+  GAME_ELEMENTS.forEach(elem => {
+    const displayType = state.elementConfig[elem.id]?.displayType || elem.displayType;
+    if (displayType === 'Board Zone' && elem.templateType) {
+      if (!state.components.some(c => c.type === elem.templateType)) count++;
+    }
+    if (elem.openQ) count++;
+  });
+  badge.textContent = count;
+  badge.className = 'warning-badge' + (count === 0 ? ' zero' : '');
+  badge.title = count === 0 ? 'All items accounted for' : `${count} items missing or need attention`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MASTER LIST MODAL
+// ═══════════════════════════════════════════════════════════════
+
+function showMasterModal() {
+  buildMasterList();
+  document.getElementById('master-modal').classList.add('visible');
+}
+
+function hideMasterModal() {
+  document.getElementById('master-modal').classList.remove('visible');
+}
+
+function buildMasterList() {
+  const body = document.getElementById('master-body');
+  body.innerHTML = '';
+  const categories = [...new Set(GAME_ELEMENTS.map(e => e.cat))];
+  for (const cat of categories) {
+    const elems = GAME_ELEMENTS.filter(e => e.cat === cat);
+    const mlAllGrayed = state.landscapeMode && elems.every(e => !isElementLandscapeRelevant(e));
+    const catDiv = document.createElement('div');
+    catDiv.className = 'ml-category' + (mlAllGrayed ? ' landscape-grayed' : '');
+    catDiv.textContent = cat.toUpperCase();
+    body.appendChild(catDiv);
+
+    for (const elem of elems) {
+      const displayType = state.elementConfig[elem.id]?.displayType || elem.displayType;
+      const isPlaced = isElementPlaced(elem);
+      const isBoardZone = displayType === 'Board Zone';
+      const hasTemplate = !!elem.templateType;
+      const mlGrayed = state.landscapeMode && !isElementLandscapeRelevant(elem);
+
+      const row = document.createElement('div');
+      row.className = 'ml-item' + (elem.openQ ? ' has-warning' : '') + (mlGrayed ? ' landscape-grayed' : '');
+
+      // Determine check state
+      let checkClass = 'ml-check';
+      let checkContent = '';
+      if (isPlaced) {
+        checkClass += ' placed';
+        checkContent = '✓';
+      } else if (!isBoardZone) {
+        checkClass += ' nonboard';
+        checkContent = '~';
+      } else {
+        checkClass += ' missing';
+        checkContent = '';
+      }
+
+      row.innerHTML = `
+        <div class="${checkClass}">${checkContent}</div>
+        <div class="ml-name">${elem.name}${elem.openQ ? ' ⚠' : ''}</div>
+        <div class="ml-desc">${elem.desc}</div>
+        <div class="ml-type">${displayType}</div>`;
+
+      row.addEventListener('click', () => {
+        if (isPlaced) {
+          hideMasterModal();
+          const comp = state.components.find(c => c.type === elem.templateType);
+          if (comp) { state.selectedIds = [comp.id]; renderAll(); }
+        } else if (hasTemplate && isBoardZone) {
+          const template = COMP_TEMPLATES.find(t => t.type === elem.templateType);
+          if (template) { addComponent(template); buildMasterList(); setStatus(`Added: ${elem.name}`); }
+        }
+      });
+      row.style.cursor = (isPlaced || (hasTemplate && isBoardZone)) ? 'pointer' : 'default';
+
+      body.appendChild(row);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHECKLIST FLY-OUT
+// ═══════════════════════════════════════════════════════════════
+
+const checklistTrigger = document.getElementById('checklist-trigger');
+const checklistPanel = document.getElementById('checklist-panel');
+let checklistPinned = false;
+
+checklistTrigger.addEventListener('mouseenter', () => { checklistPanel.classList.add('open'); });
+checklistTrigger.addEventListener('mouseleave', e => {
+  if (!checklistPinned && !checklistPanel.matches(':hover')) checklistPanel.classList.remove('open');
+});
+checklistPanel.addEventListener('mouseleave', () => {
+  if (!checklistPinned) checklistPanel.classList.remove('open');
+});
+checklistPanel.addEventListener('mouseenter', () => { checklistPanel.classList.add('open'); });
+
+function buildChecklist() {
+  const body = document.getElementById('checklist-body');
+  body.innerHTML = '';
+  const categories = [...new Set(GAME_ELEMENTS.map(e => e.cat))];
+  for (const cat of categories) {
+    const elems = GAME_ELEMENTS.filter(e => e.cat === cat);
+    const allGrayed = state.landscapeMode && elems.every(e => !isElementLandscapeRelevant(e));
+    const catDiv = document.createElement('div');
+    catDiv.className = 'cl-category' + (allGrayed ? ' landscape-grayed' : '');
+    catDiv.textContent = cat.toUpperCase();
+    body.appendChild(catDiv);
+
+    for (const elem of elems) {
+      const isPlaced = isElementPlaced(elem);
+      const displayType = state.elementConfig[elem.id]?.displayType || elem.displayType;
+      const isBoardZone = displayType === 'Board Zone';
+      const isNonBoard = !isBoardZone;
+      const lGrayed = state.landscapeMode && !isElementLandscapeRelevant(elem);
+
+      const row = document.createElement('div');
+      row.className = 'cl-item' + (isPlaced ? ' placed' : '') + (isNonBoard && !isPlaced ? ' nonboard' : '') + (lGrayed ? ' landscape-grayed' : '');
+      row.title = elem.desc + (elem.openQ ? `\n⚠ Open UX Question #${elem.openQ}` : '');
+
+      // Checkbox indicator
+      let checkHTML = '<div class="cl-checkbox">';
+      if (isPlaced) checkHTML += '✓';
+      else if (isNonBoard) checkHTML += '~';
+      checkHTML += '</div>';
+
+      // Location label for non-board items
+      let locationHTML = '';
+      if (isNonBoard && !isPlaced) {
+        locationHTML = `<div class="cl-location">in ${displayType}</div>`;
+      }
+
+      row.innerHTML = `
+        ${checkHTML}
+        <div class="cl-status"></div>
+        <div class="cl-name">${elem.name}${elem.openQ ? ' ⚠' : ''}</div>
+        ${locationHTML}
+        <div class="cl-type-badge">${displayType}</div>`;
+
+      row.addEventListener('click', e => {
+        if (e.button !== 0) return;
+        if (elem.templateType && !isPlaced) {
+          const template = COMP_TEMPLATES.find(t => t.type === elem.templateType);
+          if (template) { addComponent(template); setStatus(`Added: ${elem.name}`); }
+        } else if (isPlaced) {
+          const comp = state.components.find(c => c.type === elem.templateType);
+          if (comp) { state.selectedIds = [comp.id]; renderAll(); }
+        } else if (isNonBoard) {
+          setStatus(`${elem.name}: located in ${displayType}`);
+        } else {
+          setStatus(`${elem.name}: no board template (${displayType})`);
+        }
+      });
+
+      row.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        showChecklistContextMenu(e.clientX, e.clientY, elem);
+      });
+
+      body.appendChild(row);
+    }
+  }
+  updateChecklistStats();
+}
+
+function showChecklistContextMenu(x, y, elem) {
+  const currentType = state.elementConfig[elem.id]?.displayType || elem.displayType;
+  const items = [
+    { label: `<b style="color:rgba(186,140,30,0.8)">${elem.name}</b>`, action: '' },
+    { sep: true },
+    { label: 'Display Type', submenu: DISPLAY_TYPES.map(dt => ({
+      label: dt, active: dt === currentType,
+      action: `hideContextMenu();setElementDisplayType('${elem.id}','${dt}')`
+    }))},
+    { sep: true },
+  ];
+  if (elem.templateType) {
+    const isPlaced = isElementPlaced(elem);
+    if (!isPlaced) {
+      items.push({ label: 'Add to Board', action: `hideContextMenu();addElementToBoard('${elem.id}')` });
+    } else {
+      items.push({ label: 'Select on Board', action: `hideContextMenu();selectElement('${elem.id}')` });
+      items.push({ label: 'Remove from Board', action: `hideContextMenu();removeElement('${elem.id}')`, danger: true });
+    }
+  }
+  if (elem.openQ) {
+    items.push({ sep: true });
+    items.push({ label: `⚠ Open UX Question #${elem.openQ}`, action: '' });
+  }
+  showContextMenu(x, y, items);
+}
+
+function isElementPlaced(elem) {
+  if (!elem.templateType) return false;
+  return state.components.some(c => c.type === elem.templateType);
+}
+
+function setElementDisplayType(elemId, displayType) {
+  if (!state.elementConfig[elemId]) state.elementConfig[elemId] = {};
+  state.elementConfig[elemId].displayType = displayType;
+  buildChecklist();
+  setStatus(`${elemId}: set to ${displayType}`);
+}
+
+function addElementToBoard(elemId) {
+  const elem = GAME_ELEMENTS.find(e => e.id === elemId);
+  if (!elem || !elem.templateType) return;
+  const template = COMP_TEMPLATES.find(t => t.type === elem.templateType);
+  if (template) { addComponent(template); buildChecklist(); }
+}
+
+function selectElement(elemId) {
+  const elem = GAME_ELEMENTS.find(e => e.id === elemId);
+  if (!elem || !elem.templateType) return;
+  const comp = state.components.find(c => c.type === elem.templateType);
+  if (comp) { state.selectedIds = [comp.id]; renderAll(); }
+}
+
+function removeElement(elemId) {
+  const elem = GAME_ELEMENTS.find(e => e.id === elemId);
+  if (!elem || !elem.templateType) return;
+  saveUndo();
+  const comp = state.components.find(c => c.type === elem.templateType);
+  if (comp) { deleteComp(comp.id); buildChecklist(); }
+}
+
+function updateChecklistStats() {
+  const placed = GAME_ELEMENTS.filter(e => isElementPlaced(e)).length;
+  const total = GAME_ELEMENTS.length;
+  const el = document.getElementById('checklist-stats');
+  if (el) el.textContent = `${placed}/${total} placed`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LAYER PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function renderLayerPanel() {
+  const list = document.getElementById('layers-list');
+  list.innerHTML = '';
+  state.layers.forEach(layer => {
+    const layerComps = state.components.filter(c=>c.layer===layer.id);
+    const allLayerDimmed = state.landscapeMode && layerComps.length > 0 && layerComps.every(c => !isCompLandscapeRelevant(c));
+    const group = document.createElement('div');
+    group.className = 'layer-group';
+    const header = document.createElement('div');
+    header.className = 'layer-header' + (allLayerDimmed ? ' landscape-grayed' : '');
+    header.innerHTML = `
+      <div class="layer-vis ${layer.visible?'':'hidden'}" onclick="toggleLayerVis('${layer.id}',event)">●</div>
+      <div class="layer-dot" style="background:${layer.color};"></div>
+      <div class="layer-name">${layer.name}</div>
+      <div class="layer-caret">${layer.expanded?'▾':'▸'}</div>`;
+    header.addEventListener('click', () => { layer.expanded=!layer.expanded; renderLayerPanel(); });
+    group.appendChild(header);
+    if (layer.expanded) {
+      const items = document.createElement('div');
+      items.className = 'layer-items';
+      layerComps.forEach(comp => {
+        const compDimmed = state.landscapeMode && !isCompLandscapeRelevant(comp);
+        const row = document.createElement('div');
+        row.className = 'comp-row' + (state.selectedIds.includes(comp.id)?' selected':'') + (compDimmed ? ' landscape-grayed' : '');
+        row.innerHTML = `<div class="comp-vis ${comp.visible?'':'hidden'}" onclick="toggleCompVis(${comp.id},event)">●</div><div class="comp-name">${comp.label}</div>`;
+        row.addEventListener('click', e => { if (e.target.classList.contains('comp-vis')) return; state.selectedIds=[comp.id]; renderAll(); });
+        row.addEventListener('contextmenu', e => { e.preventDefault(); state.selectedIds=[comp.id]; renderAll(); showComponentContextMenu(e.clientX,e.clientY,comp); });
+        items.appendChild(row);
+      });
+      group.appendChild(items);
+    }
+    list.appendChild(group);
+  });
+}
+
+function toggleLayerVis(layerId, e) { e.stopPropagation(); const l=state.layers.find(l=>l.id===layerId); if(l){l.visible=!l.visible;renderAll();} }
+function toggleCompVis(compId, e) { if(e)e.stopPropagation(); const c=state.components.find(c=>c.id===compId); if(c){c.visible=!c.visible;renderAll();} }
+
+// ═══════════════════════════════════════════════════════════════
+// PROPERTIES PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function renderPropsPanel() {
+  const body = document.getElementById('props-body');
+
+  if (state.selectedIds.length === 0) {
+    const tx = state.boardTiltX || 0;
+    const ty = state.boardTiltY || 0;
+    const depth = state.perspectiveDepth || 900;
+    body.innerHTML = `
+      <div class="prop-section">BOARD</div>
+      <div class="prop-row">
+        <div class="prop-label">HORIZON (${state.horizonY.toFixed(0)}%)</div>
+        <div class="prop-val-row"><input type="range" min="-100" max="200" value="${state.horizonY.toFixed(0)}" class="prop-slider" style="flex:1;"
+          oninput="state.horizonY=parseFloat(this.value);renderHorizonLine();if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${state.horizonY.toFixed(0)}" style="width:42px;text-align:right;" onchange="state.horizonY=parseFloat(this.value);renderHorizonLine();if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">%</span></div>
+      </div>
+      <div class="toggle-row"><input type="checkbox" ${state.showHorizon?'checked':''} onchange="state.showHorizon=this.checked;renderHorizonLine();"><span>Horizon line</span></div>
+      <div class="toggle-row"><input type="checkbox" ${state.showNegSpace?'checked':''} onchange="state.showNegSpace=this.checked;updateNegSpaceCanvas();"><span>Neg. space glow</span></div>
+      <div class="toggle-row"><input type="checkbox" ${state.showGrid?'checked':''} onchange="state.showGrid=this.checked;renderGridOverlay();document.getElementById('grid-overlay').classList.toggle('visible',this.checked);"><span>Rule-of-thirds</span></div>
+      <div class="prop-section">CAMERA</div>
+      <div class="prop-row"><div class="prop-label">TILT X (pitch)</div>
+        <div class="prop-val-row"><input type="range" min="0" max="40" value="${tx}" class="prop-slider" style="flex:1;" oninput="state.boardTiltX=parseFloat(this.value);applyBoardTilt();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${tx.toFixed(0)}" style="width:42px;text-align:right;" onchange="state.boardTiltX=parseFloat(this.value);applyBoardTilt();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">°</span></div></div>
+      <div class="prop-row"><div class="prop-label">TILT Y (yaw)</div>
+        <div class="prop-val-row"><input type="range" min="-20" max="20" value="${ty}" class="prop-slider" style="flex:1;" oninput="state.boardTiltY=parseFloat(this.value);applyBoardTilt();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${ty.toFixed(0)}" style="width:42px;text-align:right;" onchange="state.boardTiltY=parseFloat(this.value);applyBoardTilt();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">°</span></div></div>
+      <div class="prop-row"><div class="prop-label">SCALE ${(state.boardZoom||1.0)===1.0?'(BASE)':'('+(((state.boardZoom||1.0)-1)*100>0?'+':'')+((((state.boardZoom||1.0)-1)*100).toFixed(0))+'%)'}</div>
+        <div class="prop-val-row"><input type="range" min="0.5" max="2.0" step="0.05" value="${state.boardZoom||1.0}" class="prop-slider" style="flex:1;" oninput="state.boardZoom=parseFloat(this.value);applyBoardTilt();renderPropsPanel();"><input class="prop-input" type="number" step="0.05" value="${(state.boardZoom||1.0).toFixed(2)}" style="width:50px;text-align:right;" onchange="state.boardZoom=parseFloat(this.value);applyBoardTilt();renderPropsPanel();"><span style="font-size:8px;color:rgba(255,255,255,0.3);">×</span></div></div>
+      <div class="prop-row"><div class="prop-label">DEPTH (perspective)</div>
+        <div class="prop-val-row"><input type="range" min="300" max="2000" value="${depth}" class="prop-slider" style="flex:1;" oninput="state.perspectiveDepth=parseFloat(this.value);applyBoardTilt();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="10" value="${depth}" style="width:50px;text-align:right;" onchange="state.perspectiveDepth=parseFloat(this.value);applyBoardTilt();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">px</span></div></div>
+      <div class="prop-row"><div class="prop-label">VANISHING POINT</div>
+        <div class="prop-val-row">
+          <input class="prop-input" type="number" step="1" value="${(state.vanishX||50).toFixed(0)}" style="width:36px;text-align:right;" onchange="state.vanishX=parseFloat(this.value);applyBoardTilt();renderVanishPoint();"><span style="font-size:8px;color:rgba(255,255,255,0.3);">%X</span>
+          <input class="prop-input" type="number" step="1" value="${(state.vanishY||50).toFixed(0)}" style="width:36px;text-align:right;" onchange="state.vanishY=parseFloat(this.value);applyBoardTilt();renderVanishPoint();"><span style="font-size:8px;color:rgba(255,255,255,0.3);">%Y</span>
+        </div></div>
+      <div class="toggle-row"><input type="checkbox" ${state.showVanishPoint?'checked':''} onchange="state.showVanishPoint=this.checked;renderVanishPoint();"><span>Show vanishing point</span></div>
+      <div class="iso-readout">H:${state.horizonY.toFixed(0)}% · X:${tx.toFixed(0)}° · Z:${(state.boardZoom||1).toFixed(2)}× · D:${depth}${state.boardZoom && state.boardZoom !== 1.0 ? ' · ' + ((state.boardZoom - 1) * 100 > 0 ? '+' : '') + ((state.boardZoom - 1) * 100).toFixed(0) + '% from base' : ' · BASE'}</div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="applyCameraPreset('medium')">Base Scale (1.0×)</button>
+        <button class="prop-btn" onclick="state.boardTiltX=0;state.boardTiltY=0;state.boardZoom=1.0;state.vanishX=50;state.vanishY=50;state.horizonY=42;applyBoardTilt();renderHorizonLine();renderVanishPoint();renderPropsPanel();">Reset All</button>
+      </div>
+      <div class="prop-section">CAMERA PRESETS</div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="applyCameraPreset('open')">Open</button>
+        <button class="prop-btn" onclick="applyCameraPreset('medium')">Medium</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="applyCameraPreset('enclosed')">Enclosed</button>
+        <button class="prop-btn" onclick="applyCameraPreset('overhead')">Overhead</button>
+      </div>
+      <button class="prop-btn" onclick="applyIsometricToAll()">Apply perspective to all zones</button>
+      <div class="prop-section">BURDENS</div>
+      <div class="prop-row">
+        <div class="prop-val-row"><input type="range" min="0" max="12" value="${state.burdens}" class="prop-slider" style="flex:1;" oninput="setBurdens(this.value);this.parentElement.querySelector('.prop-val').textContent=this.value;"><span class="prop-val">${state.burdens}</span></div>
+        <div style="font-size:7px;color:rgba(255,255,255,0.2);margin-top:2px;">${state.burdens===0?'Distant — full tower, faint':state.burdens<=4?'Approaching — tower growing':state.burdens<=8?'Close — Eye prominent':state.burdens<=11?'Imminent — Eye dominates':'Corruption threshold'}</div>
+      </div>
+      <div class="prop-section">STATS</div>
+      <div class="prop-note">${state.components.length} components · ${state.components.filter(c=>c.visible).length} visible</div>
+    `;
+    return;
+  }
+
+  if (state.selectedIds.length > 1) {
+    body.innerHTML = `
+      <div class="prop-note">${state.selectedIds.length} selected</div>
+      <div class="prop-section">ALIGNMENT</div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('left')">← Left</button>
+        <button class="prop-btn" onclick="alignSelected('right')">Right →</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('top')">↑ Top</button>
+        <button class="prop-btn" onclick="alignSelected('bottom')">Bottom ↓</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('centerH')">Center H</button>
+        <button class="prop-btn" onclick="alignSelected('centerV')">Center V</button>
+      </div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="alignSelected('distributeH')">Dist. H</button>
+        <button class="prop-btn" onclick="alignSelected('distributeV')">Dist. V</button>
+      </div>
+      <div style="height:8px;"></div>
+      <button class="prop-btn danger" onclick="deleteSelected()">Delete selected</button>
+    `;
+    return;
+  }
+
+  const comp = state.components.find(c=>c.id===state.selectedIds[0]);
+  if (!comp) return;
+  const rot=(comp.rotation||0).toFixed(1), op=((comp.opacity!==undefined?comp.opacity:1)*100).toFixed(0);
+  const skX=(comp.skewX||0).toFixed(1), skY=(comp.skewY||0).toFixed(1);
+
+  body.innerHTML = `
+    <div class="prop-row"><div class="prop-label">LABEL</div><input class="prop-input" value="${comp.label}" onchange="updateComp(${comp.id},'label',this.value)"></div>
+    <div class="prop-section">POSITION & SIZE (%)</div>
+    <div class="prop-row-2">
+      <div><div class="prop-label">X</div><input class="prop-input" type="number" step="0.1" value="${comp.x.toFixed(1)}" onchange="updateComp(${comp.id},'x',parseFloat(this.value))"></div>
+      <div><div class="prop-label">Y</div><input class="prop-input" type="number" step="0.1" value="${comp.y.toFixed(1)}" onchange="updateComp(${comp.id},'y',parseFloat(this.value))"></div>
+    </div>
+    <div class="prop-row-2">
+      <div><div class="prop-label">W</div><input class="prop-input" type="number" step="0.1" value="${comp.w.toFixed(1)}" onchange="updateComp(${comp.id},'w',parseFloat(this.value))"></div>
+      <div><div class="prop-label">H</div><input class="prop-input" type="number" step="0.1" value="${comp.h.toFixed(1)}" onchange="updateComp(${comp.id},'h',parseFloat(this.value))"></div>
+    </div>
+    <div class="prop-section">TRANSFORM</div>
+    <div class="prop-row"><div class="prop-label">ROTATION</div>
+      <div class="prop-val-row"><input type="range" min="-180" max="180" step="1" value="${rot}" class="prop-slider" style="flex:1;" oninput="updateComp(${comp.id},'rotation',parseFloat(this.value));this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${parseFloat(rot).toFixed(0)}" style="width:42px;text-align:right;" onchange="updateComp(${comp.id},'rotation',parseFloat(this.value));this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">°</span></div></div>
+    <div class="prop-row"><div class="prop-label">SKEW X</div>
+      <div class="prop-val-row"><input type="range" min="-45" max="45" step="0.5" value="${skX}" class="prop-slider" style="flex:1;" oninput="updateComp(${comp.id},'skewX',parseFloat(this.value));this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="0.5" value="${parseFloat(skX).toFixed(1)}" style="width:42px;text-align:right;" onchange="updateComp(${comp.id},'skewX',parseFloat(this.value));this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">°</span></div></div>
+    <div class="prop-row"><div class="prop-label">SKEW Y</div>
+      <div class="prop-val-row"><input type="range" min="-45" max="45" step="0.5" value="${skY}" class="prop-slider" style="flex:1;" oninput="updateComp(${comp.id},'skewY',parseFloat(this.value));this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="0.5" value="${parseFloat(skY).toFixed(1)}" style="width:42px;text-align:right;" onchange="updateComp(${comp.id},'skewY',parseFloat(this.value));this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">°</span></div></div>
+    <div class="prop-row"><div class="prop-label">OPACITY</div>
+      <div class="prop-val-row"><input type="range" min="0" max="100" step="1" value="${op}" class="prop-slider" style="flex:1;" oninput="updateComp(${comp.id},'opacity',parseFloat(this.value)/100);if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${op}" style="width:42px;text-align:right;" onchange="updateComp(${comp.id},'opacity',parseFloat(this.value)/100);if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">%</span></div></div>
+    <div class="prop-section">APPEARANCE</div>
+    <div class="prop-row"><div class="prop-label">LAYER</div>
+      <select class="prop-input" onchange="updateComp(${comp.id},'layer',this.value)" size="1">
+        ${state.layers.map(l=>`<option value="${l.id}" ${l.id===comp.layer?'selected':''}>${l.name}</option>`).join('')}
+      </select></div>
+    <div class="prop-row"><div class="prop-label">SHAPE</div>
+      <select class="prop-input" onchange="changeCompShape(${comp.id},this.value)" size="1">
+        ${SHAPE_OPTIONS.map(s=>`<option value="${s.id}" ${(comp.shape||'rect')===s.id?'selected':''}>${s.label}</option>`).join('')}
+      </select></div>
+    <div class="prop-row"><div class="prop-label">VISUAL TYPE</div>
+      <select class="prop-input" onchange="changeCompVisualType(${comp.id},this.value)" size="1">
+        ${VISUAL_TYPES.map(vt=>`<option value="${vt.id}" ${(comp.visualType||'zone')===vt.id?'selected':''}>${vt.label}</option>`).join('')}
+      </select></div>
+    <div class="prop-row"><div class="prop-label">COVER TYPE</div>
+      <select class="prop-input" onchange="updateComp(${comp.id},'coverType',this.value)" size="1">
+        <option value="opaque" ${(comp.coverType||'dynamic')==='opaque'?'selected':''}>&#9608; Opaque — hides landscape</option>
+        <option value="dynamic" ${(comp.coverType||'dynamic')==='dynamic'?'selected':''}>&#9618; Dynamic — cards come &amp; go</option>
+        <option value="translucent" ${(comp.coverType||'dynamic')==='translucent'?'selected':''}>&#9617; Translucent — see-through</option>
+      </select></div>
+    <div class="prop-row"><div class="prop-label">BG</div><input class="prop-input" value="${comp.bg}" onchange="updateComp(${comp.id},'bg',this.value)"></div>
+    <div class="prop-row"><div class="prop-label">BORDER</div><input class="prop-input" value="${comp.border||''}" onchange="updateComp(${comp.id},'border',this.value)"></div>
+    <div class="prop-row"><div class="prop-label">TEXT</div><input class="prop-input" value="${comp.color||''}" onchange="updateComp(${comp.id},'color',this.value)"></div>
+    <div class="prop-row"><div class="prop-label">RADIUS</div><input class="prop-input" value="${comp.borderRadius||'4px'}" onchange="updateComp(${comp.id},'borderRadius',this.value)"></div>
+    <div class="toggle-row"><input type="checkbox" ${comp.dashed?'checked':''} onchange="updateComp(${comp.id},'dashed',this.checked)"><span>Dashed</span></div>
+  `;
+}
+
+function updateComp(id, key, val) { const c=state.components.find(c=>c.id===id); if(c){c[key]=val;renderAll();} }
+function centerComp(id, axis) {
+  const c = state.components.find(c => c.id === id);
+  if (!c) return;
+  if (axis === 'h') c.x = (100 - c.w) / 2;
+  if (axis === 'v') c.y = (100 - c.h) / 2;
+  renderAll();
+}
+
+function duplicateComp(id) { const c=state.components.find(c=>c.id===id); if(!c)return; saveUndo(); const nc={...c,id:state.nextId++,x:c.x+2,y:c.y+2}; state.components.push(nc); state.selectedIds=[nc.id]; renderAll(); }
+function deleteComp(id) { state.components=state.components.filter(c=>c.id!==id); state.selectedIds=state.selectedIds.filter(i=>i!==id); renderAll(); }
+function deleteSelected() { saveUndo(); state.selectedIds.forEach(id=>{state.components=state.components.filter(c=>c.id!==id);}); state.selectedIds=[]; renderAll(); }
+function bringForward(id) { const c=state.components.find(c=>c.id===id); if(c){c.zIndex=(c.zIndex||0)+1;renderAll();} }
+function sendBackward(id) { const c=state.components.find(c=>c.id===id); if(c){c.zIndex=Math.max(0,(c.zIndex||0)-1);renderAll();} }
+function selectAll(val) { state.selectedIds=val?state.components.map(c=>c.id):[]; renderAll(); }
+
+function addComponent(template) {
+  saveUndo();
+  const comp = { ...template, id:state.nextId++, visible:true, zIndex:state.components.filter(c=>c.layer===template.layer).length,
+    x:template.x+(Math.random()*4-2), y:template.y+(Math.random()*4-2), rotation:0, opacity:1, skewX:0, skewY:0 };
+  state.components.push(comp);
+  state.selectedIds = [comp.id];
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ISOMETRIC — APPLY PERSPECTIVE TO ALL ZONES
+// ═══════════════════════════════════════════════════════════════
+
+function applyCameraPreset(preset) {
+  saveUndo();
+  const presets = {
+    open:     { tiltX: 5,  tiltY: 0, zoom: 0.92, depth: 1400, horizonY: 28, vanishX: 50, vanishY: 28 },
+    medium:   { tiltX: 14, tiltY: 0, zoom: 1.0,  depth: 1000, horizonY: 12, vanishX: 50, vanishY: 20 },
+    enclosed: { tiltX: 22, tiltY: 0, zoom: 1.12, depth: 750,  horizonY: -10, vanishX: 50, vanishY: 40 },
+    overhead: { tiltX: 32, tiltY: 0, zoom: 1.25, depth: 600,  horizonY: -50, vanishX: 50, vanishY: 50 },
+  };
+  const p = presets[preset];
+  if (!p) return;
+  state.boardTiltX = p.tiltX;
+  state.boardTiltY = p.tiltY;
+  state.boardZoom = p.zoom;
+  state.perspectiveDepth = p.depth;
+  state.horizonY = p.horizonY;
+  state.vanishX = p.vanishX;
+  state.vanishY = p.vanishY;
+  applyBoardTilt();
+  renderHorizonLine();
+  renderVanishPoint();
+  renderPropsPanel();
+  setStatus('Camera preset: ' + preset);
+}
+
+function applyIsometricToAll() {
+  const tx = state.boardTiltX || 0;
+  if (tx === 0) { setStatus('Set a tilt angle first.'); return; }
+  saveUndo();
+  // Apply a proportional skewX to all components based on board tilt
+  // This makes zones look like they "agree" with the isometric view
+  const skewFactor = tx * 0.35;
+  state.components.forEach(comp => {
+    // Skip landscape backgrounds — they fill the board
+    if (comp.type === 'terrain-bg' || comp.type === 'sky-bg') return;
+    comp.skewX = -skewFactor;
+    // Apply slight vertical compression based on position
+    // Objects higher on the board get slightly more foreshortening
+    const verticalPos = comp.y / 100;
+    comp.skewY = verticalPos * skewFactor * 0.15;
+  });
+  renderAll();
+  setStatus(`Applied isometric skew (${skewFactor.toFixed(1)}°) to ${state.components.length} zones`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ALIGNMENT
+// ═══════════════════════════════════════════════════════════════
+
+function alignSelected(mode) {
+  if (state.selectedIds.length < 2) return;
+  saveUndo();
+  const comps = state.selectedIds.map(id=>state.components.find(c=>c.id===id)).filter(Boolean);
+  if (mode==='left') { const m=Math.min(...comps.map(c=>c.x)); comps.forEach(c=>c.x=m); }
+  else if (mode==='right') { const m=Math.max(...comps.map(c=>c.x+c.w)); comps.forEach(c=>c.x=m-c.w); }
+  else if (mode==='centerH') { const a=comps.reduce((s,c)=>s+c.x+c.w/2,0)/comps.length; comps.forEach(c=>c.x=a-c.w/2); }
+  else if (mode==='top') { const m=Math.min(...comps.map(c=>c.y)); comps.forEach(c=>c.y=m); }
+  else if (mode==='bottom') { const m=Math.max(...comps.map(c=>c.y+c.h)); comps.forEach(c=>c.y=m-c.h); }
+  else if (mode==='centerV') { const a=comps.reduce((s,c)=>s+c.y+c.h/2,0)/comps.length; comps.forEach(c=>c.y=a-c.h/2); }
+  else if (mode==='distributeH') { comps.sort((a,b)=>a.x-b.x); const tg=comps[comps.length-1].x-comps[0].x-comps.slice(0,-1).reduce((s,c)=>s+c.w,0); const g=tg/(comps.length-1); let cur=comps[0].x+comps[0].w; for(let i=1;i<comps.length-1;i++){comps[i].x=cur+g;cur=comps[i].x+comps[i].w;} }
+  else if (mode==='distributeV') { comps.sort((a,b)=>a.y-b.y); const tg=comps[comps.length-1].y-comps[0].y-comps.slice(0,-1).reduce((s,c)=>s+c.h,0); const g=tg/(comps.length-1); let cur=comps[0].y+comps[0].h; for(let i=1;i<comps.length-1;i++){comps[i].y=cur+g;cur=comps[i].y+comps[i].h;} }
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BURDENS
+// ═══════════════════════════════════════════════════════════════
+
+function setBurdens(val) {
+  state.burdens = parseInt(val);
+  const t = Math.min(state.burdens / 12, 1);
+
+  document.querySelectorAll('.comp').forEach(el => {
+    const id=parseInt(el.dataset.id), comp=state.components.find(c=>c.id===id);
+    if (!comp) return;
+
+    if (comp.type==='baradur') {
+      // Store original position on first call
+      if (!comp._baseX) { comp._baseX = comp.x; comp._baseY = comp.y; comp._baseW = comp.w; comp._baseH = comp.h; }
+
+      // Camera progression: component grows and shifts as burden increases
+      // Width: 4% → 22% of board (tower gets closer)
+      // Height: 14% → 45% of board
+      // X: drifts toward center as it grows
+      // Y: stays anchored near top, grows downward
+      comp.w = comp._baseW + t * 18;
+      comp.h = comp._baseH + t * 31;
+      comp.x = comp._baseX - t * 9; // drift left (toward center) as it grows
+      comp.y = comp._baseY - t * 3;  // creep upward slightly
+
+      // Reposition the DOM element
+      const px = pctToPx(comp);
+      el.style.left   = px.x + 'px';
+      el.style.top    = px.y + 'px';
+      el.style.width  = px.w + 'px';
+      el.style.height = px.h + 'px';
+
+      const inner=el.querySelector('.comp-inner');
+      if(inner) inner.innerHTML=renderBaradur(comp);
+    }
+    if (comp.type==='twilight-pool') { const inner=el.querySelector('.comp-inner'); if(inner) inner.innerHTML=renderTwilightPool(comp); }
+  });
+}
+
+function toggleNegSpace() { state.showNegSpace=!state.showNegSpace; updateNegSpaceCanvas(); }
+function toggleGrid() { state.showGrid=!state.showGrid; document.getElementById('grid-overlay').classList.toggle('visible',state.showGrid); renderGridOverlay(); }
+function toggleHorizon() { state.showHorizon=!state.showHorizon; renderHorizonLine(); }
+
+// ═══════════════════════════════════════════════════════════════
+// SAVE / LOAD
+// ═══════════════════════════════════════════════════════════════
+
+function buildSaveData(name) {
+  return JSON.stringify({ name: name || state.loadedLayoutName || 'untitled', components:state.components, layers:state.layers, boardRatio:state.boardRatio, nextId:state.nextId, horizonY:state.horizonY, elementConfig:state.elementConfig, boardTiltX:state.boardTiltX, boardTiltY:state.boardTiltY, perspectiveDepth:state.perspectiveDepth, vanishX:state.vanishX, vanishY:state.vanishY, boardZoom:state.boardZoom }, null, 2);
+}
+
+function exportJSON() {
+  const filename = (state.loadedLayoutName || 'lotr_tcg_layout').replace(/[^a-zA-Z0-9_\-— ]/g,'') + '.json';
+  const data = buildSaveData();
+  const blob = new Blob([data],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+  setStatus('Saved: ' + filename);
+}
+
+function exportJSONAs() {
+  const name = prompt('Save layout as:', state.loadedLayoutName || 'my-layout');
+  if (!name) return;
+  state.loadedLayoutName = name;
+  // Update baseline to this new save
+  const dataStr = buildSaveData(name);
+  state.loadedLayoutData = JSON.parse(dataStr);
+  const filename = name.replace(/[^a-zA-Z0-9_\-— ]/g,'') + '.json';
+  const blob = new Blob([dataStr],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+  setStatus('Saved as: ' + filename);
+}
+
+function exportCompositionGuide() {
+  const W = 1920, H = 1080; // 16:9 at 1080p
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Background — dark neutral
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Horizon line
+  const horizPx = state.horizonY / 100 * H;
+  if (state.horizonY >= -10 && state.horizonY <= 110) {
+    ctx.strokeStyle = 'rgba(255,200,50,0.6)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([12, 6]);
+    ctx.beginPath(); ctx.moveTo(0, horizPx); ctx.lineTo(W, horizPx); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,200,50,0.7)';
+    ctx.font = '14px Georgia';
+    ctx.fillText('HORIZON ' + state.horizonY.toFixed(0) + '%', W - 180, horizPx - 8);
+  }
+
+  // Draw each component as a composition zone
+  const dynamicComps = state.components.filter(c => c.visible && c.coverType === 'dynamic');
+  const opaqueComps = state.components.filter(c => c.visible && c.coverType === 'opaque');
+  const transComps = state.components.filter(c => c.visible && c.coverType === 'translucent');
+
+  // First pass: mark "flat ground needed" areas (dynamic zones — where cards land)
+  dynamicComps.forEach(c => {
+    const x = c.x / 100 * W, y = c.y / 100 * H;
+    const w = c.w / 100 * W, h = c.h / 100 * H;
+    // Green fill = flat ground needed
+    ctx.fillStyle = 'rgba(80,200,80,0.15)';
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'rgba(80,200,80,0.6)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, w, h);
+    // Label
+    ctx.fillStyle = 'rgba(80,200,80,0.8)';
+    ctx.font = 'bold 13px Georgia';
+    ctx.fillText(c.label + ' — FLAT GROUND', x + 8, y + 18);
+    ctx.font = '11px Georgia';
+    ctx.fillStyle = 'rgba(80,200,80,0.5)';
+    ctx.fillText('Cards land here. Needs level terrain.', x + 8, y + 34);
+  });
+
+  // Opaque zones — "UI covers this area"
+  opaqueComps.forEach(c => {
+    const x = c.x / 100 * W, y = c.y / 100 * H;
+    const w = c.w / 100 * W, h = c.h / 100 * H;
+    ctx.fillStyle = 'rgba(100,100,255,0.12)';
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'rgba(100,100,255,0.4)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = 'rgba(100,100,255,0.5)';
+    ctx.font = '10px Georgia';
+    ctx.fillText(c.label + ' (UI)', x + 4, y + 14);
+  });
+
+  // Translucent zones — landscape shows through
+  transComps.forEach(c => {
+    const x = c.x / 100 * W, y = c.y / 100 * H;
+    const w = c.w / 100 * W, h = c.h / 100 * H;
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.strokeRect(x, y, w, h);
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.font = '10px Georgia';
+    ctx.fillText(c.label + ' (see-through)', x + 4, y + 14);
+  });
+
+  // Paint ALL areas not covered by dynamic/opaque zones as "open landscape" in gold
+  // Create a mask: start with full canvas, subtract zone rectangles
+  const coveredRects = state.components.filter(c => c.visible && (c.coverType === 'dynamic' || c.coverType === 'opaque'))
+    .map(c => ({ x: c.x / 100 * W, y: c.y / 100 * H, w: c.w / 100 * W, h: c.h / 100 * H }));
+
+  // Draw a faint gold wash over the entire board first
+  ctx.fillStyle = 'rgba(255,160,40,0.06)';
+  ctx.fillRect(0, 0, W, H);
+  // Then cut out the zones (draw dark over them to erase the gold wash)
+  ctx.fillStyle = '#1a1a1a';
+  coveredRects.forEach(r => ctx.fillRect(r.x, r.y, r.w, r.h));
+
+  // Add "open landscape" labels in the largest gaps
+  ctx.fillStyle = 'rgba(255,160,40,0.8)';
+  ctx.font = 'bold 18px Georgia';
+  // Try center of board
+  const centerX = W * 0.5, centerY = H * 0.42;
+  let centerClear = true;
+  for (const r of coveredRects) {
+    if (centerX > r.x && centerX < r.x + r.w && centerY > r.y && centerY < r.y + r.h) { centerClear = false; break; }
+  }
+  if (centerClear) {
+    // Dark backing for readability
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(centerX - 200, centerY - 20, 400, 50);
+    ctx.fillStyle = 'rgba(255,160,40,0.9)';
+    ctx.font = 'bold 18px Georgia';
+    ctx.fillText('OPEN LANDSCAPE — DRAMATIC TERRAIN OK', centerX - 190, centerY + 2);
+    ctx.font = '12px Georgia';
+    ctx.fillStyle = 'rgba(255,160,40,0.6)';
+    ctx.fillText('Cliffs, water, ruins, trees — anything visually interesting', centerX - 172, centerY + 22);
+  }
+
+  // Camera info box — bottom left
+  const zoom = state.boardZoom || 1.0;
+  const tilt = state.boardTiltX || 0;
+  ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.fillRect(20, H - 120, 400, 100);
+  ctx.strokeStyle = 'rgba(255,200,50,0.4)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(20, H - 120, 400, 100);
+  ctx.fillStyle = 'rgba(255,200,50,0.85)';
+  ctx.font = 'bold 13px Georgia';
+  ctx.fillText('CAMERA SPEC', 34, H - 98);
+  ctx.font = '12px Georgia';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  const layoutName = state.loadedLayoutName || 'custom';
+  ctx.fillText('Layout: ' + layoutName, 34, H - 78);
+  ctx.fillText('Horizon: ' + state.horizonY.toFixed(0) + '%   Tilt: ' + tilt + '\u00B0   Zoom: ' + zoom.toFixed(2) + '\u00D7', 34, H - 58);
+  const feel = tilt < 10 ? 'Low angle — vast, open, cinematic' :
+               tilt < 20 ? 'Medium angle — balanced, natural' :
+               tilt < 30 ? 'High angle — enclosed, pressing' : 'Overhead — claustrophobic, map-like';
+  ctx.fillText('Feel: ' + feel, 34, H - 38);
+
+  // Legend — top right
+  ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.fillRect(W - 280, 10, 260, 90);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.strokeRect(W - 280, 10, 260, 90);
+  ctx.font = 'bold 11px Georgia';
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('COMPOSITION GUIDE', W - 268, 30);
+  ctx.font = '11px Georgia';
+  ctx.fillStyle = 'rgba(80,200,80,0.8)';
+  ctx.fillText('\u25A0 Flat ground (cards land here)', W - 268, 50);
+  ctx.fillStyle = 'rgba(100,100,255,0.6)';
+  ctx.fillText('\u25A0 UI overlay (landscape hidden)', W - 268, 66);
+  ctx.fillStyle = 'rgba(255,160,40,0.6)';
+  ctx.fillText('\u25A0 Open landscape (dramatic terrain OK)', W - 268, 82);
+
+  // Export
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (layoutName || 'composition') + '-guide.png';
+    a.click();
+    setStatus('Composition guide exported.');
+  });
+}
+
+function importJSON() {
+  const input=document.createElement('input'); input.type='file'; input.accept='.json';
+  input.onchange = e => {
+    const reader=new FileReader();
+    reader.onload = ev => {
+      try {
+        const data=JSON.parse(ev.target.result);
+        if (data.components) state.components=data.components;
+        if (data.layers) state.layers=data.layers;
+        if (data.boardRatio) state.boardRatio=data.boardRatio;
+        if (data.nextId) state.nextId=data.nextId;
+        if (data.horizonY!==undefined) state.horizonY=data.horizonY;
+        if (data.elementConfig) state.elementConfig=data.elementConfig;
+        if (data.boardTiltX!==undefined) state.boardTiltX=data.boardTiltX;
+        if (data.boardTiltY!==undefined) state.boardTiltY=data.boardTiltY;
+        if (data.perspectiveDepth!==undefined) state.perspectiveDepth=data.perspectiveDepth;
+        if (data.vanishX!==undefined) state.vanishX=data.vanishX;
+        if (data.vanishY!==undefined) state.vanishY=data.vanishY;
+        if (data.boardZoom!==undefined) state.boardZoom=data.boardZoom;
+        // Store as baseline for "Reset to Default Layout"
+        state.loadedLayoutName = data.name || e.target.files[0].name.replace('.json','');
+        state.loadedLayoutData = JSON.parse(JSON.stringify(data));
+        applyBoardTilt(); renderVanishPoint();
+        buildChecklist(); renderAll(); setStatus('Layout loaded: ' + state.loadedLayoutName);
+      } catch(err) { setStatus('Error loading JSON.'); }
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  input.click();
+}
+
+function setStatus(msg) {
+  document.getElementById('status-msg').textContent = msg;
+  setTimeout(()=>{ document.getElementById('status-msg').textContent='Right-click for options · Hover left edge for checklist'; }, 4000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════════════════════
+
+document.addEventListener('keydown', e => {
+  const inInput = ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName);
+  if ((e.metaKey||e.ctrlKey) && e.key==='z' && !e.shiftKey) { e.preventDefault(); undo(); return; }
+  if ((e.metaKey||e.ctrlKey) && (e.key==='y'||(e.key==='z'&&e.shiftKey))) { e.preventDefault(); redo(); return; }
+  if ((e.metaKey||e.ctrlKey) && e.key==='d') { e.preventDefault(); if(state.selectedIds.length===1)duplicateComp(state.selectedIds[0]); return; }
+  if ((e.metaKey||e.ctrlKey) && e.key==='a') { e.preventDefault(); selectAll(true); return; }
+  if (inInput) return;
+  if (e.key==='Delete'||e.key==='Backspace') deleteSelected();
+  if (e.key==='Escape') { selectAll(false); hideContextMenu(); hideMasterModal(); }
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) {
+    e.preventDefault();
+    const d = e.shiftKey ? 0.5 : 0.1;
+    state.selectedIds.forEach(id => {
+      const c=state.components.find(c=>c.id===id); if(!c)return;
+      if (e.key==='ArrowLeft') c.x=Math.max(0,c.x-d);
+      if (e.key==='ArrowRight') c.x=Math.min(100-c.w,c.x+d);
+      if (e.key==='ArrowUp') c.y=Math.max(0,c.y-d);
+      if (e.key==='ArrowDown') c.y=Math.min(100-c.h,c.y+d);
+    });
+    renderAll();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// DEFAULT LAYOUT
+// ═══════════════════════════════════════════════════════════════
+
+function loadDefault() {
+  // If a layout was loaded from JSON, reset to that layout's saved state
+  if (state.loadedLayoutData) {
+    const data = state.loadedLayoutData;
+    state.components = JSON.parse(JSON.stringify(data.components || []));
+    state.selectedIds = [];
+    if (data.nextId) state.nextId = data.nextId;
+    if (data.horizonY !== undefined) state.horizonY = data.horizonY;
+    if (data.boardTiltX !== undefined) state.boardTiltX = data.boardTiltX;
+    if (data.boardTiltY !== undefined) state.boardTiltY = data.boardTiltY;
+    if (data.perspectiveDepth !== undefined) state.perspectiveDepth = data.perspectiveDepth;
+    if (data.vanishX !== undefined) state.vanishX = data.vanishX;
+    if (data.vanishY !== undefined) state.vanishY = data.vanishY;
+    applyBoardTilt(); renderVanishPoint();
+    renderAll(); buildChecklist();
+    setStatus('Reset to: ' + (state.loadedLayoutName || 'loaded layout'));
+    return;
+  }
+  // Otherwise use hardcoded default
+  state.components=[]; state.selectedIds=[]; state.nextId=1;
+  const defaults = ['baradur','phase-tracker','shadow-zone','opp-hand','opp-piles','ring-spinner',
+    'twilight-pool','adventure-path','fellowship-zone','your-piles','hand-fan','pass-btn','action-log','left-dock','right-dock'];
+  const overrides = {
+    'hand-fan':{x:52,y:55,w:48,h:45},'pass-btn':{x:45,y:94,w:10,h:5},'shadow-zone':{x:1,y:8,w:98,h:11},
+    'fellowship-zone':{x:1,y:38,w:98,h:18},
+    'twilight-pool':{x:43,y:21,w:14,h:15},'adventure-path':{x:10,y:53,w:68,h:7},'baradur':{x:93,y:1,w:4,h:10},
+  };
+  defaults.forEach(type => { const t=COMP_TEMPLATES.find(t=>t.type===type); if(t)addComponent({...t,...(overrides[type]||{})}); });
+  state.selectedIds=[];
+  renderAll();
+  buildChecklist();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+buildChecklist();
+initHorizonDrag();
+resizeBoard();
+// Editor opens empty — user loads a layout or starts fresh
+window.addEventListener('resize', () => resizeBoard());
+</script>
+</body>
+</html>

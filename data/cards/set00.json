@@ -1,0 +1,418 @@
+[
+  {
+    "blueprintId": "0_56",
+    "collInfo": "0P56",
+    "setNumber": 0,
+    "cardNumber": 56,
+    "title": "Ghân-buri-Ghân",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "While you can spot 2 other Men, Ghân-buri-Ghân cannot be overwhelmed unless his strength is tripled.<br>While at a forest site, Ghân-buri-Ghân is <b>defender +1</b>.",
+    "lore": "'Kill gorgûn! Kill orc-folk! No other words please Wild Men....'",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBeOverwhelmedMultiplier",
+          "filter": "self",
+          "requires": {
+            "type": "canSpot",
+            "filter": "another,man",
+            "count": 2
+          }
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "filter": "self",
+          "requires": {
+            "type": "location",
+            "filter": "forest"
+          },
+          "keyword": "defender+1"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR00056.jpg",
+    "hasErrata": false,
+    "subtitle": "Chieftain of the Woses",
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "race": "Man",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 5
+  },
+  {
+    "blueprintId": "0_57",
+    "collInfo": "0P57",
+    "setNumber": 0,
+    "cardNumber": 57,
+    "title": "Radagast's Staff",
+    "unique": true,
+    "twilight": 1,
+    "type": "Artifact",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be Radagast.<br>Each time the fellowship moves during the regroup phase, you may draw 2 cards.",
+    "lore": "'It would have been useless in any case to try and win over the honest Radagast to treachery.'",
+    "effects": {
+      "type": "trigger",
+      "optional": true,
+      "trigger": {
+        "type": "moves"
+      },
+      "requires": {
+        "type": "phase",
+        "phase": "regroup"
+      },
+      "effect": {
+        "type": "drawCards",
+        "count": 2
+      }
+    },
+    "imagePath": "decipher/LOTR00057.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "strength": 1,
+    "vitality": 1,
+    "itemClass": "Staff",
+    "target": "name(Radagast)"
+  },
+  {
+    "blueprintId": "0_58",
+    "collInfo": "0P58",
+    "setNumber": 0,
+    "cardNumber": 58,
+    "title": "Anárion",
+    "unique": true,
+    "twilight": 3,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "<b>Skirmish:</b> Play a [gondor] skirmish event to make each minion skirmishing Anárion strength -X, where X is Anárion's vitality.",
+    "lore": "...Elendil the Tall and his mighty sons, Isildur and Anárion, became great lords....",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "PlayCardFromHand",
+        "select": "choose(culture(gondor),timeword(skirmish),event)"
+      },
+      "effect": {
+        "type": "modifyStrength",
+        "select": "all(minion,inSkirmishAgainst(self))",
+        "amount": {
+          "type": "forEachVitality",
+          "filter": "self",
+          "multiplier": -1
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR00058.jpg",
+    "hasErrata": false,
+    "subtitle": "Lord of Anórien",
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "0_59",
+    "collInfo": "0P59",
+    "setNumber": 0,
+    "cardNumber": 59,
+    "title": "Erkenbrand",
+    "unique": true,
+    "twilight": 3,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "If you can spot a [rohan] Man, you may play Erkenbrand any time you could play a skirmish event.<br>When you play Erkenbrand, you may discard a Shadow possession.",
+    "lore": "As he came to the valley's brink, he set to his lips a great black horn and blew a ringing blast.",
+    "effects": [
+      {
+        "type": "playedInOtherPhase",
+        "phase": "skirmish",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(rohan),man"
+        }
+      },
+      {
+        "type": "trigger",
+        "optional": true,
+        "trigger": {
+          "type": "played",
+          "filter": "self"
+        },
+        "effect": {
+          "type": "discard",
+          "select": "choose(side(shadow),possession)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR00059.jpg",
+    "hasErrata": false,
+    "subtitle": "Master of Westfold",
+    "side": "Free Peoples",
+    "culture": "Rohan",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 5
+  },
+  {
+    "blueprintId": "0_60",
+    "collInfo": "0P60",
+    "setNumber": 0,
+    "cardNumber": 60,
+    "title": "Tom Bombadil's Hat",
+    "unique": true,
+    "twilight": 1,
+    "type": "Possession",
+    "rarity": "P",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, spot 2 [shire] companions.<br>Each time a Shadow card adds a burden or a threat, add a [shire] token here.<br><b>Fellowship:</b> Remove 2 [shire] tokens from here to remove a burden.",
+    "lore": "...there appeared above the reeds an old battered hat a tall crown and a long blue feather....",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(shire),companion",
+          "count": 2
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": [
+          {
+            "type": "addsBurden",
+            "filter": "side(shadow)"
+          },
+          {
+            "type": "addsThreat",
+            "filter": "side(shadow)"
+          }
+        ],
+        "effect": {
+          "type": "AddCultureTokens",
+          "culture": "shire",
+          "select": "self"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "fellowship",
+        "cost": {
+          "type": "RemoveCultureTokens",
+          "select": "self",
+          "count": 2,
+          "culture": "shire"
+        },
+        "effect": {
+          "type": "removeBurdens"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR00060.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire"
+  },
+  {
+    "blueprintId": "0_62",
+    "collInfo": "0P62",
+    "setNumber": 0,
+    "cardNumber": 62,
+    "title": "Gimli",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Damage+1"
+    ],
+    "gametext": "<b>Damage +1</b>.",
+    "lore": "'The ring cannot be destroyed, Gimli, son of Glóin, by any craft that we here possess.'",
+    "effects": null,
+    "imagePath": "decipher/LOTR00062.jpg",
+    "hasErrata": false,
+    "subtitle": "Dwarven Delegate",
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "race": "Dwarf",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "0_63",
+    "collInfo": "0P63",
+    "setNumber": 0,
+    "cardNumber": 63,
+    "title": "Arwen",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ranger"
+    ],
+    "gametext": "<b>Ranger</b>.<br><b>Skirmish:</b> Exert Arwen to make a minion skirmishing an Elf strength -2.",
+    "lore": "...and she was called Undómiel, for she was the Evenstar of her people.",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "modifyStrength",
+        "select": "choose(minion,inSkirmishAgainst(elf))",
+        "amount": -2
+      }
+    },
+    "imagePath": "decipher/LOTR00063.jpg",
+    "hasErrata": false,
+    "subtitle": "Maiden of Rivendell",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "0_64",
+    "collInfo": "0P64",
+    "setNumber": 0,
+    "cardNumber": 64,
+    "title": "Gandalf",
+    "unique": true,
+    "twilight": 4,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "",
+    "lore": "His real business was far more difficult and dangerous, but the Shire-folk knew nothing about it.",
+    "effects": null,
+    "imagePath": "decipher/LOTR00064.jpg",
+    "hasErrata": false,
+    "subtitle": "Stormcrow",
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "race": "Wizard",
+    "strength": 8,
+    "vitality": 4,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "0_65",
+    "collInfo": "0P65",
+    "setNumber": 0,
+    "cardNumber": 65,
+    "title": "Boromir",
+    "unique": true,
+    "twilight": 3,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ring-bound",
+      "Knight",
+      "Ranger"
+    ],
+    "gametext": "<b>Ring-bound</b>. <b>Knight</b>. <b>Ranger</b>.",
+    "lore": "...but at once, Boromir stood up, tall and proud before them.",
+    "effects": null,
+    "imagePath": "decipher/LOTR00065.jpg",
+    "hasErrata": false,
+    "subtitle": "Steward's Heir",
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "0_66",
+    "collInfo": "0P66",
+    "setNumber": 0,
+    "cardNumber": 66,
+    "title": "Éomer",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Valiant",
+      "Damage+1"
+    ],
+    "gametext": "<b>Valiant</b>. <b>Damage +1</b>.<br>While you can spot a [rohan] Man, Éomer's twilight cost is -1.",
+    "lore": "'Do I hope in vain that you have been sent to me for a help in doubt and need?'",
+    "effects": {
+      "type": "modifyOwnCost",
+      "amount": -1,
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(rohan),man"
+      }
+    },
+    "imagePath": "decipher/LOTR00066.jpg",
+    "hasErrata": false,
+    "subtitle": "Forthwith Banished",
+    "side": "Free Peoples",
+    "culture": "Rohan",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "0_67",
+    "collInfo": "0P67",
+    "setNumber": 0,
+    "cardNumber": 67,
+    "title": "Frodo",
+    "unique": true,
+    "twilight": 0,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "<b>Ring-bearer (resistance 10).</b><br>The twilight cost of each artifact, possession, and [shire] tale played on Frodo is -1.",
+    "lore": "'...I nearly tried on Bilbo's ring. I longed to disappear.'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyPlayOnCost",
+        "filter": "or(artifact,possession,and(culture(shire),tale))",
+        "on": "self",
+        "amount": -1
+      }
+    },
+    "imagePath": "decipher/LOTR00067.jpg",
+    "hasErrata": false,
+    "subtitle": "Mr. Underhill",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 3,
+    "vitality": 4,
+    "resistance": 10,
+    "signet": "Gandalf"
+  }
+]

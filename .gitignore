@@ -1,0 +1,18 @@
+node_modules/
+.svelte-kit/
+build/
+dist/
+
+# GEMP source data (cloned for parsing — not needed in the repo)
+gemp-raw/
+
+# Large binary assets (tracked separately or via LFS)
+Card Images/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local

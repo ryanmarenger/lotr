@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Card Grounding Techniques — Visual Prototype</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #0a0a0e;
+  font-family: Georgia, serif;
+  color: rgba(255,255,255,0.7);
+  overflow-x: hidden;
+}
+
+/* ── Landscape backdrop ── */
+.scene {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #080614 0%,
+    #100c22 25%,
+    #1a1008 55%,
+    #0e0a04 100%
+  );
+}
+.scene-bg svg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70%;
+}
+.scene-label {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: rgba(186,140,30,0.6);
+  letter-spacing: 2px;
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  padding: 3px 12px;
+  border-radius: 3px;
+}
+.scene-desc {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  max-width: 400px;
+  line-height: 1.6;
+  z-index: 10;
+}
+
+/* ── Card base (shared) ── */
+.card {
+  position: absolute;
+  width: 80px;
+  height: 112px;
+  border-radius: 5px;
+  z-index: 5;
+  transition: transform 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  /* Simulate a card with a LOTR-style illustration */
+  background: linear-gradient(180deg,
+    #1a1528 0%,
+    #201830 30%,
+    #0f1a12 60%,
+    #0a0f08 100%
+  );
+  border: 1px solid rgba(186,140,30,0.5);
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+.card-art {
+  flex: 1;
+  border-radius: 2px;
+  margin-bottom: 3px;
+}
+.card-title {
+  font-size: 7px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  padding: 2px;
+  border-top: 0.5px solid rgba(186,140,30,0.3);
+  letter-spacing: 0.5px;
+}
+.card-cost {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(20,20,50,0.85);
+  border: 0.5px solid rgba(100,100,180,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: rgba(180,180,255,0.9);
+}
+
+/* Culture card colors */
+.card-gondor .card-art { background: linear-gradient(135deg, #2a2a3a, #1a1a2a, #353540); }
+.card-gondor .card-face { border-color: rgba(200,200,220,0.5); }
+.card-elven .card-art { background: linear-gradient(135deg, #1a2535, #0f1a28, #1a2a35); }
+.card-elven .card-face { border-color: rgba(140,180,220,0.5); }
+.card-shire .card-art { background: linear-gradient(135deg, #1a2a1a, #0f1a0f, #1a2a18); }
+.card-shire .card-face { border-color: rgba(120,180,80,0.5); }
+.card-sauron .card-art { background: linear-gradient(135deg, #2a1010, #1a0808, #2a0a0a); }
+.card-sauron .card-face { border-color: rgba(180,50,50,0.5); }
+.card-isengard .card-art { background: linear-gradient(135deg, #1a1a1a, #222222, #1a1a20); }
+.card-isengard .card-face { border-color: rgba(150,150,160,0.5); }
+
+/* ═══════════════════════════════════════════════════════════
+   TECHNIQUE 1: No grounding (the problem)
+   ═══════════════════════════════════════════════════════════ */
+
+/* nothing — card just sits there */
+
+/* ═══════════════════════════════════════════════════════════
+   TECHNIQUE 2: Contact shadow only
+   ═══════════════════════════════════════════════════════════ */
+
+.ground-shadow {
+  position: absolute;
+  bottom: -6px;
+  left: 5%;
+  width: 90%;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.45) 0%, transparent 70%);
+  z-index: 3;
+  filter: blur(3px);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TECHNIQUE 3: Contact shadow + culture base glow
+   ═══════════════════════════════════════════════════════════ */
+
+.ground-glow {
+  position: absolute;
+  bottom: -10px;
+  left: -15%;
+  width: 130%;
+  height: 24px;
+  border-radius: 50%;
+  z-index: 2;
+  filter: blur(8px);
+  opacity: 0.5;
+}
+.ground-glow.glow-gondor { background: radial-gradient(ellipse, rgba(180,180,220,0.4) 0%, transparent 70%); }
+.ground-glow.glow-elven  { background: radial-gradient(ellipse, rgba(100,160,220,0.4) 0%, transparent 70%); }
+.ground-glow.glow-shire  { background: radial-gradient(ellipse, rgba(100,180,60,0.35) 0%, transparent 70%); }
+.ground-glow.glow-sauron { background: radial-gradient(ellipse, rgba(180,40,30,0.4) 0%, transparent 70%); }
+.ground-glow.glow-isengard { background: radial-gradient(ellipse, rgba(140,140,150,0.35) 0%, transparent 70%); }
+
+/* ═══════════════════════════════════════════════════════════
+   TECHNIQUE 4: Ring ripple (the LOTR-specific one)
+   ═══════════════════════════════════════════════════════════ */
+
+.ring-ripple-container {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  z-index: 1;
+}
+
+.ring-ripple {
+  position: absolute;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 1px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: ripple-expand 3s ease-out infinite;
+}
+
+.ring-ripple:nth-child(1) { animation-delay: 0s; }
+.ring-ripple:nth-child(2) { animation-delay: 1s; }
+.ring-ripple:nth-child(3) { animation-delay: 2s; }
+
+@keyframes ripple-expand {
+  0% { width: 10px; height: 6px; opacity: 0.6; }
+  100% { width: 140px; height: 50px; opacity: 0; }
+}
+
+.ring-ripple.ripple-gondor { border-color: rgba(180,180,220,0.4); }
+.ring-ripple.ripple-elven  { border-color: rgba(100,160,220,0.4); }
+.ring-ripple.ripple-shire  { border-color: rgba(100,180,60,0.35); }
+.ring-ripple.ripple-sauron { border-color: rgba(200,40,30,0.5); }
+.ring-ripple.ripple-isengard { border-color: rgba(140,140,150,0.4); }
+
+/* ═══════════════════════════════════════════════════════════
+   TECHNIQUE 5: FULL COMBO — shadow + glow + ripple + tint
+   ═══════════════════════════════════════════════════════════ */
+
+.ground-tint {
+  position: absolute;
+  bottom: -20px;
+  left: -30%;
+  width: 160%;
+  height: 50px;
+  border-radius: 50%;
+  z-index: 0;
+  filter: blur(18px);
+  opacity: 0.15;
+}
+.ground-tint.tint-gondor { background: radial-gradient(ellipse, rgba(180,180,220,0.5) 0%, transparent 65%); }
+.ground-tint.tint-elven  { background: radial-gradient(ellipse, rgba(100,160,220,0.5) 0%, transparent 65%); }
+.ground-tint.tint-shire  { background: radial-gradient(ellipse, rgba(100,180,60,0.45) 0%, transparent 65%); }
+.ground-tint.tint-sauron { background: radial-gradient(ellipse, rgba(200,40,30,0.5) 0%, transparent 65%); }
+.ground-tint.tint-isengard { background: radial-gradient(ellipse, rgba(140,140,150,0.4) 0%, transparent 65%); }
+
+/* ── Entry animation ── */
+.card-entering {
+  animation: card-materialize 1.2s ease-out forwards;
+}
+@keyframes card-materialize {
+  0% { transform: translateY(20px) scale(0.8); opacity: 0; filter: brightness(2) blur(3px); }
+  40% { transform: translateY(-4px) scale(1.02); opacity: 1; filter: brightness(1.3) blur(0); }
+  60% { transform: translateY(2px) scale(0.99); }
+  100% { transform: translateY(0) scale(1); opacity: 1; filter: brightness(1) blur(0); }
+}
+
+.ripple-entry {
+  animation: ripple-burst 1.5s ease-out forwards;
+}
+@keyframes ripple-burst {
+  0% { width: 0; height: 0; opacity: 0.8; border-width: 2px; }
+  100% { width: 180px; height: 60px; opacity: 0; border-width: 0.5px; }
+}
+
+/* ── Title bar ── */
+h1 {
+  text-align: center;
+  padding: 16px;
+  font-size: 14px;
+  color: rgba(186,140,30,0.8);
+  letter-spacing: 3px;
+  border-bottom: 1px solid rgba(186,140,30,0.15);
+}
+.controls {
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.controls button {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(186,140,30,0.3);
+  color: rgba(186,140,30,0.7);
+  padding: 6px 16px;
+  margin: 0 4px;
+  border-radius: 4px;
+  font-family: Georgia, serif;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.controls button:hover {
+  background: rgba(186,140,30,0.12);
+  color: rgba(186,140,30,0.95);
+}
+</style>
+</head>
+<body>
+
+<h1>CARD GROUNDING TECHNIQUES</h1>
+<div class="controls">
+  <button onclick="replayEntry()">Replay Entry Animation</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCENE 1: No grounding (the problem) -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="scene">
+  <div class="scene-bg">
+    <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,200 80,40 200,120 300,20 450,100 600,30 800,80 800,200" fill="#0c091a" opacity="0.9"/>
+      <polygon points="0,200 50,90 180,150 350,70 550,130 700,60 800,100 800,200" fill="#140e28" opacity="0.85"/>
+      <polygon points="0,200 0,150 100,120 250,145 400,115 550,140 700,110 800,130 800,200" fill="#161006" opacity="0.9"/>
+      <polygon points="0,200 0,175 200,165 400,170 600,160 800,170 800,200" fill="#100c04"/>
+    </svg>
+  </div>
+  <div class="scene-desc">NO GROUNDING — Cards are flat stickers on the landscape. Nothing connects them to the surface. They feel like they're floating in a separate layer.</div>
+  <div class="scene-label">1. NO GROUNDING (THE PROBLEM)</div>
+
+  <div class="card card-gondor" style="left:180px;bottom:80px;">
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Aragorn</div></div>
+  </div>
+  <div class="card card-elven" style="left:280px;bottom:90px;">
+    <div class="card-face"><div class="card-cost">2</div><div class="card-art"></div><div class="card-title">Legolas</div></div>
+  </div>
+  <div class="card card-shire" style="left:380px;bottom:75px;">
+    <div class="card-face"><div class="card-cost">0</div><div class="card-art"></div><div class="card-title">Frodo</div></div>
+  </div>
+  <div class="card card-sauron" style="left:560px;bottom:85px;">
+    <div class="card-face"><div class="card-cost">4</div><div class="card-art"></div><div class="card-title">Witch-king</div></div>
+  </div>
+  <div class="card card-isengard" style="left:660px;bottom:70px;">
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Lurtz</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCENE 2: Contact shadow only -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="scene">
+  <div class="scene-bg">
+    <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,200 80,40 200,120 300,20 450,100 600,30 800,80 800,200" fill="#0c091a" opacity="0.9"/>
+      <polygon points="0,200 50,90 180,150 350,70 550,130 700,60 800,100 800,200" fill="#140e28" opacity="0.85"/>
+      <polygon points="0,200 0,150 100,120 250,145 400,115 550,140 700,110 800,130 800,200" fill="#161006" opacity="0.9"/>
+      <polygon points="0,200 0,175 200,165 400,170 600,160 800,170 800,200" fill="#100c04"/>
+    </svg>
+  </div>
+  <div class="scene-desc">CONTACT SHADOW — A soft elliptical shadow beneath each card. Simple but effective. The card feels like it's resting on a surface. The shadow says "there is a ground here."</div>
+  <div class="scene-label">2. CONTACT SHADOW</div>
+
+  <div class="card card-gondor" style="left:180px;bottom:80px;">
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Aragorn</div></div>
+  </div>
+  <div class="card card-elven" style="left:280px;bottom:90px;">
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">2</div><div class="card-art"></div><div class="card-title">Legolas</div></div>
+  </div>
+  <div class="card card-shire" style="left:380px;bottom:75px;">
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">0</div><div class="card-art"></div><div class="card-title">Frodo</div></div>
+  </div>
+  <div class="card card-sauron" style="left:560px;bottom:85px;">
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">4</div><div class="card-art"></div><div class="card-title">Witch-king</div></div>
+  </div>
+  <div class="card card-isengard" style="left:660px;bottom:70px;">
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Lurtz</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCENE 3: Shadow + culture base glow -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="scene">
+  <div class="scene-bg">
+    <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,200 80,40 200,120 300,20 450,100 600,30 800,80 800,200" fill="#0c091a" opacity="0.9"/>
+      <polygon points="0,200 50,90 180,150 350,70 550,130 700,60 800,100 800,200" fill="#140e28" opacity="0.85"/>
+      <polygon points="0,200 0,150 100,120 250,145 400,115 550,140 700,110 800,130 800,200" fill="#161006" opacity="0.9"/>
+      <polygon points="0,200 0,175 200,165 400,170 600,160 800,170 800,200" fill="#100c04"/>
+    </svg>
+  </div>
+  <div class="scene-desc">SHADOW + CULTURE GLOW — Contact shadow plus a soft culture-colored glow beneath the card. Gondor = silver. Elven = blue. Shire = green. Sauron = red. The card's presence tints the world.</div>
+  <div class="scene-label">3. SHADOW + CULTURE GLOW</div>
+
+  <div class="card card-gondor" style="left:180px;bottom:80px;">
+    <div class="ground-glow glow-gondor"></div>
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Aragorn</div></div>
+  </div>
+  <div class="card card-elven" style="left:280px;bottom:90px;">
+    <div class="ground-glow glow-elven"></div>
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">2</div><div class="card-art"></div><div class="card-title">Legolas</div></div>
+  </div>
+  <div class="card card-shire" style="left:380px;bottom:75px;">
+    <div class="ground-glow glow-shire"></div>
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">0</div><div class="card-art"></div><div class="card-title">Frodo</div></div>
+  </div>
+  <div class="card card-sauron" style="left:560px;bottom:85px;">
+    <div class="ground-glow glow-sauron"></div>
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">4</div><div class="card-art"></div><div class="card-title">Witch-king</div></div>
+  </div>
+  <div class="card card-isengard" style="left:660px;bottom:70px;">
+    <div class="ground-glow glow-isengard"></div>
+    <div class="ground-shadow"></div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Lurtz</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCENE 4: Ring ripples -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="scene">
+  <div class="scene-bg">
+    <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,200 80,40 200,120 300,20 450,100 600,30 800,80 800,200" fill="#0c091a" opacity="0.9"/>
+      <polygon points="0,200 50,90 180,150 350,70 550,130 700,60 800,100 800,200" fill="#140e28" opacity="0.85"/>
+      <polygon points="0,200 0,150 100,120 250,145 400,115 550,140 700,110 800,130 800,200" fill="#161006" opacity="0.9"/>
+      <polygon points="0,200 0,175 200,165 400,170 600,160 800,170 800,200" fill="#100c04"/>
+    </svg>
+  </div>
+  <div class="scene-desc">RING RIPPLES — Concentric ellipses pulse outward from each card's base, culture-colored. The card is manifesting into the world. Its presence displaces reality. Very LOTR — power ripples through Middle-earth.</div>
+  <div class="scene-label">4. RING RIPPLES (YOUR IDEA)</div>
+
+  <div class="card card-gondor" style="left:180px;bottom:80px;">
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-gondor"></div>
+      <div class="ring-ripple ripple-gondor"></div>
+      <div class="ring-ripple ripple-gondor"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Aragorn</div></div>
+  </div>
+  <div class="card card-elven" style="left:280px;bottom:90px;">
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-elven"></div>
+      <div class="ring-ripple ripple-elven"></div>
+      <div class="ring-ripple ripple-elven"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">2</div><div class="card-art"></div><div class="card-title">Legolas</div></div>
+  </div>
+  <div class="card card-shire" style="left:380px;bottom:75px;">
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-shire"></div>
+      <div class="ring-ripple ripple-shire"></div>
+      <div class="ring-ripple ripple-shire"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">0</div><div class="card-art"></div><div class="card-title">Frodo</div></div>
+  </div>
+  <div class="card card-sauron" style="left:560px;bottom:85px;">
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-sauron"></div>
+      <div class="ring-ripple ripple-sauron"></div>
+      <div class="ring-ripple ripple-sauron"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">4</div><div class="card-art"></div><div class="card-title">Witch-king</div></div>
+  </div>
+  <div class="card card-isengard" style="left:660px;bottom:70px;">
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-isengard"></div>
+      <div class="ring-ripple ripple-isengard"></div>
+      <div class="ring-ripple ripple-isengard"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Lurtz</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCENE 5: Full combo — shadow + glow + ripple + tint -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="scene" style="height:380px;">
+  <div class="scene-bg">
+    <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,200 80,40 200,120 300,20 450,100 600,30 800,80 800,200" fill="#0c091a" opacity="0.9"/>
+      <polygon points="0,200 50,90 180,150 350,70 550,130 700,60 800,100 800,200" fill="#140e28" opacity="0.85"/>
+      <polygon points="0,200 0,150 100,120 250,145 400,115 550,140 700,110 800,130 800,200" fill="#161006" opacity="0.9"/>
+      <polygon points="0,200 0,175 200,165 400,170 600,160 800,170 800,200" fill="#100c04"/>
+    </svg>
+  </div>
+  <div class="scene-desc">FULL COMBO — Shadow + culture glow + ring ripples + landscape tint. Cards feel like they are IN the world, not ON it. Each culture has a distinct visual presence. Click "Replay" above to see the entry animation.</div>
+  <div class="scene-label">5. FULL COMBO (SHADOW + GLOW + RIPPLE + TINT)</div>
+
+  <div class="card card-gondor" id="entry-1" style="left:140px;bottom:100px;">
+    <div class="ground-tint tint-gondor"></div>
+    <div class="ground-glow glow-gondor"></div>
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-gondor"></div>
+      <div class="ring-ripple ripple-gondor"></div>
+      <div class="ring-ripple ripple-gondor"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Aragorn</div></div>
+  </div>
+  <div class="card card-elven" id="entry-2" style="left:250px;bottom:110px;">
+    <div class="ground-tint tint-elven"></div>
+    <div class="ground-glow glow-elven"></div>
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-elven"></div>
+      <div class="ring-ripple ripple-elven"></div>
+      <div class="ring-ripple ripple-elven"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">2</div><div class="card-art"></div><div class="card-title">Legolas</div></div>
+  </div>
+  <div class="card card-shire" id="entry-3" style="left:360px;bottom:95px;">
+    <div class="ground-tint tint-shire"></div>
+    <div class="ground-glow glow-shire"></div>
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-shire"></div>
+      <div class="ring-ripple ripple-shire"></div>
+      <div class="ring-ripple ripple-shire"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">0</div><div class="card-art"></div><div class="card-title">Frodo</div></div>
+  </div>
+  <div class="card card-sauron" id="entry-4" style="left:540px;bottom:105px;">
+    <div class="ground-tint tint-sauron"></div>
+    <div class="ground-glow glow-sauron"></div>
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-sauron"></div>
+      <div class="ring-ripple ripple-sauron"></div>
+      <div class="ring-ripple ripple-sauron"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">4</div><div class="card-art"></div><div class="card-title">Witch-king</div></div>
+  </div>
+  <div class="card card-isengard" id="entry-5" style="left:660px;bottom:90px;">
+    <div class="ground-tint tint-isengard"></div>
+    <div class="ground-glow glow-isengard"></div>
+    <div class="ground-shadow"></div>
+    <div class="ring-ripple-container">
+      <div class="ring-ripple ripple-isengard"></div>
+      <div class="ring-ripple ripple-isengard"></div>
+      <div class="ring-ripple ripple-isengard"></div>
+    </div>
+    <div class="card-face"><div class="card-cost">3</div><div class="card-art"></div><div class="card-title">Lurtz</div></div>
+  </div>
+</div>
+
+<script>
+function replayEntry() {
+  const cards = document.querySelectorAll('#entry-1, #entry-2, #entry-3, #entry-4, #entry-5');
+  cards.forEach((card, i) => {
+    card.style.opacity = '0';
+    card.classList.remove('card-entering');
+    setTimeout(() => {
+      card.style.opacity = '1';
+      card.classList.add('card-entering');
+    }, i * 300);
+  });
+}
+// Auto-play on load
+setTimeout(replayEntry, 500);
+</script>
+
+</body>
+</html>

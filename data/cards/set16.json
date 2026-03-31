@@ -1,0 +1,306 @@
+[
+  {
+    "blueprintId": "16_1",
+    "collInfo": "16R1",
+    "setNumber": 16,
+    "cardNumber": 1,
+    "title": "Barrow-wight Stalker",
+    "unique": true,
+    "twilight": 5,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Enduring"
+    ],
+    "gametext": "<b>Enduring</b>. Each [wraith] Wraith cannot take wounds (except during skirmishes).<br><b>Shadow:</b> Remove a burden to play a [wraith] Wraith. That minion's twilight cost is -2.",
+    "lore": "The icy touch froze his bones, and he remembered no more.",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantTakeWounds",
+          "filter": "culture(wraith),wraith",
+          "requires": {
+            "type": "not",
+            "requires": {
+              "type": "phase",
+              "phase": "skirmish"
+            }
+          }
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "shadow",
+        "cost": {
+          "type": "removeBurdens"
+        },
+        "effect": {
+          "type": "PlayCardFromHand",
+          "select": "choose(culture(wraith),wraith)",
+          "discount": -2
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR16001.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Wraith",
+    "strength": 11,
+    "vitality": 4,
+    "siteNumber": 2
+  },
+  {
+    "blueprintId": "16_2",
+    "collInfo": "16R2",
+    "setNumber": 16,
+    "cardNumber": 2,
+    "title": "Candle Corpses",
+    "unique": false,
+    "twilight": 3,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Enduring"
+    ],
+    "gametext": "<b>Enduring</b>. Each time the Free Peoples player assigns this minion to a companion, you may spot another [wraith] Wraith and remove (2) to wound that companion.",
+    "lore": "...here and there they twisted like ghostly sheets unfurled by hidden hands.",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "assignedAgainst",
+        "side": "free people",
+        "filter": "self",
+        "against": "companion",
+        "memorizeAgainst": "assignedToCompanion"
+      },
+      "requires": {
+        "type": "canSpot",
+        "filter": "another,culture(wraith),wraith"
+      },
+      "cost": {
+        "type": "removeTwilight",
+        "amount": 2
+      },
+      "effect": {
+        "type": "wound",
+        "select": "memory(assignedToCompanion)"
+      }
+    },
+    "imagePath": "decipher/LOTR16002.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Wraith",
+    "strength": 8,
+    "vitality": 2,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "16_3",
+    "collInfo": "16R3",
+    "setNumber": 16,
+    "cardNumber": 3,
+    "title": "Covetous Wisp",
+    "unique": true,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Enduring"
+    ],
+    "gametext": "<b>Enduring</b>. Each time the Free Peoples player assigns Covetous Wisp to a companion, you may spot another [wraith] Wraith and remove (2) to add a burden.",
+    "lore": "'Only shapes to see, perhaps, not to touch.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "assignedAgainst",
+        "side": "free people",
+        "filter": "self",
+        "against": "companion"
+      },
+      "requires": {
+        "type": "canSpot",
+        "filter": "another,culture(wraith),wraith"
+      },
+      "cost": {
+        "type": "removeTwilight",
+        "amount": 2
+      },
+      "effect": {
+        "type": "addBurdens"
+      }
+    },
+    "imagePath": "decipher/LOTR16003.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Wraith",
+    "strength": 4,
+    "vitality": 2,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "16_4",
+    "collInfo": "16R4",
+    "setNumber": 16,
+    "cardNumber": 4,
+    "title": "Dead Faces",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Enduring"
+    ],
+    "gametext": "<b>Enduring</b>. Each time the Free Peoples player assigns this minion to a companion, you may spot another [wraith] Wraith and remove (2) to discard a condition.",
+    "lore": "'There are dead things, dead faces in the water!'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "assignedAgainst",
+        "side": "free people",
+        "filter": "self",
+        "against": "companion"
+      },
+      "requires": {
+        "type": "canSpot",
+        "filter": "another,culture(wraith),wraith"
+      },
+      "cost": {
+        "type": "removeTwilight",
+        "amount": 2
+      },
+      "effect": {
+        "type": "discard",
+        "select": "choose(condition)"
+      }
+    },
+    "imagePath": "decipher/LOTR16004.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Wraith",
+    "strength": 4,
+    "vitality": 2,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "16_5",
+    "collInfo": "16R5",
+    "setNumber": 16,
+    "cardNumber": 5,
+    "title": "Spirit of Dread",
+    "unique": true,
+    "twilight": 7,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Enduring"
+    ],
+    "gametext": "<b>Enduring</b>. While you can spot another [wraith] Wraith, wounds cannot be healed and burdens can not be removed (except by Wraiths).<br><b>Skirmish:</b> Exert Spirit of Dread to make another [wraith] Wraith strength +1.",
+    "lore": "...across their three necks lay one long naked sword.",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantHeal",
+          "requires": {
+            "type": "canSpot",
+            "filter": "another,culture(wraith),wraith"
+          },
+          "filter": "any"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantRemoveBurdens",
+          "requires": {
+            "type": "canSpot",
+            "filter": "another,culture(wraith),wraith"
+          },
+          "filter": "not(wraith)"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "choose(another,culture(wraith),wraith)",
+          "amount": 1
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR16005.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Wraith",
+    "strength": 14,
+    "vitality": 3,
+    "siteNumber": 2
+  },
+  {
+    "blueprintId": "16_6",
+    "collInfo": "16R6",
+    "setNumber": 16,
+    "cardNumber": 6,
+    "title": "Undead of Angmar",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Enduring"
+    ],
+    "gametext": "<b>Enduring</b>. While you can spot another [wraith] Wraith, each wounded companion is resistance -2.<br><b>Shadow:</b> Exert Undead of Angmar twice to play a [wraith] Wraith from your draw deck, then reshuffle.",
+    "lore": "In the dark there was a snarling noise.",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyResistance",
+          "filter": "wounded,companion",
+          "requires": {
+            "type": "canSpot",
+            "filter": "another,culture(wraith),wraith"
+          },
+          "amount": -2
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "shadow",
+        "cost": {
+          "type": "exert",
+          "select": "self",
+          "times": 2
+        },
+        "effect": {
+          "type": "playCardFromDrawDeck",
+          "select": "choose(culture(wraith),wraith)",
+          "showAll": true,
+          "shuffle": true
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR16006.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Wraith",
+    "strength": 9,
+    "vitality": 3,
+    "siteNumber": 2
+  }
+]

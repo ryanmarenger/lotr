@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Card Perspective Prototype — Isometric Board</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #060610;
+  font-family: Georgia, serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+  padding: 8px;
+  font-size: 12px;
+  color: rgba(186,140,30,0.6);
+  letter-spacing: 2px;
+  background: #08080f;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+/* ── The board (isometric perspective) ── */
+#board-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  perspective-origin: 50% 85%;
+  overflow: hidden;
+}
+
+#board {
+  width: 1200px;
+  height: 700px;
+  position: relative;
+  transform-style: preserve-3d;
+  /* Player sits lower-right, looking upper-left */
+  transform: rotateX(55deg) rotateZ(-5deg);
+  transition: transform 1s ease;
+}
+
+/* ── Landscape surface ── */
+#landscape {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #0c091a 0%,
+    #140e28 20%,
+    #1a1208 45%,
+    #161006 70%,
+    #0a0a0a 100%
+  );
+  box-shadow: 0 0 80px rgba(0,0,0,0.8);
+}
+
+#landscape svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Zone indicators (ghost-faint) ── */
+.zone {
+  position: absolute;
+  border: 1px dashed rgba(255,255,255,0.06);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.zone-fp {
+  bottom: 12%;
+  left: 5%;
+  width: 60%;
+  height: 22%;
+  border-color: rgba(186,140,30,0.08);
+}
+.zone-shadow {
+  top: 8%;
+  left: 20%;
+  width: 60%;
+  height: 20%;
+  border-color: rgba(80,50,120,0.08);
+}
+.zone-label {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  opacity: 0.15;
+}
+.zone-fp .zone-label { color: rgba(186,140,30,0.5); }
+.zone-shadow .zone-label { color: rgba(80,50,120,0.5); }
+
+/* ═══════════════════════════════════════════════
+   CARDS — flat on the board (parallelogram)
+   ═══════════════════════════════════════════════ */
+
+.card-anchor {
+  position: absolute;
+  transform-style: preserve-3d;
+  z-index: 5;
+}
+
+.card-3d {
+  width: 90px;
+  height: 126px;
+  position: relative;
+  transform-style: preserve-3d;
+  /* Card lies flat on the board surface */
+  transform: rotateX(0deg);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              z-index 0s;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hover: card stands up to face the player */
+.card-3d:hover {
+  transform: rotateX(-55deg) rotateZ(5deg) translateZ(60px) translateY(-40px);
+  z-index: 100;
+}
+
+.card-3d.inspecting {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotateX(0deg) rotateZ(0deg) scale(2.5);
+  z-index: 9999;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Card face ── */
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-art {
+  flex: 1;
+  margin: 4px 4px 2px 4px;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+.card-art-inner {
+  position: absolute;
+  inset: 0;
+}
+
+.card-bottom {
+  padding: 3px 5px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.card-title-bar {
+  font-size: 7.5px;
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-subtitle {
+  font-size: 6px;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  font-style: italic;
+}
+
+.card-stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 1px;
+}
+
+.card-stat {
+  font-size: 7px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.stat-str { color: rgba(220,180,100,0.9); }
+.stat-vit { color: rgba(180,60,60,0.9); }
+.stat-res { color: rgba(100,180,220,0.9); }
+
+.card-cost-badge {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: bold;
+  z-index: 2;
+  border: 1px solid;
+}
+
+/* ── Culture colors ── */
+.culture-gondor .card-face { background: linear-gradient(180deg, #1a1a28, #14142a); border: 1px solid rgba(200,200,220,0.45); }
+.culture-gondor .card-art-inner { background: linear-gradient(135deg, #2a2a3a, #1a1a2a, #353545); }
+.culture-gondor .card-cost-badge { background: rgba(15,15,30,0.9); border-color: rgba(200,200,220,0.4); color: rgba(200,200,240,0.9); }
+
+.culture-elven .card-face { background: linear-gradient(180deg, #141a28, #0f1622); border: 1px solid rgba(100,160,220,0.45); }
+.culture-elven .card-art-inner { background: linear-gradient(135deg, #1a2a40, #0f1a28, #1a2838); }
+.culture-elven .card-cost-badge { background: rgba(10,18,30,0.9); border-color: rgba(100,160,220,0.4); color: rgba(140,190,240,0.9); }
+
+.culture-shire .card-face { background: linear-gradient(180deg, #151e15, #0f180f); border: 1px solid rgba(100,170,60,0.45); }
+.culture-shire .card-art-inner { background: linear-gradient(135deg, #1a2a1a, #0f1a0f, #1e2e1a); }
+.culture-shire .card-cost-badge { background: rgba(12,20,10,0.9); border-color: rgba(100,170,60,0.4); color: rgba(140,200,90,0.9); }
+
+.culture-sauron .card-face { background: linear-gradient(180deg, #221010, #1a0808); border: 1px solid rgba(180,50,40,0.45); }
+.culture-sauron .card-art-inner { background: linear-gradient(135deg, #2a1010, #1a0808, #2a0f0f); }
+.culture-sauron .card-cost-badge { background: rgba(25,8,8,0.9); border-color: rgba(180,50,40,0.4); color: rgba(220,80,70,0.9); }
+
+.culture-isengard .card-face { background: linear-gradient(180deg, #181818, #121215); border: 1px solid rgba(140,140,155,0.45); }
+.culture-isengard .card-art-inner { background: linear-gradient(135deg, #1e1e22, #141418, #1a1a20); }
+.culture-isengard .card-cost-badge { background: rgba(15,15,18,0.9); border-color: rgba(140,140,155,0.4); color: rgba(180,180,200,0.9); }
+
+.culture-rohan .card-face { background: linear-gradient(180deg, #1e1a12, #18140a); border: 1px solid rgba(200,170,60,0.45); }
+.culture-rohan .card-art-inner { background: linear-gradient(135deg, #2a2518, #1a1508, #282015); }
+.culture-rohan .card-cost-badge { background: rgba(20,16,8,0.9); border-color: rgba(200,170,60,0.4); color: rgba(230,200,90,0.9); }
+
+/* ── Contact shadow (on the board surface) ── */
+.card-shadow {
+  position: absolute;
+  bottom: -5px;
+  left: 5%;
+  width: 90%;
+  height: 10px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(4px);
+  transform: rotateX(0deg);
+  pointer-events: none;
+}
+
+/* ── Ring ripple ── */
+.card-ripple {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.card-ripple .ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: rp 3.5s ease-out infinite;
+}
+.card-ripple .ripple:nth-child(2) { animation-delay: 1.2s; }
+.card-ripple .ripple:nth-child(3) { animation-delay: 2.4s; }
+@keyframes rp {
+  0% { width: 8px; height: 5px; opacity: 0.5; }
+  100% { width: 120px; height: 40px; opacity: 0; }
+}
+
+.culture-gondor .ripple { border-color: rgba(200,200,220,0.3); }
+.culture-elven .ripple { border-color: rgba(100,160,220,0.3); }
+.culture-shire .ripple { border-color: rgba(100,170,60,0.25); }
+.culture-sauron .ripple { border-color: rgba(200,50,40,0.35); }
+.culture-isengard .ripple { border-color: rgba(140,140,155,0.25); }
+.culture-rohan .ripple { border-color: rgba(200,170,60,0.25); }
+
+/* ── Screen-space stat badges (always readable) ── */
+.screen-badge {
+  position: absolute;
+  transform-style: preserve-3d;
+  /* Counter-rotate to face camera regardless of board tilt */
+  transform: rotateZ(5deg) rotateX(-55deg);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: opacity 0.3s;
+}
+.card-3d:hover .screen-badge {
+  opacity: 0;
+}
+
+.badge-name {
+  font-size: 9px;
+  color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.6);
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(4px);
+}
+
+.badge-stats {
+  display: flex;
+  gap: 4px;
+}
+.badge-stat {
+  font-size: 9px;
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+}
+.badge-str { color: rgba(220,180,100,0.95); }
+.badge-vit { color: rgba(220,80,80,0.95); }
+
+/* ── Inspect overlay ── */
+#inspect-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9000;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+#inspect-overlay.active { display: block; }
+
+#inspect-card {
+  position: fixed;
+  z-index: 9001;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hint {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 1px;
+  z-index: 10;
+}
+</style>
+</head>
+<body>
+
+<h1>ISOMETRIC BOARD — CARDS FLAT ON LANDSCAPE</h1>
+
+<div id="board-container">
+  <div id="board">
+    <!-- Landscape -->
+    <div id="landscape">
+      <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+        <!-- Terrain layers -->
+        <rect width="1200" height="700" fill="#080614"/>
+        <polygon points="0,700 0,200 150,160 350,220 550,140 750,200 950,120 1100,180 1200,150 1200,700" fill="#0c091a" opacity="0.9"/>
+        <polygon points="0,700 0,320 200,280 400,330 600,260 800,310 1000,240 1200,280 1200,700" fill="#140e28" opacity="0.85"/>
+        <polygon points="0,700 0,420 100,390 300,430 500,380 700,420 900,370 1100,400 1200,380 1200,700" fill="#161006" opacity="0.88"/>
+        <polygon points="0,700 0,530 250,510 500,525 750,505 1000,520 1200,510 1200,700" fill="#100c04"/>
+        <!-- Stars -->
+        <circle cx="100" cy="80" r="1.5" fill="rgba(255,255,255,0.25)"/>
+        <circle cx="350" cy="50" r="1" fill="rgba(255,255,255,0.2)"/>
+        <circle cx="600" cy="30" r="1.2" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="850" cy="65" r="1" fill="rgba(255,255,255,0.2)"/>
+        <circle cx="1050" cy="40" r="1.3" fill="rgba(255,255,255,0.25)"/>
+        <!-- Subtle water -->
+        <ellipse cx="600" cy="480" rx="300" ry="20" fill="rgba(40,60,100,0.12)"/>
+      </svg>
+    </div>
+
+    <!-- Ghost zones -->
+    <div class="zone zone-fp"><span class="zone-label">FELLOWSHIP</span></div>
+    <div class="zone zone-shadow"><span class="zone-label">SHADOW</span></div>
+
+    <!-- ═══ FELLOWSHIP CARDS (flat on board) ═══ -->
+
+    <div class="card-anchor culture-gondor" style="left:100px; bottom:130px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">4</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Aragorn</div>
+            <div class="card-subtitle">Strider</div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">8</span>
+              <span class="card-stat stat-vit">4</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Aragorn</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">8</span><span class="badge-stat badge-vit">4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-anchor culture-elven" style="left:220px; bottom:120px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">2</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Legolas</div>
+            <div class="card-subtitle">Greenleaf</div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">6</span>
+              <span class="card-stat stat-vit">3</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Legolas</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">6</span><span class="badge-stat badge-vit">3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-anchor culture-shire" style="left:340px; bottom:140px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">0</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Frodo</div>
+            <div class="card-subtitle">Ring-bearer</div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">3</span>
+              <span class="card-stat stat-vit">4</span>
+              <span class="card-stat stat-res">R:10</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Frodo</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">3</span><span class="badge-stat badge-vit">4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-anchor culture-rohan" style="left:460px; bottom:125px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">3</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Éowyn</div>
+            <div class="card-subtitle">Lady of Rohan</div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">6</span>
+              <span class="card-stat stat-vit">3</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Éowyn</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">6</span><span class="badge-stat badge-vit">3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SHADOW CARDS (flat on board, upper area) ═══ -->
+
+    <div class="card-anchor culture-sauron" style="left:350px; top:100px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">4</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Witch-king</div>
+            <div class="card-subtitle">Lord of Angmar</div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">12</span>
+              <span class="card-stat stat-vit">3</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Witch-king</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">12</span><span class="badge-stat badge-vit">3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-anchor culture-isengard" style="left:500px; top:110px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">6</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Lurtz</div>
+            <div class="card-subtitle">Servant of Saruman</div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">9</span>
+              <span class="card-stat stat-vit">3</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Lurtz</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">9</span><span class="badge-stat badge-vit">3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-anchor culture-sauron" style="left:650px; top:95px;">
+      <div class="card-3d" onclick="inspectCard(this)">
+        <div class="card-shadow"></div>
+        <div class="card-ripple"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div></div>
+        <div class="card-face">
+          <div class="card-cost-badge">3</div>
+          <div class="card-art"><div class="card-art-inner"></div></div>
+          <div class="card-bottom">
+            <div class="card-title-bar">Orc Warrior</div>
+            <div class="card-subtitle"></div>
+            <div class="card-stats-bar">
+              <span class="card-stat stat-str">7</span>
+              <span class="card-stat stat-vit">2</span>
+            </div>
+          </div>
+        </div>
+        <div class="screen-badge" style="top:-30px;left:10px;">
+          <span class="badge-name">Orc Warrior</span>
+          <div class="badge-stats"><span class="badge-stat badge-str">7</span><span class="badge-stat badge-vit">2</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="inspect-overlay" onclick="closeInspect()"></div>
+
+<div class="hint">Hover a card to stand it up · Click to inspect · Click backdrop to close</div>
+
+<script>
+let inspectedEl = null;
+
+function inspectCard(cardEl) {
+  if (inspectedEl) { closeInspect(); return; }
+  const overlay = document.getElementById('inspect-overlay');
+  overlay.classList.add('active');
+
+  // Get card's screen position
+  const rect = cardEl.getBoundingClientRect();
+  const clone = cardEl.cloneNode(true);
+  clone.id = 'inspect-clone';
+  clone.style.position = 'fixed';
+  clone.style.left = (window.innerWidth / 2 - 120) + 'px';
+  clone.style.top = (window.innerHeight / 2 - 168) + 'px';
+  clone.style.width = '240px';
+  clone.style.height = '336px';
+  clone.style.transform = 'none';
+  clone.style.zIndex = '9999';
+  clone.style.transition = 'all 0.4s ease';
+  clone.style.cursor = 'pointer';
+  clone.onclick = closeInspect;
+
+  // Remove screen badges from clone (not needed at full size)
+  const badge = clone.querySelector('.screen-badge');
+  if (badge) badge.remove();
+
+  // Scale up text in clone
+  clone.querySelectorAll('.card-title-bar').forEach(el => el.style.fontSize = '14px');
+  clone.querySelectorAll('.card-subtitle').forEach(el => el.style.fontSize = '11px');
+  clone.querySelectorAll('.card-stat').forEach(el => el.style.fontSize = '13px');
+  clone.querySelectorAll('.card-cost-badge').forEach(el => {
+    el.style.width = '28px'; el.style.height = '28px'; el.style.fontSize = '14px';
+  });
+
+  document.body.appendChild(clone);
+  inspectedEl = clone;
+}
+
+function closeInspect() {
+  const overlay = document.getElementById('inspect-overlay');
+  overlay.classList.remove('active');
+  if (inspectedEl) { inspectedEl.remove(); inspectedEl = null; }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeInspect();
+});
+</script>
+
+</body>
+</html>

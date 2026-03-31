@@ -1,0 +1,4946 @@
+[
+  {
+    "blueprintId": "3_1",
+    "collInfo": "3R1",
+    "setNumber": 3,
+    "cardNumber": 1,
+    "title": "Book of Mazarbul",
+    "unique": true,
+    "twilight": 2,
+    "type": "Possession",
+    "rarity": "R",
+    "keywords": [
+      "Tale"
+    ],
+    "gametext": "<b>Tale</b>. Bearer must be a Dwarf.<br>At the start of each fellowship phase when the fellowship is at site 4 or higher, you may draw a card for each Dwarf companion.",
+    "lore": "'It seems to be a record of the fortunes of Balin's folk....'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "startOfPhase",
+        "phase": "fellowship"
+      },
+      "requires": {
+        "type": "location",
+        "filter": "siteNumber(4-100), SiteBlock(Fellowship)"
+      },
+      "effect": {
+        "type": "drawCards",
+        "count": {
+          "type": "forEachYouCanSpot",
+          "filter": "dwarf,companion"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03001.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "target": "dwarf"
+  },
+  {
+    "blueprintId": "3_2",
+    "collInfo": "3U2",
+    "setNumber": 3,
+    "cardNumber": 2,
+    "title": "Gimli's Pipe",
+    "unique": true,
+    "twilight": 1,
+    "type": "Possession",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "Bearer must be Gimli.<br><b>Fellowship:</b> Exert Gimli to add 1 to the number of pipes you can spot.",
+    "lore": "'And certainly it was from Bree that the art of smoking the genuine weed spread in the recent centuries among Dwarves and such other folk....'",
+    "effects": {
+      "type": "activated",
+      "phase": "fellowship",
+      "cost": {
+        "type": "exert",
+        "select": "choose(name(Gimli))"
+      },
+      "effect": {
+        "type": "addModifier",
+        "modifier": {
+          "type": "itemClassSpot",
+          "class": "Pipe"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03002.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "itemClass": "Pipe",
+    "target": "name(Gimli)"
+  },
+  {
+    "blueprintId": "3_3",
+    "collInfo": "3R3",
+    "setNumber": 3,
+    "cardNumber": 3,
+    "title": "Mines of Khazad-Dûm",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br>Each time you play a [dwarven] tale, you may heal a Dwarf companion.",
+    "lore": "'Moria! Moria! Wonder of the Northern world!'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "played",
+        "filter": "culture(dwarven),tale"
+      },
+      "effect": {
+        "type": "heal",
+        "select": "choose(dwarf,companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03003.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven"
+  },
+  {
+    "blueprintId": "3_4",
+    "collInfo": "3U4",
+    "setNumber": 3,
+    "cardNumber": 4,
+    "title": "A Royal Welcome",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "U",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Regroup:</b> Exert a Dwarf ally to heal a Dwarf companion.",
+    "lore": "'There is even a chance that Dwarves are there, and that in some deep hall of his fathers, Balin son of Fundin may be found.'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "choose(dwarf, ally)"
+      },
+      "effect": {
+        "type": "heal",
+        "select": "choose(dwarf,companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03004.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven"
+  },
+  {
+    "blueprintId": "3_5",
+    "collInfo": "3U5",
+    "setNumber": 3,
+    "cardNumber": 5,
+    "title": "Song of Durin",
+    "unique": false,
+    "twilight": 0,
+    "type": "Condition",
+    "rarity": "U",
+    "keywords": [
+      "Tale",
+      "Support Area"
+    ],
+    "gametext": "<b>Tale</b>. To play, exert a Dwarf. Plays to your support area.<br>The twilight cost of each [moria] weapon is +2.<br><b>Fellowship:</b> Discard this condition to discard up to 2 [moria] conditions.",
+    "lore": "No harp is wrung, no hammer falls: / The darkness dwells in Durin's halls....",
+    "effects": [
+      {
+        "type": "extraCost",
+        "cost": {
+          "type": "exert",
+          "select": "choose(dwarf)"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyCost",
+          "filter": "culture(moria),weapon",
+          "amount": 2
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "fellowship",
+        "cost": {
+          "type": "discard",
+          "select": "self"
+        },
+        "effect": {
+          "type": "discard",
+          "select": "choose(culture(moria),condition)",
+          "count": "0-2"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03005.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven"
+  },
+  {
+    "blueprintId": "3_6",
+    "collInfo": "3C6",
+    "setNumber": 3,
+    "cardNumber": 6,
+    "title": "Storm of Argument",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Fellowship:</b> Reveal a card at random from an opponent's hand. Shuffle up to X [dwarven] cards from your discard pile into your draw deck, where X is the twilight cost of the card revealed.",
+    "lore": "'I will be dead before I see the Ring in the hands of an Elf!'",
+    "effects": {
+      "type": "event",
+      "effect": [
+        {
+          "type": "revealCardsFromHand",
+          "hand": "shadow",
+          "select": "random(1)",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "shuffleCardsFromDiscardIntoDrawDeck",
+          "select": "choose(culture(dwarven))",
+          "count": {
+            "type": "range",
+            "from": 0,
+            "to": {
+              "type": "twilightCostInMemory",
+              "memory": "revealedCard"
+            }
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03006.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "timeword": "Fellowship"
+  },
+  {
+    "blueprintId": "3_7",
+    "collInfo": "3U7",
+    "setNumber": 3,
+    "cardNumber": 7,
+    "title": "Arwen",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "U",
+    "keywords": [
+      "Ranger"
+    ],
+    "gametext": "<b>Ranger</b>.<br><b>Response:</b> If the Ring-bearer is about to take a wound, discard 3 cards from hand to prevent that wound.",
+    "lore": "'If I can cross the river, the power of my people will protect him.'",
+    "effects": {
+      "type": "Response",
+      "trigger": {
+        "type": "aboutToTakeWound",
+        "filter": "ringBearer"
+      },
+      "cost": {
+        "type": "discardFromHand",
+        "forced": false,
+        "count": 3
+      },
+      "effect": {
+        "type": "preventWound",
+        "select": "choose(ringBearer)"
+      }
+    },
+    "imagePath": "decipher/LOTR03007.jpg",
+    "hasErrata": false,
+    "subtitle": "Elven Rider",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 6,
+    "signet": "Frodo"
+  },
+  {
+    "blueprintId": "3_8",
+    "collInfo": "3R8",
+    "setNumber": 3,
+    "cardNumber": 8,
+    "title": "Arwen",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "While you can spot 3 [elven] allies whose home is site 3, each minion skirmishing Arwen is strength -3.",
+    "lore": "Queenly she looked, and thought and knowledge were in her glance, as of one who has known many things that the years bring.",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "requires": {
+          "type": "canSpot",
+          "count": 3,
+          "filter": "culture(elven),ally,allyHome(Fellowship,3)"
+        },
+        "filter": "minion,inSkirmishAgainst(self)",
+        "amount": -3
+      }
+    },
+    "imagePath": "decipher/LOTR03008.jpg",
+    "hasErrata": false,
+    "subtitle": "Lady Undómiel",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 6,
+    "signet": "Gandalf"
+  },
+  {
+    "blueprintId": "3_9",
+    "collInfo": "3U9",
+    "setNumber": 3,
+    "cardNumber": 9,
+    "title": "Beren and Lúthien",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "U",
+    "keywords": [
+      "Tale",
+      "Support Area"
+    ],
+    "gametext": "<b>Tale</b>. Plays to your support area.<br><b>Skirmish:</b> Exert an [elven] ally to discard the bottom card of your draw deck. If that card is an [elven] card, make a minion skirmishing an Elf strength -1.",
+    "lore": "'Tinúviel! Tinúviel! / He called her by her elvish name; / And there she halted listening.'",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(elven),ally)"
+      },
+      "effect": [
+        {
+          "type": "discardBottomCardsFromDeck",
+          "forced": false,
+          "memorize": "discardedCard"
+        },
+        {
+          "type": "If",
+          "check": {
+            "type": "memoryMatches",
+            "memory": "discardedCard",
+            "filter": "culture(elven)"
+          },
+          "true": {
+            "type": "modifyStrength",
+            "select": "choose(minion,inSkirmishAgainst(elf))",
+            "amount": -1
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03009.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven"
+  },
+  {
+    "blueprintId": "3_10",
+    "collInfo": "3U10",
+    "setNumber": 3,
+    "cardNumber": 10,
+    "title": "Calaglin",
+    "unique": true,
+    "twilight": 2,
+    "type": "Ally",
+    "rarity": "U",
+    "keywords": [
+      "Archer"
+    ],
+    "gametext": "<b>Archer</b>.<br><b>Regroup:</b> Exert Calaglin to wound a minion.",
+    "lore": "'We have been keeping watch on the rivers, ever since we saw a great troop of Orcs going north toward Moria....'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "wound",
+        "select": "choose(minion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03010.jpg",
+    "hasErrata": false,
+    "subtitle": "Elf of Lórien",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 3,
+    "vitality": 3,
+    "allyHome": "6F"
+  },
+  {
+    "blueprintId": "3_11",
+    "collInfo": "3C11",
+    "setNumber": 3,
+    "cardNumber": 11,
+    "title": "Cast It Into the Fire!",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot an Elf to make each opponent discard a card from his or her hand. Draw a card for each card discarded in this way.",
+    "lore": "'It should have been cast then into Orodruin's fire nigh at hand where it was made.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "elf"
+      },
+      "effect": [
+        {
+          "type": "discardFromHand",
+          "forced": true,
+          "hand": "shadow",
+          "player": "shadow",
+          "memorize": "discardedCards"
+        },
+        {
+          "type": "drawCards",
+          "count": {
+            "type": "forEachInMemory",
+            "memory": "discardedCards"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03011.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_12",
+    "collInfo": "3U12",
+    "setNumber": 3,
+    "cardNumber": 12,
+    "title": "Dínendal",
+    "unique": true,
+    "twilight": 2,
+    "type": "Ally",
+    "rarity": "U",
+    "keywords": [
+      "Archer"
+    ],
+    "gametext": "<b>Archer</b>.<br><b>Regroup:</b> Exert Dínendal to remove (2).",
+    "lore": "He was almost certain that he could hear stealthy movements.... Not Elves; for the woodland folk were altogether noiseless in their movements.",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "removeTwilight",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03012.jpg",
+    "hasErrata": false,
+    "subtitle": "Silent Scout",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 3,
+    "vitality": 3,
+    "allyHome": "6F"
+  },
+  {
+    "blueprintId": "3_13",
+    "collInfo": "3R13",
+    "setNumber": 3,
+    "cardNumber": 13,
+    "title": "Elrond",
+    "unique": true,
+    "twilight": 4,
+    "type": "Ally",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "At the start of each of your turns, you may spot an ally whose home is site 3 and heal that ally up to 2 times.<br><b>Regroup:</b> Exert Elrond twice to heal a companion.",
+    "lore": "Venerable he seemed as a king crowned with many winters, and yet hale as a tried warrior....",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "startOfTurn"
+        },
+        "effect": [
+          {
+            "type": "ChooseActiveCards",
+            "text": "Choose an ally to heal up to 2 times",
+            "select": "choose(ally,allyHome(Fellowship,3))",
+            "memorize": "healingAlly"
+          },
+          {
+            "type": "ChooseANumber",
+            "text": "Choose how many times to heal {healingAlly}",
+            "from": 0,
+            "to": 2,
+            "default": 2,
+            "memorize": "healing"
+          },
+          {
+            "type": "heal",
+            "select": "memory(healingAlly)",
+            "times": "memory(healing)"
+          }
+        ]
+      },
+      {
+        "type": "activated",
+        "phase": "regroup",
+        "cost": {
+          "type": "exert",
+          "select": "self",
+          "times": 2
+        },
+        "effect": {
+          "type": "heal",
+          "select": "choose(companion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03013.jpg",
+    "hasErrata": false,
+    "subtitle": "Herald to Gil-galad",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 8,
+    "vitality": 4,
+    "allyHome": "3F"
+  },
+  {
+    "blueprintId": "3_14",
+    "collInfo": "3C14",
+    "setNumber": 3,
+    "cardNumber": 14,
+    "title": "Erestor",
+    "unique": true,
+    "twilight": 2,
+    "type": "Ally",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "To play, spot an Elf.<br><b>Response:</b> If an Elf is about to take a wound from a [sauron] minion or [sauron] event, exert Erestor to prevent that wound.",
+    "lore": "'Then there are but two courses... to hide the Ring for ever, or to unmake it.'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "elf"
+        }
+      },
+      {
+        "type": "Response",
+        "trigger": {
+          "type": "aboutToTakeWound",
+          "filter": "elf",
+          "source": "culture(sauron),or(minion,event)"
+        },
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "preventWound",
+          "select": "choose(elf)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03014.jpg",
+    "hasErrata": false,
+    "subtitle": "Chief Advisor to Elrond",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 5,
+    "vitality": 2,
+    "allyHome": "3F"
+  },
+  {
+    "blueprintId": "3_15",
+    "collInfo": "3R15",
+    "setNumber": 3,
+    "cardNumber": 15,
+    "title": "Forests of Lothlórien",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br>Each time the fellowship moves, you may spot 3 [elven] allies to wound a minion.",
+    "lore": "'Alas for Lothlórien that I love! It would be a poor life in a land where no mallorn grew.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "moves"
+      },
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(elven),ally",
+        "count": 3
+      },
+      "effect": {
+        "type": "wound",
+        "select": "choose(minion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03015.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven"
+  },
+  {
+    "blueprintId": "3_16",
+    "collInfo": "3C16",
+    "setNumber": 3,
+    "cardNumber": 16,
+    "title": "Friends of Old",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Fellowship:</b> Reveal a card at random from an opponent's hand. Heal X [elven] allies, where X is the twilight cost of the card revealed.",
+    "lore": "'You have been summoned here to answer the threat of Mordor.'",
+    "effects": {
+      "type": "event",
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "shadow",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "heal",
+          "select": "choose(culture(elven),ally)",
+          "count": {
+            "type": "twilightCostInMemory",
+            "memory": "revealedCard"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03016.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "timeword": "Fellowship"
+  },
+  {
+    "blueprintId": "3_17",
+    "collInfo": "3R17",
+    "setNumber": 3,
+    "cardNumber": 17,
+    "title": "Galadriel",
+    "unique": true,
+    "twilight": 3,
+    "type": "Ally",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "At the start of each of your turns, you may heal an Elf.<br><b>Fellowship:</b> Exert Galadriel to play the fellowship's next site if it is a forest (replacing opponent's site if necessary).",
+    "lore": "'There is in her and in this land no evil, unless a man bring it hither himself. Then let him beware!'",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "startOfTurn"
+        },
+        "effect": {
+          "type": "heal",
+          "select": "choose(elf)"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "fellowship",
+        "cost": {
+          "type": "exert",
+          "select": "self",
+          "times": 1
+        },
+        "effect": {
+          "type": "playNextSite",
+          "filter": "forest"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03017.jpg",
+    "hasErrata": false,
+    "subtitle": "Lady of the Golden Wood",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 3,
+    "vitality": 3,
+    "allyHome": "6F"
+  },
+  {
+    "blueprintId": "3_18",
+    "collInfo": "3U18",
+    "setNumber": 3,
+    "cardNumber": 18,
+    "title": "Galdor",
+    "unique": true,
+    "twilight": 2,
+    "type": "Ally",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "To play, spot an Elf.<br><b>Regroup:</b> Exert Galdor and spot a minion to return that minion to its owner's hand.",
+    "lore": "'My heart tells me that Sauron will expect us to take the western way, when he learns what has befallen. He soon will.'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "elf"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "regroup",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "returnToHand",
+          "select": "choose(minion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03018.jpg",
+    "hasErrata": false,
+    "subtitle": "Councilor From the West",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 5,
+    "vitality": 2,
+    "allyHome": "3F"
+  },
+  {
+    "blueprintId": "3_19",
+    "collInfo": "3R19",
+    "setNumber": 3,
+    "cardNumber": 19,
+    "title": "Gift of the Evenstar",
+    "unique": true,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "To play, spot Arwen. Bearer must be Aragorn.<br><b>Skirmish:</b> Exert Aragorn or discard 2 cards from hand to make a minion skirmishing Aragorn strength -1.",
+    "lore": "'It is mine to give to whom I will... like my heart.'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "name(Arwen)"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "choice",
+          "texts": [
+            "Exert Aragorn",
+            "Discard 2 cards from hand"
+          ],
+          "effects": [
+            {
+              "type": "exert",
+              "select": "bearer"
+            },
+            {
+              "type": "discardFromHand",
+              "forced": false,
+              "count": 2
+            }
+          ]
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "choose(minion,inSkirmishAgainst(bearer))",
+          "amount": -1
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03019.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "target": "name(Aragorn)"
+  },
+  {
+    "blueprintId": "3_20",
+    "collInfo": "3U20",
+    "setNumber": 3,
+    "cardNumber": 20,
+    "title": "Golradir",
+    "unique": true,
+    "twilight": 2,
+    "type": "Ally",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "To play, spot an Elf.<br><b>Skirmish:</b> Exert Golradir to make an Orc strength -1.",
+    "lore": "Their stay at Rivendell provided the Fellowship with counsel from many sources.",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "elf"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "choose(orc)",
+          "amount": -1
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03020.jpg",
+    "hasErrata": false,
+    "subtitle": "Councilor of Imladris",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 4,
+    "vitality": 3,
+    "allyHome": "3F"
+  },
+  {
+    "blueprintId": "3_21",
+    "collInfo": "3R21",
+    "setNumber": 3,
+    "cardNumber": 21,
+    "title": "Long-knives of Legolas",
+    "unique": true,
+    "twilight": 1,
+    "type": "Possession",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Bearer must be Legolas.<br>Each Orc or Uruk-hai skirmishing Legolas is strength -2.",
+    "lore": "Sharp, bone-handled knives defend the Elves of Mirkwood at close quarters.",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "or(orc,urukHai),inSkirmishAgainst(bearer)",
+        "amount": -2
+      }
+    },
+    "imagePath": "decipher/LOTR03021.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "strength": 1,
+    "itemClass": "Hand weapon",
+    "target": "name(Legolas)"
+  },
+  {
+    "blueprintId": "3_22",
+    "collInfo": "3C22",
+    "setNumber": 3,
+    "cardNumber": 22,
+    "title": "Master of Healing",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Fellowship</b> <i>or</i> <b>Regroup:</b> Spot Elrond (or 2 [elven] allies) to heal a companion or ally.",
+    "lore": "'Elrond has cured you: he has tended you for days, ever since you were brought in.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "or",
+        "requires": [
+          {
+            "type": "canSpot",
+            "filter": "name(Elrond)"
+          },
+          {
+            "type": "canSpot",
+            "filter": "culture(elven),ally",
+            "count": 2
+          }
+        ]
+      },
+      "effect": {
+        "type": "heal",
+        "select": "choose(or(companion,ally))"
+      }
+    },
+    "imagePath": "decipher/LOTR03022.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "timeword": [
+      "Fellowship",
+      "Regroup"
+    ]
+  },
+  {
+    "blueprintId": "3_23",
+    "collInfo": "3R23",
+    "setNumber": 3,
+    "cardNumber": 23,
+    "title": "Nenya",
+    "unique": true,
+    "twilight": 0,
+    "type": "Artifact",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Bearer must be Galadriel.<br>At the start of each regroup phase, you may discard up to 2 cards from hand to draw the same number of cards.",
+    "lore": "'Verily it is in the land of Lórien upon the finger of Galadriel that one of the Three remains. This is Nenya, the Ring of Adamant, and I am its keeper.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "startOfPhase",
+        "phase": "regroup"
+      },
+      "cost": {
+        "type": "discardFromHand",
+        "forced": false,
+        "count": "0-2",
+        "memorize": "discardedCards"
+      },
+      "effect": {
+        "type": "drawCards",
+        "count": {
+          "type": "forEachInMemory",
+          "memory": "discardedCards"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03023.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "vitality": 1,
+    "itemClass": "Ring",
+    "target": "name(Galadriel)"
+  },
+  {
+    "blueprintId": "3_24",
+    "collInfo": "3U24",
+    "setNumber": 3,
+    "cardNumber": 24,
+    "title": "Phial of Galadriel",
+    "unique": true,
+    "twilight": 0,
+    "type": "Possession",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "To play, exert an Elf. Bearer must be the Ring-bearer.<br>Bearer's resistance is +2.",
+    "lore": "'May it be a light to you in dark places, when all other lights go out. Remember Galadriel and her Mirror!'",
+    "effects": [
+      {
+        "type": "extraCost",
+        "cost": {
+          "type": "exert",
+          "select": "choose(elf)"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyResistance",
+          "filter": "bearer",
+          "amount": 2
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03024.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "target": "ringBearer"
+  },
+  {
+    "blueprintId": "3_25",
+    "collInfo": "3U25",
+    "setNumber": 3,
+    "cardNumber": 25,
+    "title": "Saelbeth",
+    "unique": true,
+    "twilight": 2,
+    "type": "Ally",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "To play, spot an Elf.<br><b>Skirmish:</b> Exert Saelbeth to make an Uruk-hai strength -1.",
+    "lore": "The wisdom of Saelbeth prepared the Company for the dangers they would face.",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "elf"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "choose(urukHai)",
+          "amount": -1
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03025.jpg",
+    "hasErrata": false,
+    "subtitle": "Elven Councilor",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 4,
+    "vitality": 3,
+    "allyHome": "3F"
+  },
+  {
+    "blueprintId": "3_26",
+    "collInfo": "3U26",
+    "setNumber": 3,
+    "cardNumber": 26,
+    "title": "Something Draws Near",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Fellowship</b> <i>or</i> <b>Maneuver:</b> Exert an Elf to discard an [isengard] possession or [isengard] artifact.",
+    "lore": "'We have hunted and slain many Orcs in the woods....'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(elf)"
+      },
+      "effect": {
+        "type": "discard",
+        "select": "choose(culture(isengard),or(possession,artifact))"
+      }
+    },
+    "imagePath": "decipher/LOTR03026.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "timeword": [
+      "Fellowship",
+      "Maneuver"
+    ]
+  },
+  {
+    "blueprintId": "3_27",
+    "collInfo": "3R27",
+    "setNumber": 3,
+    "cardNumber": 27,
+    "title": "Vilya",
+    "unique": true,
+    "twilight": 0,
+    "type": "Artifact",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Bearer must be Elrond.<br><b>Maneuver:</b> Exert Elrond twice and spot a Shadow condition to return that condition to its owner's hand.",
+    "lore": "Upon his finger was a ring of gold with a great blue stone, Vilya, mightiest of the Three.",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "cost": {
+        "type": "exert",
+        "select": "bearer",
+        "times": 2
+      },
+      "effect": {
+        "type": "returnToHand",
+        "select": "choose(side(shadow),condition)"
+      }
+    },
+    "imagePath": "decipher/LOTR03027.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "vitality": 1,
+    "itemClass": "Ring",
+    "target": "name(Elrond)"
+  },
+  {
+    "blueprintId": "3_28",
+    "collInfo": "3C28",
+    "setNumber": 3,
+    "cardNumber": 28,
+    "title": "Voice of Nimrodel",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Tale"
+    ],
+    "gametext": "<b>Tale</b>.<br><b>Skirmish:</b> Exert an Elf at a river or forest to cancel a skirmish involving that Elf.",
+    "lore": "'Beside the falls of Nimrodel, / By water clear and cool, / Her voice as falling silver fell / Into the shining pool.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "location",
+        "filter": "or(river,forest)"
+      },
+      "cost": {
+        "type": "exert",
+        "select": "choose(elf)",
+        "memorize": "exertedElf"
+      },
+      "effect": {
+        "type": "cancelSkirmish",
+        "filter": "memory(exertedElf)"
+      }
+    },
+    "imagePath": "decipher/LOTR03028.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "timeword": "Skirmish"
+  },
+  {
+    "blueprintId": "3_29",
+    "collInfo": "3R29",
+    "setNumber": 3,
+    "cardNumber": 29,
+    "title": "Betrayal of Isengard",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br>Each time an opponent draws a card (or takes a card into hand) during the Shadow phase, you may remove (1).<br><b>Maneuver:</b> Exert Gandalf to wound Saruman twice.",
+    "lore": "'There is only one Lord of the Ring.'",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "playerDrawsCard",
+          "player": "shadow"
+        },
+        "requires": {
+          "type": "phase",
+          "phase": "Shadow"
+        },
+        "effect": {
+          "type": "removeTwilight",
+          "amount": 1
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "maneuver",
+        "cost": {
+          "type": "exert",
+          "select": "choose(name(Gandalf))"
+        },
+        "effect": {
+          "type": "wound",
+          "select": "choose(name(Saruman))",
+          "times": 2
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03029.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf"
+  },
+  {
+    "blueprintId": "3_30",
+    "collInfo": "3C30",
+    "setNumber": 3,
+    "cardNumber": 30,
+    "title": "Deep in Thought",
+    "unique": false,
+    "twilight": 4,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Spell"
+    ],
+    "gametext": "<b>Spell</b>.<br><b>Maneuver:</b> Spot Gandalf and 4 twilight tokens to discard all Shadow conditions.",
+    "lore": "He was... trying to recall every memory of his former journey in the Mines, and considering anxiously the next course that he should take....",
+    "effects": {
+      "type": "event",
+      "requires": [
+        {
+          "type": "canSpot",
+          "filter": "name(Gandalf)"
+        },
+        {
+          "type": "canSpotTwilight",
+          "amount": 4
+        }
+      ],
+      "effect": {
+        "type": "discard",
+        "select": "all(side(shadow),condition)"
+      }
+    },
+    "imagePath": "decipher/LOTR03030.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_31",
+    "collInfo": "3C31",
+    "setNumber": 3,
+    "cardNumber": 31,
+    "title": "Depart Silently",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Stealth"
+    ],
+    "gametext": "<b>Stealth</b>.<br><b>Maneuver:</b> At sites 1 to 5, spot Gandalf to prevent Hobbits from being assigned to skirmishes until the regroup phase. At any other site, spot Gandalf to make a Hobbit strength +3 until the regroup phase.",
+    "lore": "'Be careful, both of you.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "name(Gandalf)"
+      },
+      "effect": [
+        {
+          "type": "If",
+          "check": {
+            "type": "location",
+            "filter": "siteNumber(1-5),siteBlock(fellowship)"
+          },
+          "true": {
+            "type": "addModifier",
+            "modifier": {
+              "type": "cantBeAssignedToSkirmish",
+              "filter": "hobbit"
+            },
+            "until": "start(regroup)"
+          }
+        },
+        {
+          "type": "If",
+          "check": {
+            "type": "location",
+            "filter": "not(siteNumber(1-5),siteBlock(fellowship))"
+          },
+          "true": {
+            "type": "modifyStrength",
+            "select": "choose(hobbit)",
+            "amount": 3,
+            "until": "start(regroup)"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03031.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_32",
+    "collInfo": "3C32",
+    "setNumber": 3,
+    "cardNumber": 32,
+    "title": "Fireworks",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Spell"
+    ],
+    "gametext": "<b>Spell</b>.<br><b>Fellowship:</b> Spot Gandalf to shuffle up to 2 [gandalf] or up to 2 [shire] cards from your discard pile into your draw deck.",
+    "lore": "'The finest rockets ever seen: / they burst in stars of blue and green....'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "name(Gandalf)"
+      },
+      "effect": {
+        "type": "choice",
+        "texts": [
+          "Shuffle up to two GANDALF cards",
+          "Shuffle up to two SHIRE cards"
+        ],
+        "effects": [
+          {
+            "type": "shuffleCardsFromDiscardIntoDrawDeck",
+            "select": "choose(culture(gandalf))",
+            "count": "0-2"
+          },
+          {
+            "type": "shuffleCardsFromDiscardIntoDrawDeck",
+            "select": "choose(culture(shire))",
+            "count": "0-2"
+          }
+        ]
+      }
+    },
+    "imagePath": "decipher/LOTR03032.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "timeword": "Fellowship"
+  },
+  {
+    "blueprintId": "3_33",
+    "collInfo": "3C33",
+    "setNumber": 3,
+    "cardNumber": 33,
+    "title": "His First Serious Check",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot Gandalf to reveal a card at random from an opponent's hand. You may add (X) to discard that card, where X is the twilight cost of the card revealed.",
+    "lore": "...a false turn now might be disastrous.",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "name(Gandalf)"
+      },
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "shadow",
+          "count": 1,
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "If",
+          "check": {
+            "type": "HasCardInMemory",
+            "memory": "revealedCard"
+          },
+          "true": {
+            "type": "optional",
+            "text": "Would you like to add twilight to discard {revealedCard}",
+            "cost": {
+              "type": "addTwilight",
+              "amount": {
+                "type": "twilightCostInMemory",
+                "memory": "revealedCard"
+              }
+            },
+            "effect": [
+              {
+                "type": "DiscardFromHand",
+                "forced": true,
+                "hand": "shadow",
+                "player": "shadow",
+                "select": "memory(revealedCard)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03033.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_34",
+    "collInfo": "3R34",
+    "setNumber": 3,
+    "cardNumber": 34,
+    "title": "Narya",
+    "unique": true,
+    "twilight": 0,
+    "type": "Artifact",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Bearer must be Gandalf.<br>At the start of each of your turns, you may add (3) to remove a burden.",
+    "lore": "'For this is the Ring of Fire, and with it you may rekindle hearts in a world that grows chill.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "startOfTurn"
+      },
+      "cost": {
+        "type": "addTwilight",
+        "amount": 3
+      },
+      "effect": {
+        "type": "removeBurdens",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03034.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "vitality": 1,
+    "itemClass": "Ring",
+    "target": "name(Gandalf)"
+  },
+  {
+    "blueprintId": "3_35",
+    "collInfo": "3U35",
+    "setNumber": 3,
+    "cardNumber": 35,
+    "title": "Trust Me as You Once Did",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "U",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Skirmish:</b> Exert Gandalf to make a companion strength +1 for each companion with the Gandalf signet you can spot (limit +3).",
+    "lore": "'Do not take me for some conjurer of cheap tricks! I am not trying to rob you. I am trying to help you.'",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "exert",
+        "select": "choose(name(Gandalf))"
+      },
+      "effect": {
+        "type": "modifyStrength",
+        "select": "choose(companion)",
+        "amount": {
+          "type": "ForEachYouCanSpot",
+          "filter": "companion,signet(Gandalf)"
+        },
+        "limitPerCardThisPhase": 3
+      }
+    },
+    "imagePath": "decipher/LOTR03035.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf"
+  },
+  {
+    "blueprintId": "3_36",
+    "collInfo": "3C36",
+    "setNumber": 3,
+    "cardNumber": 36,
+    "title": "Unknown Perils",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "C",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Response:</b> If a companion is about to take a wound, spot 4 twilight tokens and exert Gandalf to prevent that wound.",
+    "lore": "Suddenly he stopped as if listening. Frodo became aware that all was very quiet, inside and outside.",
+    "effects": {
+      "type": "Response",
+      "trigger": {
+        "type": "aboutToTakeWound",
+        "filter": "companion"
+      },
+      "requires": {
+        "type": "canSpotTwilight",
+        "amount": 4
+      },
+      "cost": {
+        "type": "exert",
+        "select": "choose(name(Gandalf))"
+      },
+      "effect": {
+        "type": "preventWound",
+        "select": "choose(companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03036.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf"
+  },
+  {
+    "blueprintId": "3_37",
+    "collInfo": "3C37",
+    "setNumber": 3,
+    "cardNumber": 37,
+    "title": "Answering the Cries",
+    "unique": false,
+    "twilight": 0,
+    "type": "Condition",
+    "rarity": "C",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Skirmish:</b> Discard a [gondor] tale from hand to make a [gondor] companion strength +2.",
+    "lore": "Drawing his bright sword and crying Elendil! Elendil! he crashed through the trees.",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "discardFromHand",
+        "forced": false,
+        "select": "choose(culture(gondor),tale)"
+      },
+      "effect": {
+        "type": "modifyStrength",
+        "select": "choose(culture(gondor),companion)",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03037.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor"
+  },
+  {
+    "blueprintId": "3_38",
+    "collInfo": "3R38",
+    "setNumber": 3,
+    "cardNumber": 38,
+    "title": "Aragorn",
+    "unique": true,
+    "twilight": 4,
+    "type": "Companion",
+    "rarity": "R",
+    "keywords": [
+      "Ranger"
+    ],
+    "gametext": "<b>Ranger</b>.<br>Each time the fellowship moves during the fellowship phase, remove (2).",
+    "lore": "'...his hood was cast back, and his dark hair was blowing in the wind, a light was in his eyes: a king returning from exile in his own land.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": false,
+      "trigger": {
+        "type": "moves"
+      },
+      "requires": {
+        "type": "phase",
+        "phase": "fellowship"
+      },
+      "effect": {
+        "type": "removeTwilight",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03038.jpg",
+    "hasErrata": false,
+    "subtitle": "Heir to the White City",
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "race": "Man",
+    "strength": 8,
+    "vitality": 4,
+    "resistance": 6,
+    "signet": "Frodo"
+  },
+  {
+    "blueprintId": "3_39",
+    "collInfo": "3R39",
+    "setNumber": 3,
+    "cardNumber": 39,
+    "title": "Banner of the White Tree",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "R",
+    "keywords": [
+      "Tale"
+    ],
+    "gametext": "<b>Tale</b>.<br><b>Maneuver:</b> Exert a [gondor] companion to make that companion strength +3 and <b>defender +1</b> until the regroup phase.",
+    "lore": "'Many Elves and many mighty Men, and many of their friends, had perished in the war.'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(gondor),companion)",
+        "memorize": "exertedCompanion"
+      },
+      "effect": [
+        {
+          "type": "modifyStrength",
+          "select": "memory(exertedCompanion)",
+          "amount": 3,
+          "until": "start(regroup)"
+        },
+        {
+          "type": "addKeyword",
+          "select": "memory(exertedCompanion)",
+          "keyword": "defender",
+          "amount": 1,
+          "until": "start(regroup)"
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03039.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_40",
+    "collInfo": "3R40",
+    "setNumber": 3,
+    "cardNumber": 40,
+    "title": "Citadel of Minas Tirith",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br>You may heal a [gondor] companion at the end of each turn during which no companion or ally lost a skirmish.",
+    "lore": "'One day our paths will lead us there, and the Tower guards shall take up the call – The Lords of Gondor have returned.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "endOfTurn"
+      },
+      "requires": {
+        "type": "not",
+        "requires": {
+          "type": "lostSkirmishThisTurn",
+          "filter": "or(companion,ally)"
+        }
+      },
+      "effect": {
+        "type": "heal",
+        "select": "choose(culture(gondor),companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03040.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor"
+  },
+  {
+    "blueprintId": "3_41",
+    "collInfo": "3R41",
+    "setNumber": 3,
+    "cardNumber": 41,
+    "title": "Gondor Bowmen",
+    "unique": false,
+    "twilight": 0,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Tale",
+      "Support Area"
+    ],
+    "gametext": "<b>Tale</b>. Plays to your support area.<br><b>Archery:</b> Exert a [gondor] companion and discard this condition to make the fellowship archery total +2.",
+    "lore": "Arrows of the Last Alliance brought death to Sauron's forces.",
+    "effects": {
+      "type": "activated",
+      "phase": "archery",
+      "cost": [
+        {
+          "type": "exert",
+          "select": "choose(culture(gondor),companion)"
+        },
+        {
+          "type": "discard",
+          "select": "self"
+        }
+      ],
+      "effect": {
+        "type": "modifyArcheryTotal",
+        "side": "free",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03041.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor"
+  },
+  {
+    "blueprintId": "3_42",
+    "collInfo": "3R42",
+    "setNumber": 3,
+    "cardNumber": 42,
+    "title": "Horn of Boromir",
+    "unique": true,
+    "twilight": 0,
+    "type": "Possession",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Bearer must be Boromir.<br><b>Maneuver:</b> Exert Boromir and spot an ally. Until the regroup phase, that ally is strength +3 and participates in archery fire and skirmishes.",
+    "lore": "On a baldric he wore a great horn tipped with silver....",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "cost": {
+        "type": "exert",
+        "select": "bearer"
+      },
+      "effect": [
+        {
+          "type": "chooseActiveCards",
+          "select": "choose(ally)",
+          "text": "Choose ally to have it participate in archery and skirmishes",
+          "memorize": "chosenAlly"
+        },
+        {
+          "type": "modifyStrength",
+          "select": "memory(chosenAlly)",
+          "amount": 3,
+          "until": "start(regroup)"
+        },
+        {
+          "type": "enableParticipationInArcheryFireAndSkirmishes",
+          "select": "memory(chosenAlly)",
+          "until": "regroup"
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03042.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "target": "name(Boromir)"
+  },
+  {
+    "blueprintId": "3_43",
+    "collInfo": "3C43",
+    "setNumber": 3,
+    "cardNumber": 43,
+    "title": "Might of Númenor",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Tale"
+    ],
+    "gametext": "<b>Tale</b>.<br><b>Maneuver:</b> Spot a [gondor] companion to reveal a card at random from an opponent's hand. Heal X companions, where X is the twilight cost of the card revealed.",
+    "lore": "'But the lords of Minas Tirith still fight on....'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(gondor),companion"
+      },
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "shadow",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "heal",
+          "select": "choose(companion)",
+          "count": {
+            "type": "twilightCostInMemory",
+            "memory": "revealedCard"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03043.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_44",
+    "collInfo": "3R44",
+    "setNumber": 3,
+    "cardNumber": 44,
+    "title": "The Shards of Narsil",
+    "unique": true,
+    "twilight": 1,
+    "type": "Artifact",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Fellowship:</b> Stack a [gondor] card from hand here.<br><b>Fellowship:</b> Add (1) to take a card stacked here into hand.",
+    "lore": "'...Narsil was broken and its light extinguished, and it had not yet been forged again.'",
+    "effects": [
+      {
+        "type": "activated",
+        "phase": "fellowship",
+        "text": "Stack a GONDOR card from hand here",
+        "effect": {
+          "type": "stackCardsFromHand",
+          "select": "choose(culture(gondor))",
+          "where": "self"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "fellowship",
+        "text": "Add (1) to take a card from here",
+        "cost": {
+          "type": "addTwilight",
+          "amount": 1
+        },
+        "effect": [
+          {
+            "type": "ChooseCardsFromSingleStack",
+            "select": "choose(any)",
+            "count": 1,
+            "on": "self",
+            "memorize": "chosenCard",
+            "text": "Choose a card to take into hand"
+          },
+          {
+            "type": "putStackedCardsIntoHand",
+            "select": "memory(chosenCard)",
+            "on": "self"
+          }
+        ]
+      }
+    ],
+    "imagePath": "decipher/LOTR03044.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor"
+  },
+  {
+    "blueprintId": "3_45",
+    "collInfo": "3U45",
+    "setNumber": 3,
+    "cardNumber": 45,
+    "title": "Some Who Resisted",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [
+      "Tale"
+    ],
+    "gametext": "<b>Tale</b>.<br><b>Maneuver:</b> Spot a [gondor] companion to make the twilight cost of each maneuver event +2.",
+    "lore": "'In the South the realm of Gondor long endured; and for a while its splendour grew....'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(gondor),companion"
+      },
+      "effect": {
+        "type": "addModifier",
+        "modifier": {
+          "type": "modifyCost",
+          "filter": "timeword(maneuver),event",
+          "amount": 2
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03045.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_46",
+    "collInfo": "3U46",
+    "setNumber": 3,
+    "cardNumber": 46,
+    "title": "Still Sharp",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Skirmish:</b> Spot The Shards of Narsil to make a [gondor] companion strength +3 and <b>damage +1</b>.",
+    "lore": "'The shards of Narsil... the blade that cut the Ring from Sauron's hand.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "name(The Shards of Narsil)"
+      },
+      "effect": [
+        {
+          "type": "chooseActiveCards",
+          "select": "choose(culture(gondor),companion)",
+          "text": "Choose GONDOR companion to strengthen",
+          "memorize": "chosenCompanion"
+        },
+        {
+          "type": "modifyStrength",
+          "select": "memory(chosenCompanion)",
+          "amount": 3
+        },
+        {
+          "type": "addKeyword",
+          "select": "memory(chosenCompanion)",
+          "keyword": "damage",
+          "amount": 1
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03046.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "timeword": "Skirmish"
+  },
+  {
+    "blueprintId": "3_47",
+    "collInfo": "3U47",
+    "setNumber": 3,
+    "cardNumber": 47,
+    "title": "Voice of Rauros",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Exert Aragorn to make each companion with the Aragorn signet <b>damage +1</b> until the regroup phase.",
+    "lore": "As he ran the cries came louder, but fainter now and desperately the horn was blowing.",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(name(Aragorn))"
+      },
+      "effect": {
+        "type": "addKeyword",
+        "select": "all(companion,signet(Aragorn))",
+        "keyword": "damage",
+        "amount": 1,
+        "until": "start(regroup)"
+      }
+    },
+    "imagePath": "decipher/LOTR03047.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_48",
+    "collInfo": "3C48",
+    "setNumber": 3,
+    "cardNumber": 48,
+    "title": "We Must Go Warily",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Response:</b> If the fellowship moves in the regroup phase, exert a [gondor] companion twice to make each minion's twilight cost +1 until the next regroup phase.",
+    "lore": "'This is the lawn of Parth Galen: a fair place in the summer days of old. Let us hope that no evil has yet come here.'",
+    "effects": {
+      "type": "responseEvent",
+      "trigger": {
+        "type": "moves"
+      },
+      "requires": {
+        "type": "phase",
+        "phase": "regroup"
+      },
+      "cost": {
+        "type": "exert",
+        "count": 2,
+        "select": "choose(culture(gondor),companion)"
+      },
+      "effect": {
+        "type": "addModifier",
+        "modifier": {
+          "type": "modifyCost",
+          "filter": "minion",
+          "amount": 1
+        },
+        "until": "start(regroup)"
+      }
+    },
+    "imagePath": "decipher/LOTR03048.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "timeword": "Response"
+  },
+  {
+    "blueprintId": "3_49",
+    "collInfo": "3C49",
+    "setNumber": 3,
+    "cardNumber": 49,
+    "title": "Abandoning Reason for Madness",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Shadow:</b> Spot an [isengard] minion to discard up to 3 cards from hand and draw an equal number of cards.",
+    "lore": "'And why not, Gandalf?... Why not? The Ruling Ring? If we could command that, then the power would pass to us.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(isengard),minion"
+      },
+      "effect": [
+        {
+          "type": "discardFromHand",
+          "forced": false,
+          "count": "0-3",
+          "memorize": "discardedCards"
+        },
+        {
+          "type": "drawCards",
+          "count": {
+            "type": "forEachInMemory",
+            "memory": "discardedCards"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03049.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Shadow"
+  },
+  {
+    "blueprintId": "3_50",
+    "collInfo": "3R50",
+    "setNumber": 3,
+    "cardNumber": 50,
+    "title": "Can You Protect Me From Yourself?",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot an [isengard] minion to exhaust Aragorn. The Free Peoples player may add 2 burdens to prevent this.",
+    "lore": "'Where is the Ring?'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(isengard),minion"
+      },
+      "effect": {
+        "type": "preventable",
+        "text": "Would you like to add 2 burdens to prevent exhausting Aragorn?",
+        "player": "fp",
+        "cost": {
+          "type": "addBurdens",
+          "amount": 2
+        },
+        "effect": {
+          "type": "exhaust",
+          "select": "choose(name(Aragorn))"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03050.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_51",
+    "collInfo": "3C51",
+    "setNumber": 3,
+    "cardNumber": 51,
+    "title": "Coming for the Ring",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Reveal a card at random from the Free Peoples player's hand. Heal X [isengard] minions, where X is the twilight cost of the card revealed.",
+    "lore": "'This evil cannot be concealed by the power of the Elves....'",
+    "effects": {
+      "type": "event",
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "fp",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "heal",
+          "select": "choose(culture(isengard),minion)",
+          "count": {
+            "type": "twilightCostInMemory",
+            "memory": "revealedCard"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03051.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Regroup"
+  },
+  {
+    "blueprintId": "3_52",
+    "collInfo": "3R52",
+    "setNumber": 3,
+    "cardNumber": 52,
+    "title": "A Fell Voice on the Air",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Shadow:</b> Exert Saruman to play an [isengard] weather condition from your discard pile. Its twilight cost is -2.",
+    "lore": "'He's trying to bring down the mountain!'",
+    "effects": {
+      "type": "activated",
+      "phase": "shadow",
+      "cost": {
+        "type": "exert",
+        "select": "choose(name(Saruman))"
+      },
+      "effect": {
+        "type": "playCardFromDiscard",
+        "select": "choose(culture(isengard),weather,condition)",
+        "discount": -2
+      }
+    },
+    "imagePath": "decipher/LOTR03052.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard"
+  },
+  {
+    "blueprintId": "3_53",
+    "collInfo": "3U53",
+    "setNumber": 3,
+    "cardNumber": 53,
+    "title": "Hate and Anger",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Shadow:</b> Spot an Uruk-hai and a [moria] minion to draw 3 cards.",
+    "lore": "The frenzy of Uruks is born of the fear of the very Goblins that work the pits.",
+    "effects": {
+      "type": "event",
+      "requires": [
+        {
+          "type": "canSpot",
+          "filter": "urukHai"
+        },
+        {
+          "type": "canSpot",
+          "filter": "culture(moria),minion"
+        }
+      ],
+      "effect": {
+        "type": "drawCards",
+        "count": 3
+      }
+    },
+    "imagePath": "decipher/LOTR03053.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Shadow"
+  },
+  {
+    "blueprintId": "3_54",
+    "collInfo": "3R54",
+    "setNumber": 3,
+    "cardNumber": 54,
+    "title": "Hollowing of Isengard",
+    "unique": false,
+    "twilight": 4,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, spot an [isengard] Orc. Plays to your support area.<br><b>Shadow:</b> Discard this condition to add (3).",
+    "lore": "'Rip them all down!'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(isengard),orc"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "shadow",
+        "cost": {
+          "type": "discard",
+          "select": "self"
+        },
+        "effect": {
+          "type": "addTwilight",
+          "amount": 3
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03054.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard"
+  },
+  {
+    "blueprintId": "3_55",
+    "collInfo": "3C55",
+    "setNumber": 3,
+    "cardNumber": 55,
+    "title": "Isengard Axe",
+    "unique": false,
+    "twilight": 0,
+    "type": "Possession",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "Bearer must be an [isengard] Orc.<br>When you play this weapon, add (1).",
+    "lore": "Axes eat into the forests of Isengard as well as the victims of Saruman's Orcs.",
+    "effects": {
+      "type": "Trigger",
+      "optional": false,
+      "trigger": {
+        "type": "played",
+        "filter": "self"
+      },
+      "effect": {
+        "type": "addTwilight",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03055.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "strength": 2,
+    "itemClass": "Hand weapon",
+    "target": "culture(isengard),orc"
+  },
+  {
+    "blueprintId": "3_56",
+    "collInfo": "3C56",
+    "setNumber": 3,
+    "cardNumber": 56,
+    "title": "Isengard Forger",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Shadow:</b> Exert this minion to add (1).",
+    "lore": "'I looked on it and saw that, whereas it had once been green and fair, it was now filled with pits and forges.'",
+    "effects": {
+      "type": "activated",
+      "phase": "shadow",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "addTwilight",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03056.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 6,
+    "vitality": 2,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_57",
+    "collInfo": "3U57",
+    "setNumber": 3,
+    "cardNumber": 57,
+    "title": "Isengard Retainer",
+    "unique": false,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert this minion to make the Free Peoples player wound a companion.",
+    "lore": "'...the Eagles of the mountain went far and wide, and they saw many things: the gathering of wolves and the mustering of Orcs....'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "wound",
+        "player": "fp",
+        "select": "choose(companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03057.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 8,
+    "vitality": 3,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_58",
+    "collInfo": "3U58",
+    "setNumber": 3,
+    "cardNumber": 58,
+    "title": "Isengard Servant",
+    "unique": false,
+    "twilight": 3,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert this minion to make the Free Peoples player wound a companion.",
+    "lore": "The servants of Isengard worked tirelessly to spread the influence of their master.",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "wound",
+        "player": "fp",
+        "select": "choose(companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03058.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 7,
+    "vitality": 3,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_59",
+    "collInfo": "3C59",
+    "setNumber": 3,
+    "cardNumber": 59,
+    "title": "Isengard Shaman",
+    "unique": false,
+    "twilight": 1,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Response:</b> If an [isengard] Orc is about to take a wound, remove (2) to prevent that wound.",
+    "lore": "'Over all his works a dark smoke hung and wrapped itself about the sides of Orthanc.'",
+    "effects": {
+      "type": "Response",
+      "trigger": {
+        "type": "aboutToTakeWound",
+        "filter": "culture(isengard),orc"
+      },
+      "cost": {
+        "type": "removeTwilight",
+        "amount": 2
+      },
+      "effect": {
+        "type": "preventWound",
+        "select": "choose(culture(isengard),orc)"
+      }
+    },
+    "imagePath": "decipher/LOTR03059.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 5,
+    "vitality": 2,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_60",
+    "collInfo": "3U60",
+    "setNumber": 3,
+    "cardNumber": 60,
+    "title": "Isengard Smith",
+    "unique": false,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert this minion to discard a weapon (or all Free Peoples possessions if you can spot 5 companions).",
+    "lore": "'No other folk make such a trampling....'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "if",
+        "check": {
+          "type": "canSpot",
+          "filter": "companion",
+          "count": 5
+        },
+        "true": {
+          "type": "discard",
+          "select": "all(side(free),possession)"
+        },
+        "false": {
+          "type": "discard",
+          "select": "choose(weapon)"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03060.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 8,
+    "vitality": 3,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_61",
+    "collInfo": "3U61",
+    "setNumber": 3,
+    "cardNumber": 61,
+    "title": "Isengard Warrior",
+    "unique": false,
+    "twilight": 3,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "While you can spot another [isengard] Orc, no player may use archery special abilities.<br><b>Regroup:</b> Exert this minion and spot 3 wounds on the Ring-bearer to exert every companion.",
+    "lore": "'There is evil afoot in Isengard, and the West is no longer safe.'",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "CantUseSpecialAbilities",
+          "requires": {
+            "type": "canSpot",
+            "filter": "another,culture(isengard),orc"
+          },
+          "phase": "archery"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "regroup",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "requires": {
+          "type": "canSpotWounds",
+          "filter": "ringBearer",
+          "amount": 3
+        },
+        "effect": {
+          "type": "exert",
+          "select": "all(companion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03061.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 7,
+    "vitality": 3,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_62",
+    "collInfo": "3C62",
+    "setNumber": 3,
+    "cardNumber": 62,
+    "title": "Isengard Worker",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert this minion to make the Free Peoples player wound a companion.",
+    "lore": "'They were Elves once. Taken by dark powers – tortured and mutilated....'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "wound",
+        "player": "fp",
+        "select": "choose(companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03062.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 5,
+    "vitality": 3,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_63",
+    "collInfo": "3C63",
+    "setNumber": 3,
+    "cardNumber": 63,
+    "title": "One of You Must Do This",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Exert an [isengard] minion to make the Free Peoples player exert X companions, where X is the number of these races you can spot in the fellowship: Dwarf, Elf, Man, and Wizard.",
+    "lore": "'And if we fail, what then? What happens when Sauron takes back what is his?'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(isengard),minion)"
+      },
+      "effect": {
+        "type": "exert",
+        "player": "fp",
+        "select": "choose(companion)",
+        "count": {
+          "type": "forEachRace",
+          "filter": "companion,or(dwarf,elf,man,wizard)"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03063.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_64",
+    "collInfo": "3R64",
+    "setNumber": 3,
+    "cardNumber": 64,
+    "title": "Orc Commander",
+    "unique": true,
+    "twilight": 6,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Each other [isengard] Orc is strength +1.<br><b>Regroup:</b> Exert Orc Commander to make the Free Peoples player wound a companion.",
+    "lore": "'It seems their delight to slash and beat down growing things that are not even in their way.'",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "filter": "another,culture(isengard),orc",
+          "amount": 1
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "regroup",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "wound",
+          "player": "fp",
+          "select": "choose(companion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03064.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 11,
+    "vitality": 4,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_65",
+    "collInfo": "3R65",
+    "setNumber": 3,
+    "cardNumber": 65,
+    "title": "Orc Overseer",
+    "unique": true,
+    "twilight": 5,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert Orc Overseer twice to exhaust a companion (except the Ring-bearer).",
+    "lore": "'What orders from Mordor, my Lord? What does the Eye command?'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self",
+        "times": 2
+      },
+      "effect": {
+        "type": "exhaust",
+        "select": "choose(companion,not(ringBearer))"
+      }
+    },
+    "imagePath": "decipher/LOTR03065.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Orc",
+    "strength": 10,
+    "vitality": 4,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_66",
+    "collInfo": "3R66",
+    "setNumber": 3,
+    "cardNumber": 66,
+    "title": "Orthanc Berserker",
+    "unique": true,
+    "twilight": 5,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [
+      "Damage+1"
+    ],
+    "gametext": "<b>Damage +1</b>.<br><b>Maneuver:</b> Spot 5 burdens and exert Orthanc Berserker twice to exhaust a companion (except the Ring-bearer).",
+    "lore": "The voice of Saruman compels his minions to stop at nothing to earn his favor.",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "requires": {
+        "type": "canSpotBurdens",
+        "amount": 5
+      },
+      "cost": {
+        "type": "exert",
+        "select": "self",
+        "times": 2
+      },
+      "effect": {
+        "type": "exhaust",
+        "select": "choose(companion,not(ringBearer))"
+      }
+    },
+    "imagePath": "decipher/LOTR03066.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Uruk-hai",
+    "strength": 11,
+    "vitality": 3,
+    "siteNumber": 5
+  },
+  {
+    "blueprintId": "3_67",
+    "collInfo": "3R67",
+    "setNumber": 3,
+    "cardNumber": 67,
+    "title": "The Palantír of Orthanc",
+    "unique": true,
+    "twilight": 0,
+    "type": "Artifact",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "To play, spot an [isengard] minion. Plays to your support area.<br><b>Shadow:</b> Spot an [isengard] minion and remove (1) to reveal a card at random from the Free Peoples player's hand. Place that card on top of that player's draw deck.",
+    "lore": "'Seven stars and seven stones....'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(isengard),minion"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "shadow",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(isengard),minion"
+        },
+        "cost": {
+          "type": "removeTwilight",
+          "amount": 1
+        },
+        "effect": [
+          {
+            "type": "revealRandomCardsFromHand",
+            "forced": true,
+            "hand": "fp",
+            "memorize": "revealedCard"
+          },
+          {
+            "type": "putCardsFromHandOnTopOfDeck",
+            "hand": "fp",
+            "select": "memory(revealedCard)",
+            "reveal": true
+          }
+        ]
+      }
+    ],
+    "imagePath": "decipher/LOTR03067.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "itemClass": "Palantir"
+  },
+  {
+    "blueprintId": "3_68",
+    "collInfo": "3R68",
+    "setNumber": 3,
+    "cardNumber": 68,
+    "title": "Saruman",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "Saruman may not take wounds during the archery phase and may not be assigned to a skirmish.<br>Uruk-hai are <b>fierce</b>.<br><b>Response:</b> If an Uruk-hai is about to take a wound, exert Saruman to prevent that wound.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantTakeWounds",
+          "requires": [
+            {
+              "type": "sarumanFirstSentenceActive"
+            },
+            {
+              "type": "phase",
+              "phase": "archery"
+            }
+          ],
+          "filter": "self"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBeAssignedToSkirmish",
+          "requires": {
+            "type": "sarumanFirstSentenceActive"
+          },
+          "filter": "self"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "filter": "urukHai",
+          "keyword": "fierce"
+        }
+      },
+      {
+        "type": "Response",
+        "trigger": {
+          "type": "aboutToTakeWound",
+          "filter": "urukHai"
+        },
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "preventWound",
+          "select": "choose(urukHai)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03068.jpg",
+    "hasErrata": false,
+    "subtitle": "Keeper of Isengard",
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Wizard",
+    "strength": 8,
+    "vitality": 4,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_69",
+    "collInfo": "3C69",
+    "setNumber": 3,
+    "cardNumber": 69,
+    "title": "Saruman",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "Saruman may not take wounds during the archery phase and may not be assigned to a skirmish.<br><b>Assignment:</b> Exert Saruman to assign an [isengard] minion to a companion (except the Ring-bearer). That companion may exert to prevent this.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantTakeWounds",
+          "requires": [
+            {
+              "type": "sarumanFirstSentenceActive"
+            },
+            {
+              "type": "phase",
+              "phase": "archery"
+            }
+          ],
+          "filter": "self"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBeAssignedToSkirmish",
+          "requires": {
+            "type": "sarumanFirstSentenceActive"
+          },
+          "filter": "self"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "assignment",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "assignFpCharacterToSkirmish",
+          "fpCharacter": "choose(companion,not(ringBearer))",
+          "minion": "choose(culture(isengard),minion)",
+          "memorizeFPCharacter": "assignedCompanion",
+          "memorizeMinion": "assignedMinion",
+          "preventText": "Would you like to exert {assignedCompanion} to prevent it being assigned to {assignedMinion}",
+          "preventCost": {
+            "type": "exert",
+            "select": "memory(assignedCompanion)"
+          }
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03069.jpg",
+    "hasErrata": false,
+    "subtitle": "Servant of the Eye",
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Wizard",
+    "strength": 8,
+    "vitality": 4,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "3_70",
+    "collInfo": "3C70",
+    "setNumber": 3,
+    "cardNumber": 70,
+    "title": "Servants to Saruman",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Skirmish:</b> Make an [isengard] Orc strength +2 (or +3 if you have fewer than 3 cards in hand).",
+    "lore": "'This is grievous news concerning Saruman... for we trusted him and he is deep in all our counsels.'",
+    "effects": {
+      "type": "event",
+      "effect": {
+        "type": "modifyStrength",
+        "select": "choose(culture(isengard),orc)",
+        "amount": {
+          "type": "Conditional",
+          "requires": {
+            "type": "isLessThan",
+            "firstNumber": {
+              "type": "forEachInHand"
+            },
+            "secondNumber": 3
+          },
+          "true": 3,
+          "false": 2
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03070.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Skirmish"
+  },
+  {
+    "blueprintId": "3_71",
+    "collInfo": "3R71",
+    "setNumber": 3,
+    "cardNumber": 71,
+    "title": "Tower of Orthanc",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, spot an [isengard] minion. Plays to your support area.<br>Each time the fellowship moves, you may spot an exhausted companion to add (3).",
+    "lore": "'It was not made by Saruman, but by the men of Númenor long ago; and it is very tall and has many secrets; yet it looks not to be a work of craft.'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(isengard),minion"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "moves"
+        },
+        "requires": {
+          "type": "canSpot",
+          "filter": "exhausted,companion"
+        },
+        "effect": {
+          "type": "addTwilight",
+          "amount": 3
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03071.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard"
+  },
+  {
+    "blueprintId": "3_72",
+    "collInfo": "3U72",
+    "setNumber": 3,
+    "cardNumber": 72,
+    "title": "Trapped and Alone",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "U",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br>Each character skirmishing an [isengard] Orc loses all <b>damage</b> bonuses from weapons.",
+    "lore": "'...I had no chance of escape, and my days were bitter.'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "cancelKeywordBonus",
+        "filter": "character,inSkirmishAgainst(culture(isengard),orc)",
+        "keyword": "damage",
+        "from": "weapon"
+      }
+    },
+    "imagePath": "decipher/LOTR03072.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard"
+  },
+  {
+    "blueprintId": "3_73",
+    "collInfo": "3U73",
+    "setNumber": 3,
+    "cardNumber": 73,
+    "title": "The Trees Are Strong",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Discard X [isengard] Orcs to make the Free Peoples player wound X companions.",
+    "lore": "'Their roots go deep.'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "discard",
+        "select": "choose(culture(isengard),orc)",
+        "count": "any",
+        "memorize": "discardedOrcs"
+      },
+      "effect": {
+        "type": "wound",
+        "player": "fp",
+        "select": "choose(companion)",
+        "count": {
+          "type": "forEachInMemory",
+          "memory": "discardedOrcs"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03073.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "timeword": "Regroup"
+  },
+  {
+    "blueprintId": "3_74",
+    "collInfo": "3C74",
+    "setNumber": 3,
+    "cardNumber": 74,
+    "title": "Uruk Raider",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [
+      "Damage+1"
+    ],
+    "gametext": "<b>Damage +1</b>.<br>While an ally is in the dead pile, this minion is strength +3 and <b>fierce</b>.",
+    "lore": "There is no safety where Saruman's emblem is shown.",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "requires": {
+            "type": "hasCardInDeadPile",
+            "filter": "ally"
+          },
+          "filter": "self",
+          "amount": 3
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "requires": {
+            "type": "hasCardInDeadPile",
+            "filter": "ally"
+          },
+          "filter": "self",
+          "keyword": "fierce"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03074.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Uruk-hai",
+    "strength": 6,
+    "vitality": 2,
+    "siteNumber": 5
+  },
+  {
+    "blueprintId": "3_75",
+    "collInfo": "3U75",
+    "setNumber": 3,
+    "cardNumber": 75,
+    "title": "Uruk Ravager",
+    "unique": false,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [
+      "Damage+1"
+    ],
+    "gametext": "<b>Damage +1</b>.<br>When you play this minion, you may spot Saruman to add (2).",
+    "lore": "'...a ruined and terrible form of life.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "played",
+        "filter": "self"
+      },
+      "requires": {
+        "type": "canSpot",
+        "filter": "name(Saruman)"
+      },
+      "effect": {
+        "type": "addTwilight",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03075.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Uruk-hai",
+    "strength": 9,
+    "vitality": 2,
+    "siteNumber": 5
+  },
+  {
+    "blueprintId": "3_76",
+    "collInfo": "3C76",
+    "setNumber": 3,
+    "cardNumber": 76,
+    "title": "Dangerous Gamble",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Shadow:</b> Spot a [moria] minion to reveal a card at random from the Free Peoples player's hand. Add (X), where X is the twilight cost of the card revealed.",
+    "lore": "Almost they began to hope that they would escape.",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(moria),minion"
+      },
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "fp",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "addTwilight",
+          "amount": {
+            "type": "twilightCostInMemory",
+            "memory": "revealedCard"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03076.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria",
+    "timeword": "Shadow"
+  },
+  {
+    "blueprintId": "3_77",
+    "collInfo": "3R77",
+    "setNumber": 3,
+    "cardNumber": 77,
+    "title": "Depths of Moria",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, spot a [moria] Orc. Plays to your support area.<br>Each time the fellowship moves during the regroup phase, add (2).",
+    "lore": "...a great fissure had opened. Out of it a fierce red light came, and now and again flames licked at the brink.... Wisps of dark smoke wavered in the hot air.",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(moria),orc"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "moves"
+        },
+        "requires": {
+          "type": "phase",
+          "phase": "regroup"
+        },
+        "effect": {
+          "type": "addTwilight",
+          "amount": 2
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03077.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria"
+  },
+  {
+    "blueprintId": "3_78",
+    "collInfo": "3C78",
+    "setNumber": 3,
+    "cardNumber": 78,
+    "title": "Hide and Seek",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Search"
+    ],
+    "gametext": "<b>Search</b>.<br><b>Skirmish:</b> Spot 2 [shire] companions to make a [moria] minion <b>damage +1</b>.",
+    "lore": "'Which way shall we go?'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "count": 2,
+        "filter": "culture(shire),companion"
+      },
+      "effect": {
+        "type": "addKeyword",
+        "select": "choose(culture(moria),minion)",
+        "keyword": "damage",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03078.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria",
+    "timeword": "Skirmish"
+  },
+  {
+    "blueprintId": "3_79",
+    "collInfo": "3U79",
+    "setNumber": 3,
+    "cardNumber": 79,
+    "title": "Malice",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Archery:</b> Spot a [moria] Orc and a [sauron] Orc to wound an archer.",
+    "lore": "Fueled by Sauron's hatred of living things, Orcs searched for the Ring of Power.",
+    "effects": {
+      "type": "event",
+      "requires": [
+        {
+          "type": "canSpot",
+          "filter": "culture(moria),orc"
+        },
+        {
+          "type": "canSpot",
+          "filter": "culture(sauron),orc"
+        }
+      ],
+      "effect": {
+        "type": "wound",
+        "select": "choose(archer)"
+      }
+    },
+    "imagePath": "decipher/LOTR03079.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria",
+    "timeword": "Archery"
+  },
+  {
+    "blueprintId": "3_80",
+    "collInfo": "3R80",
+    "setNumber": 3,
+    "cardNumber": 80,
+    "title": "Such a Little Thing",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot a [moria] minion to wound Boromir 3 times. The Free Peoples player may discard 2 Free Peoples possessions to prevent this.",
+    "lore": "'Boromir... give the Ring to Frodo.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(moria),minion"
+      },
+      "effect": {
+        "type": "preventable",
+        "text": "Would you like to discard 2 FP possession to prevent wounding Boromir 3 times?",
+        "player": "fp",
+        "cost": {
+          "type": "discard",
+          "select": "choose(side(free),possession)",
+          "count": 2
+        },
+        "effect": {
+          "type": "wound",
+          "select": "choose(name(Boromir))",
+          "times": 3
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03080.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_81",
+    "collInfo": "3R81",
+    "setNumber": 3,
+    "cardNumber": 81,
+    "title": "Gates of the Dead City",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, spot a Nazgûl. Plays to your support area.<br>Each time a [wraith] card adds a burden, the Free Peoples player must exert a companion.",
+    "lore": "'...and they took Minas Ithil and abode in it, and they made it into a place of dread....'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "nazgul"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "addsBurden",
+          "filter": "culture(wraith)"
+        },
+        "effect": {
+          "type": "exert",
+          "player": "fp",
+          "select": "choose(companion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03081.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith"
+  },
+  {
+    "blueprintId": "3_82",
+    "collInfo": "3U82",
+    "setNumber": 3,
+    "cardNumber": 82,
+    "title": "News of Mordor",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Skirmish:</b> Spot an [isengard] minion to make a Nazgûl <b>damage +1</b>.",
+    "lore": "'Build me an army worthy of Mordor.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(isengard),minion"
+      },
+      "effect": {
+        "type": "addKeyword",
+        "select": "choose(nazgul)",
+        "keyword": "damage",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03082.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "timeword": "Skirmish"
+  },
+  {
+    "blueprintId": "3_83",
+    "collInfo": "3U83",
+    "setNumber": 3,
+    "cardNumber": 83,
+    "title": "The Ring Draws Them",
+    "unique": true,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "U",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br>Each time the fellowship moves, add (1) for each burden you can spot.<br>At the end of each of your Shadow phases, exert a Nazgûl or discard this condition.",
+    "lore": "'If I move I shall be seen and hunted!'",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "moves"
+        },
+        "effect": {
+          "type": "addTwilight",
+          "amount": {
+            "type": "forEachBurden"
+          }
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "endOfPhase",
+          "phase": "shadow"
+        },
+        "effect": {
+          "type": "choice",
+          "texts": [
+            "Exert a Nazgul",
+            "Discard The Ring Draws Them"
+          ],
+          "effects": [
+            {
+              "type": "exert",
+              "select": "choose(nazgul)"
+            },
+            {
+              "type": "discard",
+              "select": "self"
+            }
+          ]
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03083.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith"
+  },
+  {
+    "blueprintId": "3_84",
+    "collInfo": "3C84",
+    "setNumber": 3,
+    "cardNumber": 84,
+    "title": "They Will Never Stop Hunting You",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot a Nazgûl to reveal a card at random from the Free Peoples player's hand. Exert a companion bearing a ranged weapon X times, where X is the twilight cost of the card revealed.",
+    "lore": "'They're looking for Baggins, and if they mean well, then I'm a hobbit.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "nazgul"
+      },
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "fp",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "exert",
+          "select": "choose(companion,hasAttached(ranged weapon))",
+          "times": {
+            "type": "twilightCostInMemory",
+            "memory": "revealedCard"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03084.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_85",
+    "collInfo": "3R85",
+    "setNumber": 3,
+    "cardNumber": 85,
+    "title": "Too Great and Terrible",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot a Nazgûl to wound Gandalf twice. The Free Peoples player may discard 2 [gandalf] cards from hand to prevent this.",
+    "lore": "'His eyes flashed and his face was lit as by a fire within. 'Do not tempt me! For I do not wish to become like the Dark Lord himself.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "nazgul"
+      },
+      "effect": {
+        "type": "preventable",
+        "text": "Would you like to discard 2 GANDALF cards from hand to prevent wounding Gandalf twice?",
+        "player": "fp",
+        "cost": {
+          "type": "discardFromHand",
+          "forced": false,
+          "hand": "fp",
+          "player": "fp",
+          "select": "choose(culture(gandalf))",
+          "count": 2
+        },
+        "effect": {
+          "type": "wound",
+          "select": "choose(name(Gandalf))",
+          "times": 2
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03085.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_86",
+    "collInfo": "3U86",
+    "setNumber": 3,
+    "cardNumber": 86,
+    "title": "Úlairë Otsëa",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [
+      "Twilight"
+    ],
+    "gametext": "<b>Twilight</b>.<br>Each time Úlairë Otsëa wins a skirmish, you may exert him to transfer Blade Tip from your support area to the Ring-bearer.",
+    "lore": "'...at all times they smell the blood of living things, desiring and hating it.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "winsSkirmish",
+        "filter": "self"
+      },
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "transfer",
+        "select": "choose(name(Blade Tip),zone(support))",
+        "where": "choose(ringBearer)"
+      }
+    },
+    "imagePath": "decipher/LOTR03086.jpg",
+    "hasErrata": false,
+    "subtitle": "Ringwraith in Twilight",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 9,
+    "vitality": 3,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "3_87",
+    "collInfo": "3C87",
+    "setNumber": 3,
+    "cardNumber": 87,
+    "title": "The Dark Lord Advances",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert a [sauron] minion to reveal a card at random from the Free Peoples player's hand. That player must discard X cards from hand, where X is the twilight cost of the card revealed.",
+    "lore": "'A power was there that we have not felt before.'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(sauron),minion)"
+      },
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "fp",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "If",
+          "check": {
+            "type": "HasCardInMemory",
+            "memory": "revealedCard"
+          },
+          "true": {
+            "type": "discardFromHand",
+            "forced": true,
+            "hand": "fp",
+            "player": "fp",
+            "count": {
+              "type": "twilightCostInMemory",
+              "memory": "revealedCard"
+            }
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03087.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Regroup"
+  },
+  {
+    "blueprintId": "3_88",
+    "collInfo": "3U88",
+    "setNumber": 3,
+    "cardNumber": 88,
+    "title": "Get Off the Road!",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [
+      "Search"
+    ],
+    "gametext": "<b>Search</b>.<br><b>Shadow:</b> Spot a [sauron] minion and a Nazgûl to make the Free Peoples player discard a card from the top of his or her deck for each burden you can spot.",
+    "lore": "'The Morgul-lord and his Black Riders have come forth. War is preparing!'",
+    "effects": {
+      "type": "event",
+      "requires": [
+        {
+          "type": "canSpot",
+          "filter": "culture(sauron),minion"
+        },
+        {
+          "type": "canSpot",
+          "filter": "nazgul"
+        }
+      ],
+      "effect": {
+        "type": "discardTopCardsFromDeck",
+        "deck": "fp",
+        "forced": true,
+        "count": {
+          "type": "forEachBurden"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03088.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Shadow"
+  },
+  {
+    "blueprintId": "3_89",
+    "collInfo": "3U89",
+    "setNumber": 3,
+    "cardNumber": 89,
+    "title": "Gleaming in the Snow",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert a [sauron] Orc and spot a [gondor] companion to add a burden.",
+    "lore": "'A Ring of Power looks after itself... It may slip off treacherously, but its keeper never abandons it.'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(sauron),orc)"
+      },
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(gondor),companion"
+      },
+      "effect": {
+        "type": "addBurdens",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03089.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Regroup"
+  },
+  {
+    "blueprintId": "3_90",
+    "collInfo": "3C90",
+    "setNumber": 3,
+    "cardNumber": 90,
+    "title": "Hand of Sauron",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Exert a [sauron] minion to make the Free Peoples player discard a card at random from his or her hand.",
+    "lore": "'The power of the Ring could not be undone.'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(sauron),minion)"
+      },
+      "effect": {
+        "type": "DiscardCardAtRandomFromHand",
+        "forced": true,
+        "hand": "fp",
+        "count": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03090.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_91",
+    "collInfo": "3R91",
+    "setNumber": 3,
+    "cardNumber": 91,
+    "title": "His Cruelty and Malice",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "Plays to your support area.<br><b>Regroup:</b> Exert a [sauron] minion to make the Free Peoples player discard the top card from his or her draw deck.",
+    "lore": "'Into this Ring he poured his cruelty, his malice, and his will to dominate all life.'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(sauron),minion)"
+      },
+      "effect": {
+        "type": "discardTopCardsFromDeck",
+        "forced": true,
+        "deck": "fp",
+        "count": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03091.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron"
+  },
+  {
+    "blueprintId": "3_92",
+    "collInfo": "3U92",
+    "setNumber": 3,
+    "cardNumber": 92,
+    "title": "Massing in the East",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert a [sauron] minion to discard a card from the top of the Free Peoples player's draw deck for each of these races you can spot in the fellowship: Dwarf, Elf, Man, and Wizard.",
+    "lore": "'The power of the Black Land grows....'",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "exert",
+        "select": "choose(culture(sauron),minion)"
+      },
+      "effect": {
+        "type": "discardTopCardsFromDeck",
+        "forced": true,
+        "deck": "fp",
+        "count": {
+          "type": "forEachRace",
+          "filter": "companion,or(dwarf,elf,man,wizard)"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03092.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Regroup"
+  },
+  {
+    "blueprintId": "3_93",
+    "collInfo": "3R93",
+    "setNumber": 3,
+    "cardNumber": 93,
+    "title": "Morgul Slayer",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert this minion to wound a companion (except the Ring-bearer).",
+    "lore": "'Sauron was diminished, but not destroyed. His Ring was lost but not unmade.'",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "wound",
+        "select": "choose(companion,not(ringBearer))"
+      }
+    },
+    "imagePath": "decipher/LOTR03093.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 7,
+    "vitality": 2,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_94",
+    "collInfo": "3C94",
+    "setNumber": 3,
+    "cardNumber": 94,
+    "title": "Orc Butcher",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "For each [sauron] condition you can spot, this minion is strength +1.",
+    "lore": "'And yet we see that Sauron can torture and destroy the very hills.'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "self",
+        "amount": {
+          "type": "forEachYouCanSpot",
+          "filter": "culture(sauron),condition"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03094.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 6,
+    "vitality": 2,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_95",
+    "collInfo": "3C95",
+    "setNumber": 3,
+    "cardNumber": 95,
+    "title": "Orc Guard",
+    "unique": false,
+    "twilight": 1,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Exert this minion and discard your [sauron] condition to discard a Free Peoples condition.",
+    "lore": "The malice of the Dark Tower thins the hopes of Men.",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "cost": [
+        {
+          "type": "exert",
+          "select": "self"
+        },
+        {
+          "type": "discard",
+          "select": "choose(your,culture(sauron),condition)"
+        }
+      ],
+      "effect": {
+        "type": "discard",
+        "select": "choose(side(free),condition)"
+      }
+    },
+    "imagePath": "decipher/LOTR03095.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 5,
+    "vitality": 2,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_96",
+    "collInfo": "3U96",
+    "setNumber": 3,
+    "cardNumber": 96,
+    "title": "Orc Pillager",
+    "unique": false,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "For each Free Peoples card borne by a character this minion is skirmishing, that character is strength -1.",
+    "lore": "Weapons of the West are often powerless against the threat of Sauron.",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "inSkirmishAgainst(self)",
+        "amount": {
+          "type": "forEachYouCanSpot",
+          "filter": "side(free),attachedTo(inSkirmishAgainst(self))",
+          "multiplier": -1
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03096.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 10,
+    "vitality": 3,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_97",
+    "collInfo": "3U97",
+    "setNumber": 3,
+    "cardNumber": 97,
+    "title": "Orc Slayer",
+    "unique": false,
+    "twilight": 1,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Regroup:</b> Exert this minion to wound a companion (except the Ring-bearer).",
+    "lore": "For it is a long tale, full of deeds great and terrible....",
+    "effects": {
+      "type": "activated",
+      "phase": "regroup",
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "wound",
+        "select": "choose(companion,not(ringBearer))"
+      }
+    },
+    "imagePath": "decipher/LOTR03097.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 5,
+    "vitality": 2,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_98",
+    "collInfo": "3C98",
+    "setNumber": 3,
+    "cardNumber": 98,
+    "title": "Orc Swordsman",
+    "unique": false,
+    "twilight": 3,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "While this minion bears a weapon, he is strength +2.",
+    "lore": "'Many evil things there are that your strong walls and bright swords do not stay.'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "self,hasAttached(weapon)",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03098.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 9,
+    "vitality": 3,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_99",
+    "collInfo": "3R99",
+    "setNumber": 3,
+    "cardNumber": 99,
+    "title": "Orc Trooper",
+    "unique": false,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "For each card in your hand, this minion is strength +1.",
+    "lore": "The Dark Lord's power grows in unseen ways.",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "self",
+        "amount": {
+          "type": "forEachInHand",
+          "hand": "you"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03099.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 7,
+    "vitality": 3,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_100",
+    "collInfo": "3U100",
+    "setNumber": 3,
+    "cardNumber": 100,
+    "title": "Orc Veteran",
+    "unique": false,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Skirmish:</b> Discard your [sauron] condition to make a character skirmishing this minion strength -1.",
+    "lore": "'There was war, and the land was laid waste....'",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "discard",
+        "select": "choose(your,culture(sauron),condition)"
+      },
+      "effect": {
+        "type": "addModifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "filter": "character,inSkirmishAgainst(self)",
+          "amount": -1
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03100.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 10,
+    "vitality": 3,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_101",
+    "collInfo": "3C101",
+    "setNumber": 3,
+    "cardNumber": 101,
+    "title": "Orc Warrior",
+    "unique": false,
+    "twilight": 3,
+    "type": "Minion",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Exert this minion and discard your [sauron] condition to make the Free Peoples player discard the top 2 cards from his or her draw deck.",
+    "lore": "Orcs were multiplying again in the mountains.",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "cost": [
+        {
+          "type": "exert",
+          "select": "self"
+        },
+        {
+          "type": "discard",
+          "select": "choose(your,culture(sauron),condition)"
+        }
+      ],
+      "effect": {
+        "type": "discardTopCardsFromDeck",
+        "deck": "fp",
+        "forced": true,
+        "count": 2
+      }
+    },
+    "imagePath": "decipher/LOTR03101.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "race": "Orc",
+    "strength": 9,
+    "vitality": 3,
+    "siteNumber": 6
+  },
+  {
+    "blueprintId": "3_102",
+    "collInfo": "3R102",
+    "setNumber": 3,
+    "cardNumber": 102,
+    "title": "Our List of Allies Grows Thin",
+    "unique": true,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, exert a [sauron] minion. Plays to your support area.<br>Each time the fellowship moves, add (1) for each ally you can spot.",
+    "lore": "'The enemy is moving.... His eye is fixed on Rivendell. And Saruman, you tell me, has betrayed us.'",
+    "effects": [
+      {
+        "type": "extraCost",
+        "cost": {
+          "type": "exert",
+          "select": "choose(culture(sauron),minion)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "moves"
+        },
+        "effect": {
+          "type": "addTwilight",
+          "amount": {
+            "type": "forEachYouCanSpot",
+            "filter": "ally"
+          }
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03102.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron"
+  },
+  {
+    "blueprintId": "3_103",
+    "collInfo": "3R103",
+    "setNumber": 3,
+    "cardNumber": 103,
+    "title": "Terrible as the Dawn",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot a [sauron] minion to wound Galadriel 3 times. The Free Peoples player may discard 2 Elves to prevent this.",
+    "lore": "'In the place of the Dark Lord, you would have a Queen... All shall love me and despair!'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(sauron),minion"
+      },
+      "effect": {
+        "type": "preventable",
+        "text": "Would you like to discard 2 Elves to prevent wounding Galadriel 3 times?",
+        "player": "fp",
+        "cost": {
+          "type": "discard",
+          "select": "choose(elf)",
+          "count": 2
+        },
+        "effect": {
+          "type": "wound",
+          "select": "choose(name(Galadriel))",
+          "times": 3
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03103.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_104",
+    "collInfo": "3R104",
+    "setNumber": 3,
+    "cardNumber": 104,
+    "title": "Tower of Barad-dûr",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, exert a [sauron] minion. Plays to your support area.<br>Each time the fellowship moves, the Free Peoples player must discard a card from hand.",
+    "lore": "The Dark Tower had been rebuilt, it was said. From there the power was spreading....",
+    "effects": [
+      {
+        "type": "extraCost",
+        "cost": {
+          "type": "exert",
+          "select": "choose(culture(sauron),minion)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "moves"
+        },
+        "effect": {
+          "type": "discardFromHand",
+          "forced": true,
+          "player": "fp",
+          "hand": "fp"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03104.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron"
+  },
+  {
+    "blueprintId": "3_105",
+    "collInfo": "3R105",
+    "setNumber": 3,
+    "cardNumber": 105,
+    "title": "Why Shouldn't I Keep It?",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot a [sauron] minion to discard Bilbo. The Free Peoples player may discard 2 Free Peoples conditions to prevent this.",
+    "lore": "'No, wait, it's here in my pocket. Isn't that... isn't that odd now?'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(sauron),minion"
+      },
+      "effect": {
+        "type": "preventable",
+        "text": "Would you like to discard 2 FP conditions to prevent discarding Bilbo?",
+        "player": "fp",
+        "cost": {
+          "type": "discard",
+          "select": "choose(side(free),condition)",
+          "count": 2
+        },
+        "effect": {
+          "type": "discard",
+          "select": "choose(name(Bilbo))"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03105.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Maneuver"
+  },
+  {
+    "blueprintId": "3_106",
+    "collInfo": "3U106",
+    "setNumber": 3,
+    "cardNumber": 106,
+    "title": "Bill the Pony",
+    "unique": true,
+    "twilight": 0,
+    "type": "Possession",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "Bearer must be a Hobbit companion.<br>The Shadow number of each site is -1.<br>Discard Bill the Pony when at an underground site.",
+    "lore": "'That animal can nearly talk.... He gave me a look as plain as Mr. Pippin could speak....'",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyCost",
+          "filter": "site",
+          "amount": -1
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "ConstantlyCheck",
+          "requires": {
+            "type": "location",
+            "filter": "underground"
+          }
+        },
+        "effect": {
+          "type": "discard",
+          "select": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03106.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "target": "hobbit,companion"
+  },
+  {
+    "blueprintId": "3_107",
+    "collInfo": "3U107",
+    "setNumber": 3,
+    "cardNumber": 107,
+    "title": "Frodo's Pipe",
+    "unique": true,
+    "twilight": 1,
+    "type": "Possession",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "Bearer must be Frodo.<br><b>Fellowship:</b> Discard a pipeweed possession and spot X pipes to heal a companion with the Frodo signet X times.",
+    "lore": "'All the same, observations that I have made on my own many journeys south have convinced me that the weed itself is not native to our parts of the world.'",
+    "effects": {
+      "type": "activated",
+      "phase": "fellowship",
+      "cost": [
+        {
+          "type": "discard",
+          "select": "choose(pipeweed,possession)"
+        },
+        {
+          "type": "chooseHowManyToSpot",
+          "filter": "pipe",
+          "memorize": "pipeCount"
+        }
+      ],
+      "effect": {
+        "type": "heal",
+        "select": "choose(companion,signet(Frodo))",
+        "times": {
+          "type": "fromMemory",
+          "memory": "pipeCount"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03107.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "itemClass": "Pipe",
+    "target": "name(Frodo)"
+  },
+  {
+    "blueprintId": "3_108",
+    "collInfo": "3C108",
+    "setNumber": 3,
+    "cardNumber": 108,
+    "title": "Frying Pan",
+    "unique": false,
+    "twilight": 0,
+    "type": "Possession",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "Bearer must be a Hobbit.<br><b>Skirmish:</b> Exert bearer to wound an Orc he or she is skirmishing.",
+    "lore": "'I think I'm getting the hang of this!'",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "exert",
+        "select": "bearer"
+      },
+      "effect": {
+        "type": "wound",
+        "select": "choose(orc,inSkirmishAgainst(bearer))"
+      }
+    },
+    "imagePath": "decipher/LOTR03108.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "strength": 1,
+    "itemClass": "Hand weapon",
+    "target": "hobbit"
+  },
+  {
+    "blueprintId": "3_109",
+    "collInfo": "3C109",
+    "setNumber": 3,
+    "cardNumber": 109,
+    "title": "Meant to Be Alone",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "<b>Fellowship:</b> Spot a Hobbit companion (except the Ring-bearer) to reveal a card at random from an opponent's hand. Remove (X), where X is the twilight cost of the card revealed.",
+    "lore": "'You are a Ring-bearer, Frodo... to bear a Ring of Power is to be alone.'",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "hobbit,companion,not(ringBearer)"
+      },
+      "effect": [
+        {
+          "type": "revealRandomCardsFromHand",
+          "forced": true,
+          "hand": "shadow",
+          "memorize": "revealedCard"
+        },
+        {
+          "type": "removeTwilight",
+          "amount": {
+            "type": "twilightCostInMemory",
+            "memory": "revealedCard"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR03109.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "timeword": "Fellowship"
+  },
+  {
+    "blueprintId": "3_110",
+    "collInfo": "3R110",
+    "setNumber": 3,
+    "cardNumber": 110,
+    "title": "Melilot Brandybuck",
+    "unique": true,
+    "twilight": 1,
+    "type": "Ally",
+    "rarity": "R",
+    "keywords": [],
+    "gametext": "<b>Response:</b> If a burden is about to be added by a Shadow card, exert Melilot Brandybuck to prevent that burden.",
+    "lore": "Master Everard Took and Miss Melilot Brandybuck got on a table and with bells in their hands began to dance the Springle-ring: a pretty dance, but rather 'vigorous.",
+    "effects": {
+      "type": "Response",
+      "trigger": {
+        "type": "aboutToAddBurden",
+        "filter": "side(shadow)"
+      },
+      "cost": {
+        "type": "exert",
+        "select": "self"
+      },
+      "effect": {
+        "type": "preventBurden"
+      }
+    },
+    "imagePath": "decipher/LOTR03110.jpg",
+    "hasErrata": false,
+    "subtitle": "Merry Dancer",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 2,
+    "vitality": 2,
+    "allyHome": "1F"
+  },
+  {
+    "blueprintId": "3_111",
+    "collInfo": "3C111",
+    "setNumber": 3,
+    "cardNumber": 111,
+    "title": "Old Noakes",
+    "unique": true,
+    "twilight": 1,
+    "type": "Ally",
+    "rarity": "C",
+    "keywords": [],
+    "gametext": "Each time a Shadow card makes you discard a card from hand, you may also discard a minion or Shadow condition.",
+    "lore": "'There's been some strange folk crossing the Shire – Dwarves and others of a less than savoury nature.'",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "discarded",
+        "filter": "your",
+        "fromZone": "HAND",
+        "source": "side(shadow)",
+        "ignoreVoluntary": true
+      },
+      "effect": {
+        "type": "discard",
+        "select": "choose(or(minion,and(side(shadow),condition)))"
+      }
+    },
+    "imagePath": "decipher/LOTR03111.jpg",
+    "hasErrata": false,
+    "subtitle": "Purveyor of Wisdoms",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 1,
+    "vitality": 2,
+    "allyHome": "1F"
+  },
+  {
+    "blueprintId": "3_112",
+    "collInfo": "3C112",
+    "setNumber": 3,
+    "cardNumber": 112,
+    "title": "Seek and Hide",
+    "unique": false,
+    "twilight": 1,
+    "type": "Event",
+    "rarity": "C",
+    "keywords": [
+      "Stealth"
+    ],
+    "gametext": "<b>Stealth</b>.<br><b>Skirmish:</b> Spot 2 [shire] companions to make a minion lose all <b>damage</b> bonuses.",
+    "lore": "A Hobbit's best friends in Moria are the very pillars that support its structure.",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "culture(shire),companion",
+        "count": 2
+      },
+      "effect": {
+        "type": "removeKeyword",
+        "select": "choose(minion)",
+        "keyword": "damage"
+      }
+    },
+    "imagePath": "decipher/LOTR03112.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "timeword": "Skirmish"
+  },
+  {
+    "blueprintId": "3_113",
+    "collInfo": "3R113",
+    "setNumber": 3,
+    "cardNumber": 113,
+    "title": "The Shire Countryside",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "R",
+    "keywords": [
+      "Support Area"
+    ],
+    "gametext": "To play, spot 2 [shire] companions. Plays to your support area.<br>Each time you remove a burden (except by a Hobbit's game text), you may heal a companion.",
+    "lore": "'Life in the wide world goes on... scarcely even aware of the existence of hobbits....'",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(shire),companion",
+          "count": 2
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "removesBurden",
+          "player": "you",
+          "filter": "not(hobbit)"
+        },
+        "effect": {
+          "type": "heal",
+          "select": "choose(companion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR03113.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire"
+  },
+  {
+    "blueprintId": "3_114",
+    "collInfo": "3C114",
+    "setNumber": 3,
+    "cardNumber": 114,
+    "title": "Three Monstrous Trolls",
+    "unique": false,
+    "twilight": 0,
+    "type": "Condition",
+    "rarity": "C",
+    "keywords": [
+      "Tale",
+      "Support Area"
+    ],
+    "gametext": "<b>Tale</b>. Plays to your support area.<br><b>Response:</b> If a Shadow card is about to add any number of twilight tokens, exert a Hobbit ally to prevent this.",
+    "lore": "'Great big nasty twenty foot high smelly things – and they're arguing... arguing about how they were going to cook us!'",
+    "effects": {
+      "type": "Response",
+      "trigger": {
+        "type": "aboutToAddTwilight",
+        "filter": "side(shadow)"
+      },
+      "cost": {
+        "type": "exert",
+        "select": "choose(hobbit,ally)"
+      },
+      "effect": {
+        "type": "preventTwilight"
+      }
+    },
+    "imagePath": "decipher/LOTR03114.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire"
+  },
+  {
+    "blueprintId": "3_115",
+    "collInfo": "3U115",
+    "setNumber": 3,
+    "cardNumber": 115,
+    "title": "Caras Galadhon",
+    "unique": false,
+    "twilight": 3,
+    "type": "Site",
+    "rarity": "U",
+    "keywords": [
+      "Forest",
+      "Sanctuary"
+    ],
+    "gametext": "<b>Forest</b>. <b>Sanctuary</b>. While the fellowship is at Caras Galadhon, no more than one minion may be assigned to each skirmish.",
+    "lore": "",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "noMoreThanOneMinionMayBeAssignedToEachSkirmish",
+        "requires": {
+          "type": "location",
+          "filter": "self"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03115.jpg",
+    "hasErrata": false,
+    "siteNumber": 6,
+    "siteBlock": "Fellowship",
+    "siteDirection": "Left"
+  },
+  {
+    "blueprintId": "3_116",
+    "collInfo": "3U116",
+    "setNumber": 3,
+    "cardNumber": 116,
+    "title": "Eregion Hills",
+    "unique": false,
+    "twilight": 2,
+    "type": "Site",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "When the fellowship moves to Eregion Hills, add a burden.",
+    "lore": "",
+    "effects": {
+      "type": "Trigger",
+      "optional": false,
+      "player": "fp",
+      "trigger": {
+        "type": "movesTo",
+        "filter": "self"
+      },
+      "effect": {
+        "type": "addBurdens"
+      }
+    },
+    "imagePath": "decipher/LOTR03116.jpg",
+    "hasErrata": false,
+    "siteNumber": 4,
+    "siteBlock": "Fellowship",
+    "siteDirection": "Right"
+  },
+  {
+    "blueprintId": "3_117",
+    "collInfo": "3C117",
+    "setNumber": 3,
+    "cardNumber": 117,
+    "title": "Gates of Argonath",
+    "unique": false,
+    "twilight": 8,
+    "type": "Site",
+    "rarity": "C",
+    "keywords": [
+      "River"
+    ],
+    "gametext": "<b>River</b>. Maneuver events may not be played.",
+    "lore": "",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "cantPlayPhaseEvents",
+        "phase": "maneuver"
+      }
+    },
+    "imagePath": "decipher/LOTR03117.jpg",
+    "hasErrata": false,
+    "siteNumber": 8,
+    "siteBlock": "Fellowship",
+    "siteDirection": "Right"
+  },
+  {
+    "blueprintId": "3_118",
+    "collInfo": "3C118",
+    "setNumber": 3,
+    "cardNumber": 118,
+    "title": "The Great River",
+    "unique": false,
+    "twilight": 6,
+    "type": "Site",
+    "rarity": "C",
+    "keywords": [
+      "River"
+    ],
+    "gametext": "<b>River</b>. While the fellowship is at The Great River, cards may not be played from draw decks or discard piles.",
+    "lore": "",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "cantPlayCardsFromDeckOrDiscardPile",
+        "requires": {
+          "type": "location",
+          "filter": "self"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR03118.jpg",
+    "hasErrata": false,
+    "siteNumber": 7,
+    "siteBlock": "Fellowship",
+    "siteDirection": "Right"
+  },
+  {
+    "blueprintId": "3_119",
+    "collInfo": "3U119",
+    "setNumber": 3,
+    "cardNumber": 119,
+    "title": "House of Elrond",
+    "unique": false,
+    "twilight": 0,
+    "type": "Site",
+    "rarity": "U",
+    "keywords": [
+      "Sanctuary"
+    ],
+    "gametext": "<b>Sanctuary</b>. When the fellowship moves to House of Elrond, the Free Peoples player may spot 2 Elves to remove a burden.",
+    "lore": "",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "movesTo",
+        "filter": "self"
+      },
+      "player": "fp",
+      "requires": {
+        "type": "canSpot",
+        "filter": "elf",
+        "count": 2
+      },
+      "effect": {
+        "type": "removeBurdens"
+      }
+    },
+    "imagePath": "decipher/LOTR03119.jpg",
+    "hasErrata": false,
+    "siteNumber": 3,
+    "siteBlock": "Fellowship",
+    "siteDirection": "Right"
+  },
+  {
+    "blueprintId": "3_120",
+    "collInfo": "3U120",
+    "setNumber": 3,
+    "cardNumber": 120,
+    "title": "Wastes of Emyn Muil",
+    "unique": false,
+    "twilight": 9,
+    "type": "Site",
+    "rarity": "U",
+    "keywords": [],
+    "gametext": "<b>Maneuver:</b> Spot 4 companions and exert your [isengard] Orc to make the Free Peoples player wound a companion.",
+    "lore": "",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "requires": {
+        "type": "canSpot",
+        "filter": "companion",
+        "count": 4
+      },
+      "cost": {
+        "type": "exert",
+        "select": "choose(your,culture(isengard),orc)"
+      },
+      "effect": {
+        "type": "wound",
+        "player": "fp",
+        "select": "choose(companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR03120.jpg",
+    "hasErrata": false,
+    "siteNumber": 9,
+    "siteBlock": "Fellowship",
+    "siteDirection": "Left"
+  },
+  {
+    "blueprintId": "3_121",
+    "collInfo": "3P121",
+    "setNumber": 3,
+    "cardNumber": 121,
+    "title": "Legolas",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Archer"
+    ],
+    "gametext": "<b>Archer</b>.<br>While Legolas is at a river or forest, add 1 to the fellowship archery total.",
+    "lore": "'Praised be the bow of Galadriel, and the hand and eye of Legolas!... That was a mighty shot in the dark, my friend!'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyArcheryTotal",
+        "requires": {
+          "type": "location",
+          "filter": "or(river,forest)"
+        },
+        "side": "free",
+        "amount": 1
+      }
+    },
+    "imagePath": "decipher/LOTR03121.jpg",
+    "hasErrata": false,
+    "subtitle": "Son of Thranduil",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 6,
+    "signet": "Aragorn"
+  },
+  {
+    "blueprintId": "3_122",
+    "collInfo": "3P122",
+    "setNumber": 3,
+    "cardNumber": 122,
+    "title": "Boromir",
+    "unique": true,
+    "twilight": 3,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ranger"
+    ],
+    "gametext": "<b>Ranger</b>.<br><b>Fellowship:</b> Add (2) to heal Boromir.",
+    "lore": "...seated a little apart was a tall man with a fair and noble face... proud and stern of glance.",
+    "effects": {
+      "type": "activated",
+      "phase": "fellowship",
+      "cost": {
+        "type": "addTwilight",
+        "amount": 2
+      },
+      "effect": {
+        "type": "heal",
+        "select": "self"
+      }
+    },
+    "imagePath": "decipher/LOTR03122.jpg",
+    "hasErrata": false,
+    "subtitle": "Defender of Minas Tirith",
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 6,
+    "signet": "Gandalf"
+  }
+]

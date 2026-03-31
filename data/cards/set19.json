@@ -1,0 +1,2015 @@
+[
+  {
+    "blueprintId": "19_1",
+    "collInfo": "19P1",
+    "setNumber": 19,
+    "cardNumber": 1,
+    "title": "The One Ring",
+    "unique": true,
+    "twilight": 0,
+    "type": "The One Ring",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "While wearing The One Ring, each time bearer is about to take a wound, add a burden instead.<br><b>Maneuver:</b> Wear The One Ring until the regroup phase.<br><b>Skirmish:</b> Add a burden to make the Ring-bearer strength +3.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": false,
+        "requires": [
+          {
+            "type": "ringIsOn"
+          },
+          {
+            "type": "ringIsActive"
+          }
+        ],
+        "trigger": {
+          "type": "aboutToTakeWound",
+          "filter": "bearer"
+        },
+        "effect": [
+          {
+            "type": "negateWound",
+            "select": "all(bearer)"
+          },
+          {
+            "type": "addBurdens"
+          }
+        ]
+      },
+      {
+        "type": "activated",
+        "requires": {
+          "type": "ringIsActive"
+        },
+        "phase": "maneuver",
+        "effect": {
+          "type": "putOnRing"
+        }
+      },
+      {
+        "type": "activated",
+        "requires": {
+          "type": "ringIsActive"
+        },
+        "phase": "skirmish",
+        "cost": {
+          "type": "addBurdens"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "bearer",
+          "amount": 3
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19001.jpg",
+    "hasErrata": false,
+    "subtitle": "The Great Ring"
+  },
+  {
+    "blueprintId": "19_2",
+    "collInfo": "19P2",
+    "setNumber": 19,
+    "cardNumber": 2,
+    "title": "Gimli",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship",
+      "Damage+1"
+    ],
+    "gametext": "<b>Fellowship</b>. <b>Damage +1</b>.<br>Each time you play a [dwarven] possession, you may draw a card.",
+    "lore": "If anyone was to ask for my opinion, which I note they're not, I'd say we were taking the long way round.",
+    "effects": {
+      "type": "Trigger",
+      "optional": true,
+      "trigger": {
+        "type": "played",
+        "filter": "your,culture(dwarven),possession"
+      },
+      "effect": {
+        "type": "drawCards"
+      }
+    },
+    "imagePath": "decipher/LOTR19002.jpg",
+    "hasErrata": false,
+    "subtitle": "Opinionated Guide",
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "race": "Dwarf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "19_3",
+    "collInfo": "19P3",
+    "setNumber": 19,
+    "cardNumber": 3,
+    "title": "Still Twitching",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be a [dwarven] companion.<br>Bearer gains <b>hunter 2</b>. Each time bearer wins a skirmish, you may transfer this condition to another [dwarven] companion.<br>At the end of each turn, if bearer did not win a skirmish this turn, discard this condition from play.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "filter": "bearer",
+          "keyword": "hunter+2"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "bearer"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(culture(dwarven),companion)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "endOfTurn"
+        },
+        "requires": {
+          "type": "not",
+          "requires": {
+            "type": "didWinSkirmish",
+            "filter": "bearer"
+          }
+        },
+        "effect": {
+          "type": "discard",
+          "select": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19003.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "target": "culture(dwarven),companion"
+  },
+  {
+    "blueprintId": "19_4",
+    "collInfo": "19P4",
+    "setNumber": 19,
+    "cardNumber": 4,
+    "title": "That's Two!",
+    "unique": false,
+    "twilight": 2,
+    "type": "Event",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Spot Gimli and exert a fellowship companion to have each Shadow player discard one of his or her Shadow cards from play.",
+    "lore": "Legolas, two already!",
+    "effects": {
+      "type": "event",
+      "requires": {
+        "type": "canSpot",
+        "filter": "name(Gimli)"
+      },
+      "cost": {
+        "type": "exert",
+        "select": "choose(fellowship,companion)"
+      },
+      "effect": {
+        "type": "discard",
+        "player": "shadow",
+        "select": "choose(your,side(shadow))"
+      }
+    },
+    "imagePath": "decipher/LOTR19004.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Dwarven",
+    "timeword": "Regroup"
+  },
+  {
+    "blueprintId": "19_5",
+    "collInfo": "19P5",
+    "setNumber": 19,
+    "cardNumber": 5,
+    "title": "Army Long Trained",
+    "unique": false,
+    "twilight": 0,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be an [elven] companion.<br>Each time bearer wins a skirmish, you may transfer this condition to another [elven] companion.<br>At the start of the archery phase, you must exert bearer or return this condition to hand.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "bearer"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(culture(elven),companion)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "startOfPhase",
+          "phase": "archery"
+        },
+        "effect": {
+          "type": "choice",
+          "texts": [
+            "Exert bearer",
+            "Return this condition to hand"
+          ],
+          "effects": [
+            {
+              "type": "exert",
+              "select": "bearer"
+            },
+            {
+              "type": "returnToHand",
+              "select": "self"
+            }
+          ]
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19005.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "strength": 1,
+    "target": "culture(elven),companion"
+  },
+  {
+    "blueprintId": "19_6",
+    "collInfo": "19P6",
+    "setNumber": 19,
+    "cardNumber": 6,
+    "title": "Arwen",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ranger"
+    ],
+    "gametext": "<b>Ranger</b>.<br>While you can spot 2 [elven] followers, each minion skirmishing Arwen is strength -2.<br><b>Maneuver:</b> Add 3 threats to reconcile your hand.",
+    "lore": "I would rather share one lifetime with you than face all the ages of this world alone.",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "requires": {
+            "type": "canSpot",
+            "count": 2,
+            "filter": "culture(elven),follower"
+          },
+          "filter": "minion,inSkirmishAgainst(name(Arwen))",
+          "amount": -2
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "maneuver",
+        "cost": {
+          "type": "addThreats",
+          "amount": 3
+        },
+        "effect": {
+          "type": "reconcileHand"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19006.jpg",
+    "hasErrata": false,
+    "subtitle": "Royal Maiden",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 6
+  },
+  {
+    "blueprintId": "19_7",
+    "collInfo": "19P7",
+    "setNumber": 19,
+    "cardNumber": 7,
+    "title": "Legolas",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship",
+      "Archer"
+    ],
+    "gametext": "<b>Fellowship</b>. <b>Archer</b>.<br><b>Archery:</b> Add two threats to wound a minion; Legolas does not add to the fellowship archery total.",
+    "lore": "Have you heard nothing Lord Elrond has said? The Ring must be destroyed!",
+    "effects": {
+      "type": "activated",
+      "phase": "archery",
+      "cost": {
+        "type": "addThreats",
+        "amount": 2
+      },
+      "effect": [
+        {
+          "type": "wound",
+          "select": "choose(minion)"
+        },
+        {
+          "type": "disableArcheryTotalContribution",
+          "select": "self"
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR19007.jpg",
+    "hasErrata": false,
+    "subtitle": "Skeptical Guide",
+    "side": "Free Peoples",
+    "culture": "Elven",
+    "race": "Elf",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 7
+  },
+  {
+    "blueprintId": "19_8",
+    "collInfo": "19P8",
+    "setNumber": 19,
+    "cardNumber": 8,
+    "title": "Gandalf",
+    "unique": true,
+    "twilight": 4,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship"
+    ],
+    "gametext": "<b>Fellowship</b>.<br><b>Response:</b> If an event is played, exert Gandalf twice to cancel that event.",
+    "lore": "The Ring yearns above all else to return to the hand of its master. They are one, the Ring and the Dark Lord. Frodo, he must never find it.",
+    "effects": {
+      "type": "Response",
+      "trigger": {
+        "type": "played",
+        "filter": "event"
+      },
+      "cost": {
+        "type": "exert",
+        "select": "self",
+        "times": 2
+      },
+      "effect": {
+        "type": "cancelEvent"
+      }
+    },
+    "imagePath": "decipher/LOTR19008.jpg",
+    "hasErrata": false,
+    "subtitle": "Wise Guide",
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "race": "Wizard",
+    "strength": 8,
+    "vitality": 4,
+    "resistance": 7
+  },
+  {
+    "blueprintId": "19_9",
+    "collInfo": "19P9",
+    "setNumber": 19,
+    "cardNumber": 9,
+    "title": "Stern Words",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "To play, spot a [gandalf] Wizard.<br>Bearer must be a companion.<br>Each time bearer wins a skirmish, you may transfer this condition to another companion.<br>At the end of each turn, return this condition to hand.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(gandalf),wizard"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "bearer"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(companion)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "endOfTurn"
+        },
+        "effect": {
+          "type": "returnToHand",
+          "select": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19009.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gandalf",
+    "strength": 2,
+    "target": "companion"
+  },
+  {
+    "blueprintId": "19_10",
+    "collInfo": "19P10",
+    "setNumber": 19,
+    "cardNumber": 10,
+    "title": "Gollum",
+    "unique": true,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Gollum is strength +1 for each threat you can spot.<br>Each time Gollum wins a skirmish, you may add a threat.",
+    "lore": "'But if we was master, then we could help ourselfs, yes....'",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "filter": "self",
+          "amount": {
+            "type": "forEachThreat"
+          }
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "self"
+        },
+        "effect": {
+          "type": "addThreats"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19010.jpg",
+    "hasErrata": false,
+    "subtitle": "Threatening Guide",
+    "side": "Shadow",
+    "culture": "Gollum",
+    "strength": 5,
+    "vitality": 4,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_11",
+    "collInfo": "19P11",
+    "setNumber": 19,
+    "cardNumber": 11,
+    "title": "Sméagol",
+    "unique": true,
+    "twilight": 0,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ring-bound"
+    ],
+    "gametext": "<b>Ring-bound</b>. To play, add a burden.<br>Each time Sméagol wins a skirmish, you may shuffle up to 2 [gollum] cards from your discard pile into your draw deck.<br><b>Skirmish:</b> Exert a Ring-bound companion to make Sméagol strength +2.",
+    "lore": "...now that I see him, I do pity him.",
+    "effects": [
+      {
+        "type": "extraCost",
+        "cost": {
+          "type": "addBurdens"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "self"
+        },
+        "effect": {
+          "type": "shuffleCardsFromDiscardIntoDrawDeck",
+          "count": "0-2",
+          "select": "choose(culture(gollum))"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "exert",
+          "select": "choose(ring-bound,companion)"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "self",
+          "amount": 2
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19011.jpg",
+    "hasErrata": false,
+    "subtitle": "Pitiable Guide",
+    "side": "Free Peoples",
+    "culture": "Gollum",
+    "strength": 3,
+    "vitality": 4,
+    "resistance": 5
+  },
+  {
+    "blueprintId": "19_12",
+    "collInfo": "19P12",
+    "setNumber": 19,
+    "cardNumber": 12,
+    "title": "Aragorn",
+    "unique": true,
+    "twilight": 4,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship",
+      "Ranger"
+    ],
+    "gametext": "<b>Fellowship</b>. <b>Ranger</b>.<br>While the Ring-bearer is the only other companion you can spot, Aragorn is an <b>archer</b>, <b>defender +1</b>, and can take no more than 1 wound each skirmish.",
+    "lore": "The skill of the Elves can reforge the sword of Kings, but only you have the power to wield it.",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "requires": {
+            "type": "cantSpot",
+            "filter": "companion,not(self),not(ring bearer)"
+          },
+          "filter": "self",
+          "keyword": "archer"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "requires": {
+            "type": "cantSpot",
+            "filter": "companion,not(self),not(ring bearer)"
+          },
+          "filter": "self",
+          "keyword": "defender+1"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantTakeMoreWoundsThan",
+          "requires": {
+            "type": "cantSpot",
+            "filter": "companion,not(self),not(ring bearer)"
+          },
+          "filter": "self",
+          "phase": "skirmish"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19012.jpg",
+    "hasErrata": false,
+    "subtitle": "Well-traveled Guide",
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "race": "Man",
+    "strength": 8,
+    "vitality": 4,
+    "resistance": 8
+  },
+  {
+    "blueprintId": "19_13",
+    "collInfo": "19P13",
+    "setNumber": 19,
+    "cardNumber": 13,
+    "title": "Boromir",
+    "unique": true,
+    "twilight": 3,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship",
+      "Ranger"
+    ],
+    "gametext": "<b>Fellowship</b>. <b>Ranger</b>.<br>While you can spot two unbound Hobbits, Boromir's twilight cost is -1.<br>Each time Boromir wins a skirmish, you may exert an unbound Hobbit to discard each minion he is skirmishing from play.",
+    "lore": "In a dream, I saw the eastern sky grow dark.",
+    "effects": [
+      {
+        "type": "modifyOwnCost",
+        "requires": {
+          "type": "canSpot",
+          "count": 2,
+          "filter": "unbound,hobbit"
+        },
+        "amount": -1
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "self"
+        },
+        "cost": {
+          "type": "exert",
+          "select": "choose(unbound,hobbit)"
+        },
+        "effect": {
+          "type": "discard",
+          "select": "all(minion,inSkirmish)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19013.jpg",
+    "hasErrata": false,
+    "subtitle": "Destined Guide",
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 5
+  },
+  {
+    "blueprintId": "19_14",
+    "collInfo": "19P14",
+    "setNumber": 19,
+    "cardNumber": 14,
+    "title": "Not Bound to His Fate",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be a [gondor] Man.<br>Each time bearer wins a skirmish, you may transfer this condition to another [gondor] Man.<br>At the end of each turn, if bearer is not Aragorn, return this condition to hand.",
+    "lore": "Your time will come. You will face the same evil....",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "bearer"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(culture(gondor),man)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "endOfTurn"
+        },
+        "requires": {
+          "type": "canSpot",
+          "filter": "bearer,not(name(Aragorn))"
+        },
+        "effect": {
+          "type": "returnToHand",
+          "select": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19014.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "strength": 1,
+    "target": "culture(gondor),man"
+  },
+  {
+    "blueprintId": "19_15",
+    "collInfo": "19P15",
+    "setNumber": 19,
+    "cardNumber": 15,
+    "title": "Strength in My Blood",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be a fellowship companion.<br>While bearer is a [gondor] companion, he or she is <b>damage +1</b>.",
+    "lore": "I would have followed you my Brother... my Captain... my King!",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "addKeyword",
+        "filter": "bearer",
+        "requires": {
+          "type": "canSpot",
+          "filter": "bearer,culture(gondor),companion"
+        },
+        "keyword": "damage+1"
+      }
+    },
+    "imagePath": "decipher/LOTR19015.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Gondor",
+    "strength": 1,
+    "target": "fellowship,companion"
+  },
+  {
+    "blueprintId": "19_16",
+    "collInfo": "19P16",
+    "setNumber": 19,
+    "cardNumber": 16,
+    "title": "Gríma",
+    "unique": true,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "When you play Gríma, you may remove (4) to exert an unbound companion. That companion cannot use special abilities until the regroup phase.<br><b>Assignment:</b> Exert Gríma to assign him to an unbound companion. That companion may exert to prevent this.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "played",
+          "filter": "self"
+        },
+        "cost": {
+          "type": "removeTwilight",
+          "amount": 4
+        },
+        "effect": [
+          {
+            "type": "exert",
+            "select": "choose(unbound,companion)",
+            "memorize": "exertedCompanion"
+          },
+          {
+            "type": "addModifier",
+            "modifier": {
+              "type": "cantUseSpecialAbilities",
+              "filter": "memory(exertedCompanion)"
+            },
+            "until": "start(regroup)"
+          }
+        ]
+      },
+      {
+        "type": "activated",
+        "phase": "assignment",
+        "cost": {
+          "type": "exert",
+          "select": "self"
+        },
+        "effect": {
+          "type": "assignFPCharacterToSkirmish",
+          "fpCharacter": "choose(unbound,companion)",
+          "minion": "self",
+          "memorizeFPCharacter": "chosenCompanion",
+          "preventText": "Would you like to exert {chosenCompanion} to prevent {self} assigning to it?",
+          "preventCost": {
+            "type": "exert",
+            "select": "memory(chosenCompanion)"
+          }
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19016.jpg",
+    "hasErrata": false,
+    "subtitle": "Servant of Another Master",
+    "side": "Shadow",
+    "culture": "Isengard",
+    "race": "Man",
+    "strength": 4,
+    "vitality": 3,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_17",
+    "collInfo": "19P17",
+    "setNumber": 19,
+    "cardNumber": 17,
+    "title": "Urgency",
+    "unique": false,
+    "twilight": 0,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [
+      "Weather",
+      "Support Area"
+    ],
+    "gametext": "<b>Weather</b>.<br>Each time the fellowship moves, add (2) for each Ent you can spot.<br><b>Skirmish:</b> Discard this condition from play to make a non-[wraith] minion strength +1.",
+    "lore": "If the mountain defeats you, will you risk a more dangerous road?",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "moves"
+        },
+        "effect": {
+          "type": "addTwilight",
+          "amount": {
+            "type": "forEachYouCanSpot",
+            "filter": "ent",
+            "multiplier": 2
+          }
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "discard",
+          "select": "self"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "choose(not(culture(wraith)),minion)",
+          "amount": 1
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19017.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Isengard"
+  },
+  {
+    "blueprintId": "19_18",
+    "collInfo": "19P18",
+    "setNumber": 19,
+    "cardNumber": 18,
+    "title": "The Balrog",
+    "unique": true,
+    "twilight": 14,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Damage+2",
+      "Fierce"
+    ],
+    "gametext": "<b>Damage +2</b>. <b>Fierce</b>.<br>While at an underground site, skip the archery phase, the maneuver phase, and The Balrog cannot be assigned to skirmish companions of strength 6 or less.",
+    "lore": "The flames roared up to greet it, and wreathed about it....",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "skipPhase",
+          "requires": {
+            "type": "location",
+            "filter": "underground"
+          },
+          "phase": "archery"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "skipPhase",
+          "requires": {
+            "type": "location",
+            "filter": "underground"
+          },
+          "phase": "maneuver"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBeAssignedToSkirmishAgainst",
+          "requires": {
+            "type": "location",
+            "filter": "underground"
+          },
+          "fpCharacter": "companion,MaxStrength(6)",
+          "minion": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19018.jpg",
+    "hasErrata": false,
+    "subtitle": "Demon of Might",
+    "side": "Shadow",
+    "culture": "Moria",
+    "race": "Balrog",
+    "strength": 17,
+    "vitality": 5,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "19_19",
+    "collInfo": "19P19",
+    "setNumber": 19,
+    "cardNumber": 19,
+    "title": "Reaching Tentacle",
+    "unique": false,
+    "twilight": 2,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Tentacle"
+    ],
+    "gametext": "<b>Tentacle</b>.<br>This minion cannot bear possessions.<br>Discard this minion from play if not at a marsh.<br>This minion is strength +1 for each tentacle you can spot.",
+    "lore": "Frodo felt something seize him by the ankle....",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBear",
+          "filter": "self",
+          "cardFilter": "possession"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "ConstantlyCheck",
+          "requires": {
+            "type": "location",
+            "filter": "not(marsh)"
+          }
+        },
+        "effect": {
+          "type": "discard",
+          "select": "self"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "filter": "self",
+          "amount": {
+            "type": "forEachYouCanSpot",
+            "filter": "tentacle"
+          }
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19019.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria",
+    "race": "Creature",
+    "strength": 4,
+    "vitality": 2,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "19_20",
+    "collInfo": "19P20",
+    "setNumber": 19,
+    "cardNumber": 20,
+    "title": "Strong Tentacle",
+    "unique": false,
+    "twilight": 3,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Tentacle"
+    ],
+    "gametext": "<b>Tentacle</b>.<br>This minion cannot bear possessions.<br>Discard this minion from play if not at a marsh.<br>This minion is strength +1 for each tentacle you can spot.",
+    "lore": "One came wriggling over the threshold....",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBear",
+          "filter": "self",
+          "cardFilter": "possession"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "ConstantlyCheck",
+          "requires": {
+            "type": "location",
+            "filter": "not(marsh)"
+          }
+        },
+        "effect": {
+          "type": "discard",
+          "select": "self"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "filter": "self",
+          "amount": {
+            "type": "forEachYouCanSpot",
+            "filter": "tentacle"
+          }
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19020.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Moria",
+    "race": "Creature",
+    "strength": 7,
+    "vitality": 2,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "19_21",
+    "collInfo": "19P21",
+    "setNumber": 19,
+    "cardNumber": 21,
+    "title": "Watcher in the Water",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Discard all other minions (except tentacles).<br>Watcher in the Water cannot bear possessions.<br>The fellowship's current site gains <b>marsh</b>.<br><b>Shadow:</b> Play a tentacle from your discard pile.",
+    "lore": "...as if a host of snakes were swimming up....",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "ConstantlyCheck",
+          "requires": {
+            "type": "canSpot",
+            "filter": "minion,not(self),not(tentacle)"
+          }
+        },
+        "effect": {
+          "type": "discard",
+          "select": "all(minion,not(self),not(tentacle))"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBear",
+          "filter": "self",
+          "cardFilter": "possession"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "addKeyword",
+          "filter": "currentSite",
+          "keyword": "marsh"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "shadow",
+        "effect": {
+          "type": "playCardFromDiscard",
+          "select": "choose(tentacle)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19021.jpg",
+    "hasErrata": false,
+    "subtitle": "Many-tentacled Creature",
+    "side": "Shadow",
+    "culture": "Moria",
+    "race": "Creature",
+    "strength": 11,
+    "vitality": 4,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "19_22",
+    "collInfo": "19P22",
+    "setNumber": 19,
+    "cardNumber": 22,
+    "title": "Pit Troll",
+    "unique": false,
+    "twilight": 7,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Hunter 2"
+    ],
+    "gametext": "<b>Hunter 2</b>. <helper>(While skirmishing a non-hunter character, this character is strength +2.)</helper><br>To play, spot an [orc] Orc.<br>When you play this minion, add 2 threats. The Free Peoples player may exert the Ring-bearer to prevent this.",
+    "lore": "Black blood. Flat feet. Scaly skin.",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(orc),orc"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "played",
+          "filter": "self"
+        },
+        "effect": {
+          "type": "preventable",
+          "player": "fp",
+          "text": "Would you like to exert the Ring-bearer to prevent adding 2 threats?",
+          "cost": {
+            "type": "exert",
+            "select": "choose(ring bearer)"
+          },
+          "effect": {
+            "type": "addThreats",
+            "amount": 2
+          }
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19022.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Orc",
+    "race": "Troll",
+    "strength": 13,
+    "vitality": 4,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "19_23",
+    "collInfo": "19P23",
+    "setNumber": 19,
+    "cardNumber": 23,
+    "title": "Troll of the Deep",
+    "unique": true,
+    "twilight": 6,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "To play, spot an [orc] Orc.<br><b>Skirmish:</b> Remove a threat to make an [orc] minion strength +2.",
+    "lore": "Stones to move. Bridges to be rebuilt.",
+    "effects": [
+      {
+        "type": "toPlay",
+        "requires": {
+          "type": "canSpot",
+          "filter": "culture(orc),orc"
+        }
+      },
+      {
+        "type": "activated",
+        "phase": "skirmish",
+        "cost": {
+          "type": "removeThreats"
+        },
+        "effect": {
+          "type": "modifyStrength",
+          "select": "choose(culture(orc),minion)",
+          "amount": 2
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19023.jpg",
+    "hasErrata": false,
+    "subtitle": "Cave Troll",
+    "side": "Shadow",
+    "culture": "Orc",
+    "race": "Troll",
+    "strength": 13,
+    "vitality": 3,
+    "siteNumber": 4
+  },
+  {
+    "blueprintId": "19_24",
+    "collInfo": "19P24",
+    "setNumber": 19,
+    "cardNumber": 24,
+    "title": "Brought Down from Inside",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be a [rohan] Man.<br>At the start of each skirmish you may transfer this condition to a [rohan] Man.<br>At the end of each turn, if bearer did not win a skirmish this turn, return this condition to hand.",
+    "lore": "Bring it down! Bring it down! Bring it down!",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "startOfPhase",
+          "phase": "skirmish"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(culture(rohan),man)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "endOfTurn"
+        },
+        "requires": {
+          "type": "not",
+          "requires": {
+            "type": "didWinSkirmish",
+            "filter": "bearer"
+          }
+        },
+        "effect": {
+          "type": "returnToHand",
+          "select": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19024.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Rohan",
+    "strength": 1,
+    "target": "culture(rohan),man"
+  },
+  {
+    "blueprintId": "19_25",
+    "collInfo": "19P25",
+    "setNumber": 19,
+    "cardNumber": 25,
+    "title": "Éomer",
+    "unique": true,
+    "twilight": 3,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Valiant"
+    ],
+    "gametext": "<b>Valiant</b>.<br>Éomer is strength +2 for each wound on each minion he is skirmishing.",
+    "lore": "Now is the hour, Riders of Rohan, oaths you have taken! Now, fulfill them all! To Lord and Land!",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "self",
+        "amount": {
+          "type": "forEachWound",
+          "filter": "minion,inSkirmishAgainst(self)",
+          "multiplier": 2
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR19025.jpg",
+    "hasErrata": false,
+    "subtitle": "Éored Captain",
+    "side": "Free Peoples",
+    "culture": "Rohan",
+    "race": "Man",
+    "strength": 7,
+    "vitality": 3,
+    "resistance": 7
+  },
+  {
+    "blueprintId": "19_26",
+    "collInfo": "19P26",
+    "setNumber": 19,
+    "cardNumber": 26,
+    "title": "Éowyn",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Valiant"
+    ],
+    "gametext": "<b>Valiant</b>.<br><b>Fellowship:</b> Play a [rohan] companion with a twilight cost of 3 or more; his or her twilight cost is -1.",
+    "lore": "It's tradition for the women of the court to farewell the men.",
+    "effects": {
+      "type": "activated",
+      "phase": "fellowship",
+      "effect": {
+        "type": "PlayCardFromHand",
+        "select": "choose(culture(rohan),companion,minTwilight(3))",
+        "discount": -1
+      }
+    },
+    "imagePath": "decipher/LOTR19026.jpg",
+    "hasErrata": false,
+    "subtitle": "Lady of the Mark",
+    "side": "Free Peoples",
+    "culture": "Rohan",
+    "race": "Man",
+    "strength": 6,
+    "vitality": 3,
+    "resistance": 7
+  },
+  {
+    "blueprintId": "19_27",
+    "collInfo": "19P27",
+    "setNumber": 19,
+    "cardNumber": 27,
+    "title": "Sauron's Might",
+    "unique": false,
+    "twilight": 0,
+    "type": "Event",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Remove a Free Peoples culture token to add a threat. When you play this event, you may remove (1) to place this on the bottom of your draw deck instead of in your discard pile.",
+    "lore": "One by one, the free lands of Middle-earth fell to the power of the Ring.",
+    "effects": {
+      "type": "event",
+      "cost": {
+        "type": "RemoveCultureTokens",
+        "select": "choose(side(free people))"
+      },
+      "effect": [
+        {
+          "type": "addThreats"
+        },
+        {
+          "type": "optional",
+          "text": "Would you like to remove (1) to place {self} on the bottom of your draw deck?",
+          "cost": {
+            "type": "removeTwilight"
+          },
+          "effect": {
+            "type": "putPlayedEventOnBottomOfDrawDeck"
+          }
+        }
+      ]
+    },
+    "imagePath": "decipher/LOTR19027.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Sauron",
+    "timeword": "Shadow"
+  },
+  {
+    "blueprintId": "19_28",
+    "collInfo": "19P28",
+    "setNumber": 19,
+    "cardNumber": 28,
+    "title": "Frodo",
+    "unique": true,
+    "twilight": 0,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ring-bearer",
+      "Ring-bound",
+      "Fellowship"
+    ],
+    "gametext": "<b>Ring-bearer.</b> <b>Ring-bound</b>. <b>Fellowship</b>.<br>While you cannot spot 4 threats, Shadow cards cannot discard cards from your hand or from the top of your draw deck.",
+    "lore": "We're friends of Gandalf the Grey.",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "cantDiscardCardsFromHandOrTopOfDrawDeck",
+        "requires": {
+          "type": "not",
+          "requires": {
+            "type": "canSpotThreats",
+            "amount": 4
+          }
+        },
+        "filter": "side(shadow)"
+      }
+    },
+    "imagePath": "decipher/LOTR19028.jpg",
+    "hasErrata": false,
+    "subtitle": "Little Master",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 3,
+    "vitality": 4,
+    "resistance": 10
+  },
+  {
+    "blueprintId": "19_29",
+    "collInfo": "19P29",
+    "setNumber": 19,
+    "cardNumber": 29,
+    "title": "Merry",
+    "unique": true,
+    "twilight": 1,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship"
+    ],
+    "gametext": "<b>Fellowship</b>.<br><b>Skirmish:</b> If Merry is not assigned to a skirmish, take 2 [shire] cards from your discard pile and remove them from the game to make a companion strength +2.",
+    "lore": "'You can trust us to stick to you through thick and thin – to the bitter end.'",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "requires": {
+        "type": "canSpot",
+        "filter": "self,notAssignedToSkirmish"
+      },
+      "cost": {
+        "type": "removeCardsInDiscardFromGame",
+        "count": 2,
+        "select": "choose(culture(shire))"
+      },
+      "effect": {
+        "type": "modifyStrength",
+        "select": "choose(companion)",
+        "amount": 2
+      }
+    },
+    "imagePath": "decipher/LOTR19029.jpg",
+    "hasErrata": false,
+    "subtitle": "Resolute Friend",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 3,
+    "vitality": 4,
+    "resistance": 8
+  },
+  {
+    "blueprintId": "19_30",
+    "collInfo": "19P30",
+    "setNumber": 19,
+    "cardNumber": 30,
+    "title": "Pippin",
+    "unique": true,
+    "twilight": 1,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Fellowship"
+    ],
+    "gametext": "<b>Fellowship</b>.<br>Pippin is strength +1 for each tale you can spot.",
+    "lore": "'You must go – and therefore we must, too. Merry and I are coming with you.'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "self",
+        "amount": {
+          "type": "forEachYouCanSpot",
+          "filter": "tale"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR19030.jpg",
+    "hasErrata": false,
+    "subtitle": "Steadfast Friend",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 3,
+    "vitality": 4,
+    "resistance": 8
+  },
+  {
+    "blueprintId": "19_31",
+    "collInfo": "19P31",
+    "setNumber": 19,
+    "cardNumber": 31,
+    "title": "Rabbit Stew",
+    "unique": false,
+    "twilight": 1,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be a [shire] companion.<br>Each time bearer wins a skirmish, you may transfer this condition to a fellowship companion.<br>Each time this condition is transferred to a companion, heal that companion.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "bearer"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(fellowship,companion)"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "transferred",
+          "filter": "self",
+          "to": "companion"
+        },
+        "effect": {
+          "type": "heal",
+          "select": "bearer"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19031.jpg",
+    "hasErrata": false,
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "target": "culture(shire),companion"
+  },
+  {
+    "blueprintId": "19_32",
+    "collInfo": "19P32",
+    "setNumber": 19,
+    "cardNumber": 32,
+    "title": "Sam",
+    "unique": true,
+    "twilight": 2,
+    "type": "Companion",
+    "rarity": "P",
+    "keywords": [
+      "Ring-bound",
+      "Fellowship"
+    ],
+    "gametext": "<b>Ring-bound</b>. <b>Fellowship</b>.<br>While Sam bears The One Ring, he is resistance -4.<br>While you can spot 3 [shire] companions, Sam is strength +2.<br><b>Response:</b> If Frodo dies, make Sam the <b>Ring-bearer</b>.",
+    "lore": "",
+    "effects": [
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyResistance",
+          "filter": "self,ring bearer",
+          "amount": -4
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "modifyStrength",
+          "requires": {
+            "type": "canSpot",
+            "count": 3,
+            "filter": "culture(shire),companion"
+          },
+          "filter": "self",
+          "amount": 2
+        }
+      },
+      {
+        "type": "Response",
+        "trigger": {
+          "type": "killed",
+          "filter": "name(Frodo),ring bearer"
+        },
+        "effect": {
+          "type": "makeSelfRingBearer"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19032.jpg",
+    "hasErrata": false,
+    "subtitle": "Loyal Friend",
+    "side": "Free Peoples",
+    "culture": "Shire",
+    "race": "Hobbit",
+    "strength": 3,
+    "vitality": 4,
+    "resistance": 9
+  },
+  {
+    "blueprintId": "19_33",
+    "collInfo": "19P33",
+    "setNumber": 19,
+    "cardNumber": 33,
+    "title": "Lurtz",
+    "unique": true,
+    "twilight": 7,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Archer",
+      "Damage+1"
+    ],
+    "gametext": "<b>Archer</b>. <b>Damage +1</b>.<br><b>Response:</b> If Lurtz is about to take a wound or be exerted, remove (2) (or exert another Uruk-hai) to prevent that wound or exertion.",
+    "lore": "The Uruk-hai leader walked into view on the misty hilltop beneath the dark trees. Hungry for blood.",
+    "effects": [
+      {
+        "type": "Response",
+        "trigger": {
+          "type": "aboutToTakeWound",
+          "filter": "self"
+        },
+        "cost": {
+          "type": "choice",
+          "texts": [
+            "Remove (2)",
+            "Exert another Uruk-hai"
+          ],
+          "effects": [
+            {
+              "type": "removeTwilight",
+              "amount": 2
+            },
+            {
+              "type": "exert",
+              "select": "choose(another,uruk-hai)"
+            }
+          ]
+        },
+        "effect": {
+          "type": "preventWound",
+          "select": "self"
+        }
+      },
+      {
+        "type": "Response",
+        "trigger": {
+          "type": "aboutToExert",
+          "filter": "self"
+        },
+        "cost": {
+          "type": "choice",
+          "texts": [
+            "Remove (2)",
+            "Exert another Uruk-hai"
+          ],
+          "effects": [
+            {
+              "type": "removeTwilight",
+              "amount": 2
+            },
+            {
+              "type": "exert",
+              "select": "choose(another,uruk-hai)"
+            }
+          ]
+        },
+        "effect": {
+          "type": "preventExert",
+          "select": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19033.jpg",
+    "hasErrata": false,
+    "subtitle": "Resilient Captain",
+    "side": "Shadow",
+    "culture": "Uruk-hai",
+    "race": "Uruk-hai",
+    "strength": 13,
+    "vitality": 3,
+    "siteNumber": 5
+  },
+  {
+    "blueprintId": "19_34",
+    "collInfo": "19P34",
+    "setNumber": 19,
+    "cardNumber": 34,
+    "title": "In Twilight",
+    "unique": false,
+    "twilight": 2,
+    "type": "Condition",
+    "rarity": "P",
+    "keywords": [],
+    "gametext": "Bearer must be a [wraith] minion.<br>When you play this, you may draw a card.<br>Each time bearer wins a skirmish, you may transfer this condition to another [wraith] minion.",
+    "lore": "The Nazgûl's true forms were revealed to him, shining like ghostly Kings.",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "played",
+          "filter": "self"
+        },
+        "effect": {
+          "type": "drawCards"
+        }
+      },
+      {
+        "type": "Trigger",
+        "optional": true,
+        "trigger": {
+          "type": "winsSkirmish",
+          "filter": "bearer"
+        },
+        "effect": {
+          "type": "transfer",
+          "select": "self",
+          "where": "choose(culture(wraith),minion)"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19034.jpg",
+    "hasErrata": false,
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "strength": 2,
+    "target": "culture(wraith),minion"
+  },
+  {
+    "blueprintId": "19_35",
+    "collInfo": "19P35",
+    "setNumber": 19,
+    "cardNumber": 35,
+    "title": "Úlairë Attëa",
+    "unique": true,
+    "twilight": 6,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Fierce"
+    ],
+    "gametext": "<b>Fierce</b>.<br>While you can spot 5 twilight tokens in the twilight pool and another [wraith] card, Úlairë Attëa is strength +3.",
+    "lore": "Those that knew the most power as kings were placed in particular ways for the will of Sauron.",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "requires": [
+          {
+            "type": "canSpotTwilight",
+            "amount": 5
+          },
+          {
+            "type": "canSpot",
+            "filter": "another,culture(wraith)"
+          }
+        ],
+        "filter": "self",
+        "amount": 3
+      }
+    },
+    "imagePath": "decipher/LOTR19035.jpg",
+    "hasErrata": false,
+    "subtitle": "Dark Predator",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 12,
+    "vitality": 3,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_36",
+    "collInfo": "19P36",
+    "setNumber": 19,
+    "cardNumber": 36,
+    "title": "Úlairë Enquëa",
+    "unique": true,
+    "twilight": 6,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Fierce"
+    ],
+    "gametext": "<b>Fierce</b>.<br><b>Maneuver:</b> Spot 6 companions and discard a Nazgûl from hand to wound an unbound companion.",
+    "lore": "The Nine Riders were embodiments of Sauron's will, searching all of Middle-earth for his prize.",
+    "effects": {
+      "type": "activated",
+      "phase": "maneuver",
+      "requires": {
+        "type": "canSpot",
+        "filter": "companion",
+        "count": 6
+      },
+      "cost": {
+        "type": "discardFromHand",
+        "forced": false,
+        "select": "choose(nazgul)"
+      },
+      "effect": {
+        "type": "wound",
+        "select": "choose(unbound,companion)"
+      }
+    },
+    "imagePath": "decipher/LOTR19036.jpg",
+    "hasErrata": false,
+    "subtitle": "Dark Threat",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 11,
+    "vitality": 4,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_37",
+    "collInfo": "19P37",
+    "setNumber": 19,
+    "cardNumber": 37,
+    "title": "Úlairë Lemenya",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Fierce"
+    ],
+    "gametext": "<b>Fierce</b>.<br>Úlairë Lemenya is strength +1 for each [wraith] possession in your discard pile.",
+    "lore": "'Do you wish them to find you? They are terrible!'",
+    "effects": {
+      "type": "modifier",
+      "modifier": {
+        "type": "modifyStrength",
+        "filter": "self",
+        "amount": {
+          "type": "forEachInDiscard",
+          "filter": "your,culture(wraith),possession"
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR19037.jpg",
+    "hasErrata": false,
+    "subtitle": "Dark Enemy",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 9,
+    "vitality": 2,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_38",
+    "collInfo": "19P38",
+    "setNumber": 19,
+    "cardNumber": 38,
+    "title": "Úlairë Nertëa",
+    "unique": true,
+    "twilight": 4,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Fierce"
+    ],
+    "gametext": "<b>Fierce</b>.<br>When you play Úlairë Nertëa, name a race. The Free Peoples player cannot assign Úlairë Nertëa to skirmish a companion of the named race.",
+    "lore": "Some accepted Sauron's gift for glory and a notion of great deeds.",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "played",
+          "filter": "self"
+        },
+        "effect": [
+          {
+            "type": "chooseARace",
+            "memorize": "chosenRace"
+          },
+          {
+            "type": "storeWhileInZone",
+            "memory": "chosenRace"
+          }
+        ]
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBeAssignedToSkirmishAgainst",
+          "side": "free people",
+          "fpCharacter": "companion,race(stored)",
+          "minion": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19038.jpg",
+    "hasErrata": false,
+    "subtitle": "Dark Horseman",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 9,
+    "vitality": 2,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_39",
+    "collInfo": "19P39",
+    "setNumber": 19,
+    "cardNumber": 39,
+    "title": "Úlairë Toldëa",
+    "unique": true,
+    "twilight": 6,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Fierce"
+    ],
+    "gametext": "<b>Fierce</b>.<br>Úlairë Toldëa cannot be assigned to skirmish the same companion in a fierce skirmish that he has already been assigned to this turn.",
+    "lore": "Open, in the name of Mordor!' said a voice thin and menacing.",
+    "effects": [
+      {
+        "type": "Trigger",
+        "optional": false,
+        "trigger": {
+          "type": "assignedAgainst",
+          "filter": "self",
+          "memorizeAgainst": "against"
+        },
+        "effect": {
+          "type": "appendCardIdsToWhileInZone",
+          "memory": "against"
+        }
+      },
+      {
+        "type": "modifier",
+        "modifier": {
+          "type": "cantBeAssignedToSkirmishAgainst",
+          "requires": {
+            "type": "fierceSkirmish"
+          },
+          "fpCharacter": "companion,idInStored",
+          "minion": "self"
+        }
+      }
+    ],
+    "imagePath": "decipher/LOTR19039.jpg",
+    "hasErrata": false,
+    "subtitle": "Dark Shadow",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 12,
+    "vitality": 3,
+    "siteNumber": 3
+  },
+  {
+    "blueprintId": "19_40",
+    "collInfo": "19P40",
+    "setNumber": 19,
+    "cardNumber": 40,
+    "title": "The Witch-king",
+    "unique": true,
+    "twilight": 8,
+    "type": "Minion",
+    "rarity": "P",
+    "keywords": [
+      "Fierce"
+    ],
+    "gametext": "<b>Fierce</b>.<br><b>Skirmish:</b> Discard a Nazgûl from hand to make The Witch-king strength +1 (or strength +2 if you can spot that discarded Nazgûl).",
+    "lore": "'A great king and sorcerer he was of old, and now he wields a deadly fear.'",
+    "effects": {
+      "type": "activated",
+      "phase": "skirmish",
+      "cost": {
+        "type": "discardFromHand",
+        "forced": false,
+        "select": "choose(nazgul)",
+        "memorize": "discardedNazgul"
+      },
+      "effect": {
+        "type": "modifyStrength",
+        "select": "self",
+        "amount": {
+          "type": "Conditional",
+          "requires": {
+            "type": "canSpot",
+            "filter": "nameFromMemory(discardedNazgul)"
+          },
+          "true": 2,
+          "false": 1
+        }
+      }
+    },
+    "imagePath": "decipher/LOTR19040.jpg",
+    "hasErrata": false,
+    "subtitle": "Dark Lord",
+    "side": "Shadow",
+    "culture": "Ringwraith",
+    "race": "Nazgul",
+    "strength": 14,
+    "vitality": 4,
+    "siteNumber": 3
+  }
+]
