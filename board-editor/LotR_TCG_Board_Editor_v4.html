@@ -92,6 +92,30 @@ body{background:#0a0a0e;font-family:Georgia,serif;overflow:hidden;width:100vw;he
 .toggle-row input{accent-color:rgba(186,140,30,0.8);}
 .toggle-row span{font-size:9px;color:rgba(255,255,255,0.4);}
 
+/* ── FULL VIEW MODE ── */
+body.full-view #topbar,
+body.full-view #checklist-trigger,
+body.full-view #checklist-panel,
+body.full-view #right-trigger,
+body.full-view #right-panels,
+body.full-view #hover-tooltip,
+body.full-view #ctx-menu,
+body.full-view #master-modal,
+body.full-view .rh,
+body.full-view .rotate-handle,
+body.full-view #horizon-line,
+body.full-view #grid-overlay,
+body.full-view #vanish-point,
+body.full-view #neg-space-canvas{display:none!important;}
+body.full-view #board-wrap{padding:0;background:#000;}
+body.full-view #board{cursor:default;}
+body.full-view .comp{outline:none!important;box-shadow:none!important;}
+body.full-view .comp.selected{outline:none!important;}
+body.full-view .comp-inner-label{display:none!important;}
+body.full-view #full-view-exit{display:flex;}
+#full-view-exit{display:none;position:fixed;top:12px;right:12px;z-index:10000;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:rgba(255,255,255,0.5);font-size:10px;padding:4px 10px;cursor:pointer;font-family:Georgia,serif;align-items:center;gap:4px;transition:opacity .2s;}
+#full-view-exit:hover{color:rgba(255,255,255,0.9);border-color:rgba(255,255,255,0.3);}
+
 /* ── BOARD WRAP ── */
 #board-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 34px 10px 34px;overflow:hidden;background:#0a0a0e;position:relative;}
 #board-outer{position:relative;transform-style:preserve-3d;transition:transform 0.3s ease;}
@@ -108,6 +132,9 @@ body{background:#0a0a0e;font-family:Georgia,serif;overflow:hidden;width:100vw;he
 
 /* ── COMPONENTS ── */
 .comp{position:absolute;cursor:move;user-select:none;transform-origin:center center;}
+.comp.locked{cursor:default;}
+.comp.locked .rh{display:none!important;}
+.comp.locked::after{content:'🔒';position:absolute;top:-8px;right:-8px;font-size:10px;z-index:800;filter:drop-shadow(0 0 2px rgba(0,0,0,0.8));pointer-events:none;}
 .comp-inner{position:absolute;inset:0;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:visible;}
 .comp-inner-label{font-size:11px;font-family:Georgia,serif;text-align:center;line-height:1.4;pointer-events:none;padding:3px;text-shadow:0 0 6px rgba(0,0,0,0.8);}
 .comp.selected>.comp-inner{outline:1.5px solid rgba(186,140,30,0.85);outline-offset:0px;}
@@ -134,8 +161,7 @@ body{background:#0a0a0e;font-family:Georgia,serif;overflow:hidden;width:100vw;he
 .ctx-item .ctx-key{margin-left:auto;font-size:8px;color:rgba(255,255,255,0.2);letter-spacing:0.5px;}
 .ctx-sep{height:0.5px;background:rgba(255,255,255,0.06);margin:3px 0;}
 .ctx-submenu{position:relative;}
-.ctx-submenu>.ctx-sub-items{position:absolute;left:100%;top:-4px;background:#0f0f1a;border:0.5px solid rgba(186,140,30,0.3);border-radius:5px;min-width:140px;padding:4px 0;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.7);}
-.ctx-submenu:hover>.ctx-sub-items{display:block;}
+.ctx-submenu>.ctx-sub-items{position:fixed;background:#0f0f1a;border:0.5px solid rgba(186,140,30,0.3);border-radius:5px;min-width:140px;padding:4px 0;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.7);}
 .ctx-item .ctx-arrow{margin-left:auto;font-size:8px;color:rgba(255,255,255,0.2);}
 .ctx-slider-row{padding:4px 14px 6px;display:flex;align-items:center;gap:6px;}
 .ctx-slider-row label{font-size:9px;color:rgba(255,255,255,0.4);min-width:48px;}
@@ -196,6 +222,16 @@ body{background:#0a0a0e;font-family:Georgia,serif;overflow:hidden;width:100vw;he
 .shape-quarter-bl>.comp-inner{border-radius:0 0 0 100%!important;overflow:hidden!important;}
 .shape-quarter-br>.comp-inner{border-radius:0 0 100% 0!important;overflow:hidden!important;}
 .shape-quarter-tl>.comp-inner{border-radius:100% 0 0 0!important;overflow:hidden!important;}
+.shape-arc-wide-up>.comp-inner{clip-path:url(#arc-wide-up)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-arc-wide-down>.comp-inner{clip-path:url(#arc-wide-down)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-arc-band-tl>.comp-inner{clip-path:url(#arc-band-tl)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-arc-band-tr>.comp-inner{clip-path:url(#arc-band-tr)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-arc-band-bl>.comp-inner{clip-path:url(#arc-band-bl)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-arc-band-br>.comp-inner{clip-path:url(#arc-band-br)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-corner-tl>.comp-inner{clip-path:url(#corner-tl)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-corner-tr>.comp-inner{clip-path:url(#corner-tr)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-corner-bl>.comp-inner{clip-path:url(#corner-bl)!important;border-radius:0!important;overflow:hidden!important;}
+.shape-corner-br>.comp-inner{clip-path:url(#corner-br)!important;border-radius:0!important;overflow:hidden!important;}
 
 /* ── BETTER SELECT DROPDOWN ── */
 select.prop-input{appearance:auto;background:#0f0f1a;cursor:pointer;min-height:22px;}
@@ -246,17 +282,21 @@ select.prop-input option{background:#0f0f1a;color:rgba(255,255,255,0.8);padding:
   <button class="tb-btn" onclick="undo()" title="Ctrl+Z">↩ Undo</button>
   <button class="tb-btn" onclick="redo()" title="Ctrl+Shift+Z">↪ Redo</button>
   <div class="tb-sep"></div>
-  <button class="tb-btn gold" onclick="exportJSON()">⬇ Save</button>
-  <button class="tb-btn" onclick="exportJSONAs()">⬇ Save As</button>
-  <button class="tb-btn" onclick="importJSON()">⬆ Load</button>
+  <button class="tb-btn gold" onclick="exportJSON()" title="Overwrite the loaded file">💾 Save</button>
+  <button class="tb-btn" onclick="exportJSONAs()" title="Save to a new file">💾 Save As</button>
+  <button class="tb-btn" onclick="importJSON()" title="Open a layout file">📂 Load</button>
   <div class="tb-sep"></div>
-  <button class="tb-btn gold" onclick="exportCompositionGuide()" title="Export Midjourney composition template">MJ Guide</button>
+  <button class="tb-btn gold" onclick="exportMJGuide()" title="Export Midjourney composition guide — smooth UI mask + stamp positions">MJ Guide</button>
   <div class="tb-sep"></div>
   <label class="tb-check" title="Rule-of-thirds grid"><input type="checkbox" onchange="state.showGrid=this.checked;renderGridOverlay();document.getElementById('grid-overlay').classList.toggle('visible',this.checked);"> Grid</label>
   <label class="tb-check" title="Horizon line"><input type="checkbox" checked onchange="state.showHorizon=this.checked;renderHorizonLine();"> Horizon</label>
   <label class="tb-check" title="Vanishing point"><input type="checkbox" onchange="state.showVanishPoint=this.checked;renderVanishPoint();"> VP</label>
   <div class="tb-sep"></div>
   <label class="tb-check" title="Hide UI elements, show only landscape zones"><input type="checkbox" id="landscape-toggle" onchange="state.landscapeMode=this.checked;renderAll();buildChecklist();"> Landscape Only</label>
+  <label class="tb-check" title="Snap edges to other components (hold Alt to temporarily disable)"><input type="checkbox" checked onchange="state.snapEnabled=this.checked;"> Snap</label>
+  <div class="tb-sep"></div>
+  <div class="tb-sep"></div>
+  <button class="tb-btn gold" onclick="enterFullView()" title="Preview as it would appear in-game — no editor chrome, exact zoom. Press Escape to exit.">Full View</button>
   <div class="tb-sep"></div>
   <button class="tb-btn" onclick="showMasterModal()" title="All game elements inventory">☰ Master List</button>
   <span class="warning-badge" id="warning-badge" onclick="showMasterModal()" title="Missing / needs attention">0</span>
@@ -316,8 +356,16 @@ select.prop-input option{background:#0f0f1a;color:rgba(255,255,255,0.8);padding:
 
 </div>
 
+<!-- FULL VIEW EXIT -->
+<div id="full-view-exit" onclick="exitFullView()">ESC to exit</div>
+
 <!-- CONTEXT MENU -->
 <div id="ctx-menu"></div>
+
+<!-- ARC BAND CLIP PATHS -->
+<svg width="0" height="0" style="position:absolute;">
+  <defs id="arc-band-defs"></defs>
+</svg>
 
 <!-- HOVER TOOLTIP -->
 <div id="hover-tooltip">
@@ -342,6 +390,7 @@ select.prop-input option{background:#0f0f1a;color:rgba(255,255,255,0.8);padding:
 // ═══════════════════════════════════════════════════════════════
 
 const LAYER_DEFS = [
+  { id:'frame',      name:'Frame',      color:'#1a1a1a', locked:false },
   { id:'landscape',  name:'Landscape',  color:'#2a4a1a', locked:true  },
   { id:'shadow',     name:'Shadow',     color:'#4a2a6a', locked:false },
   { id:'neutral',    name:'Neutral',    color:'#2a3a5a', locked:false },
@@ -354,21 +403,29 @@ const LAYER_DEFS = [
 //            'dynamic' = cards move in/out, landscape sometimes visible
 //            'translucent' = landscape always visible through this zone
 const COMP_TEMPLATES = [
-  { type:'phase-tracker',    label:'Phase Tracker',        layer:'interface',  w:62, h:5,   x:19,y:1,   bg:'rgba(12,12,28,0.9)',     border:'rgba(255,255,255,0.35)', color:'rgba(255,255,255,0.8)',   coverType:'opaque'      },
+  { type:'phase-jewel',      label:'Phase Jewel',          layer:'interface',  w:5,  h:5,   x:1, y:1,   bg:'rgba(12,12,28,0.9)',     border:'rgba(160,130,60,0.6)',   color:'rgba(210,180,100,0.9)',   coverType:'opaque'      },
   { type:'shadow-zone',      label:'Shadow Zone',          layer:'shadow',     w:98, h:11,  x:1, y:8,   bg:'rgba(40,18,70,0.45)',    border:'rgba(120,80,180,0.7)',   color:'rgba(190,160,240,0.9)',  coverType:'dynamic'     },
   { type:'fellowship-zone',  label:'Fellowship Zone',      layer:'fellowship', w:98, h:13,  x:1, y:38,  bg:'rgba(100,70,15,0.45)',   border:'rgba(220,170,40,0.7)',   color:'rgba(255,220,120,0.9)',  coverType:'dynamic'     },
   { type:'twilight-pool',    label:'Twilight Pool',        layer:'neutral',    w:13, h:11,  x:43,y:23,  bg:'rgba(55,138,221,0.35)',  border:'rgba(70,160,240,0.7)',   color:'rgba(150,210,255,0.9)',  coverType:'opaque'      },
-  { type:'adventure-path',   label:'Adventure Path',       layer:'neutral',    w:70, h:8,   x:15,y:52,  bg:'rgba(40,28,10,0.55)',    border:'rgba(160,110,40,0.65)',  color:'rgba(210,170,80,0.8)',   coverType:'translucent' },
+  { type:'adventure-hud',    label:'Adventure (HUD)',       layer:'interface',  w:10, h:5,   x:7, y:1,   bg:'rgba(12,12,28,0.9)',     border:'rgba(160,110,40,0.65)',  color:'rgba(210,170,80,0.8)',   coverType:'opaque'      },
   { type:'hand-fan',         label:'Hand (fan)',            layer:'hand',       w:38, h:38,  x:62,y:62,  bg:'rgba(20,65,45,0.2)',     border:'rgba(100,186,130,0.35)', color:'rgba(200,220,200,0.6)',  coverType:'translucent' },
   { type:'pass-btn',         label:'Pass Button',          layer:'interface',  w:9,  h:5,   x:45,y:93,  bg:'rgba(10,10,22,0.88)',    border:'rgba(255,255,255,0.35)', color:'rgba(255,255,255,0.7)',  coverType:'opaque'      },
   { type:'opp-hand',         label:'Shadow Hand Count',    layer:'shadow',     w:4,  h:5,   x:1, y:9,   bg:'rgba(60,35,100,0.75)',   border:'rgba(130,80,190,0.7)',   color:'rgba(200,170,240,0.9)',  coverType:'opaque'      },
   { type:'action-log',       label:'Action Log',           layer:'interface',  w:18, h:6,   x:80,y:9,   bg:'rgba(0,0,0,0.45)',       border:'rgba(255,255,255,0.2)',  color:'rgba(120,240,150,0.85)', coverType:'opaque'      },
   { type:'left-dock',        label:'Left Dock',            layer:'interface',  w:4,  h:42,  x:0, y:10,  bg:'rgba(0,0,0,0.08)',       border:'rgba(255,255,255,0.2)',  color:'rgba(255,255,255,0.5)',  coverType:'translucent',dashed:true },
   { type:'right-dock',       label:'Right Dock',           layer:'interface',  w:4,  h:42,  x:96,y:10,  bg:'rgba(0,0,0,0.08)',       border:'rgba(255,255,255,0.2)',  color:'rgba(255,255,255,0.5)',  coverType:'translucent',dashed:true },
-  { type:'baradur',          label:'Barad-dûr',            layer:'landscape',  w:4,  h:10,  x:93,y:1,   bg:'rgba(10,3,3,0.12)',      border:'rgba(150,30,30,0.3)',    color:'rgba(230,100,70,0.8)',   coverType:'translucent' },
-  { type:'opp-piles',        label:'Opp. Piles',           layer:'shadow',     w:8,  h:8,   x:91,y:9,   bg:'rgba(60,35,100,0.55)',   border:'rgba(130,80,190,0.55)',  color:'rgba(190,160,230,0.8)',  coverType:'opaque'      },
-  { type:'your-piles',       label:'Your Piles',           layer:'fellowship', w:8,  h:8,   x:91,y:44,  bg:'rgba(35,100,65,0.55)',   border:'rgba(50,190,140,0.55)',  color:'rgba(130,220,180,0.8)',  coverType:'opaque'      },
-  { type:'ring-spinner',     label:'Ring / RB Portrait',   layer:'interface',  w:5,  h:7,   x:94,y:10,  bg:'rgba(0,0,0,0)',          border:'rgba(220,150,30,0.6)',   color:'rgba(220,150,30,0.8)',   coverType:'opaque'      },
+  { type:'baradur',          label:'Barad-dûr',            layer:'interface',  w:8,  h:18,  x:92,y:0,   bg:'rgba(10,3,3,0.12)',      border:'rgba(150,30,30,0.3)',    color:'rgba(230,100,70,0.8)',   coverType:'opaque', anchorCorner:'top-right' },
+  { type:'fp-draw',          label:'FP Draw',              layer:'fellowship', w:3,  h:7.5, x:91,y:44,  bg:'rgba(35,100,65,0.7)',    border:'rgba(50,190,140,0.55)',  color:'rgba(130,220,180,0.8)',  coverType:'opaque'      },
+  { type:'fp-discard',       label:'FP Discard',           layer:'fellowship', w:3,  h:7.5, x:95,y:44,  bg:'rgba(35,100,65,0.5)',    border:'rgba(50,190,140,0.4)',   color:'rgba(130,220,180,0.7)',  coverType:'opaque'      },
+  { type:'fp-dead',          label:'FP Dead',              layer:'fellowship', w:3,  h:7.5, x:91,y:53,  bg:'rgba(120,40,40,0.55)',   border:'rgba(180,60,60,0.5)',    color:'rgba(220,130,130,0.8)',  coverType:'opaque'      },
+  { type:'sh-draw',          label:'Shadow Draw',          layer:'shadow',     w:3,  h:7.5, x:91,y:9,   bg:'rgba(60,35,100,0.7)',    border:'rgba(130,80,190,0.55)',  color:'rgba(190,160,230,0.8)',  coverType:'opaque'      },
+  { type:'sh-discard',       label:'Shadow Discard',       layer:'shadow',     w:3,  h:7.5, x:95,y:9,   bg:'rgba(60,35,100,0.5)',    border:'rgba(130,80,190,0.4)',   color:'rgba(190,160,230,0.7)',  coverType:'opaque'      },
+  { type:'ring-spinner',     label:'One Ring (FP Wait)',    layer:'interface',  w:8,  h:10,  x:46,y:40,  bg:'rgba(0,0,0,0.6)',        border:'rgba(220,150,30,0.4)',   color:'rgba(220,150,30,0.8)',   coverType:'opaque'      },
+  { type:'border-1',         label:'Border 1',             layer:'frame',      w:20, h:4,   x:0, y:0,   bg:'rgba(12,10,8,0.95)',     border:'rgba(80,60,30,0.5)',     color:'rgba(140,110,60,0.7)',   coverType:'opaque'      },
+  { type:'border-2',         label:'Border 2',             layer:'frame',      w:20, h:4,   x:0, y:96,  bg:'rgba(12,10,8,0.95)',     border:'rgba(80,60,30,0.5)',     color:'rgba(140,110,60,0.7)',   coverType:'opaque'      },
+  { type:'border-3',         label:'Border 3',             layer:'frame',      w:4,  h:20,  x:0, y:0,   bg:'rgba(12,10,8,0.95)',     border:'rgba(80,60,30,0.5)',     color:'rgba(140,110,60,0.7)',   coverType:'opaque'      },
+  { type:'border-4',         label:'Border 4',             layer:'frame',      w:4,  h:20,  x:96,y:0,   bg:'rgba(12,10,8,0.95)',     border:'rgba(80,60,30,0.5)',     color:'rgba(140,110,60,0.7)',   coverType:'opaque'      },
+  { type:'border-5',         label:'Border 5',             layer:'frame',      w:10, h:10,  x:45,y:0,   bg:'rgba(12,10,8,0.95)',     border:'rgba(80,60,30,0.5)',     color:'rgba(140,110,60,0.7)',   coverType:'opaque'      },
   { type:'custom',           label:'Custom Zone',          layer:'neutral',    w:20, h:10,  x:40,y:40,  bg:'rgba(70,70,70,0.35)',    border:'rgba(180,180,180,0.5)',  color:'rgba(220,220,220,0.7)',  coverType:'dynamic'     },
 ];
 
@@ -382,7 +439,7 @@ const GAME_ELEMENTS = [
   // ── Core Board Zones ──
   { id:'el-fellowship-zone',   name:'Fellowship Zone',           cat:'Board Zones',    templateType:'fellowship-zone',  desc:'Companions in play (FP player)', displayType:'Board Zone' },
   { id:'el-shadow-zone',       name:'Shadow Zone',               cat:'Board Zones',    templateType:'shadow-zone',      desc:'Minions in play (Shadow player)', displayType:'Board Zone' },
-  { id:'el-adventure-path',    name:'Adventure Path',            cat:'Board Zones',    templateType:'adventure-path',   desc:'9 site cards in sequence', displayType:'Board Zone' },
+  { id:'el-adventure-hud',     name:'Adventure (HUD)',           cat:'Interface',      templateType:'adventure-hud',    desc:'Compact site indicator: icon, counter, site name. Hover=card preview, click=full image', displayType:'HUD' },
   { id:'el-skirmish-overlay',  name:'Skirmish Overlay',          cat:'Combat',         templateType:null,               desc:'Pop-up overlay for skirmish resolution (not a board zone)', displayType:'Modal' },
   { id:'el-support-area-fp',   name:'FP Support Area',           cat:'Board Zones',    templateType:'custom',           desc:'Free Peoples conditions, allies not attached', displayType:'Board Zone' },
   { id:'el-support-area-sh',   name:'Shadow Support Area',       cat:'Board Zones',    templateType:'custom',           desc:'Shadow conditions not attached to minions', displayType:'Board Zone' },
@@ -391,21 +448,20 @@ const GAME_ELEMENTS = [
   // ── Card Piles & Hand ──
   { id:'el-hand',              name:'Player Hand',               cat:'Cards & Piles',  templateType:'hand-fan',         desc:'Your cards (fan layout)', displayType:'Board Zone' },
   { id:'el-opp-hand',          name:'Opponent Hand Count',       cat:'Cards & Piles',  templateType:'opp-hand',         desc:'Number of cards in opponent hand', displayType:'Board Zone' },
-  { id:'el-draw-deck',         name:'Draw Deck',                 cat:'Cards & Piles',  templateType:'custom',           desc:'Face-down stack, card count', displayType:'Board Zone' },
-  { id:'el-discard-pile',      name:'Discard Pile',              cat:'Cards & Piles',  templateType:'custom',           desc:'Side panel browser, last 5-7 visible', displayType:'Sidebar' },
-  { id:'el-dead-pile',         name:'Dead Pile',                 cat:'Cards & Piles',  templateType:'custom',           desc:'Killed companions/minions', displayType:'Board Zone' },
-  { id:'el-opp-piles',         name:'Opponent Piles',            cat:'Cards & Piles',  templateType:'opp-piles',        desc:'Opponent draw/discard/dead piles', displayType:'Board Zone' },
-  { id:'el-your-piles',        name:'Your Piles',                cat:'Cards & Piles',  templateType:'your-piles',       desc:'Your draw/discard/dead piles', displayType:'Board Zone' },
+  { id:'el-fp-draw',            name:'FP Draw Deck',              cat:'Cards & Piles',  templateType:'fp-draw',          desc:'Fellowship draw pile — face-down stack with card count', displayType:'HUD' },
+  { id:'el-fp-discard',         name:'FP Discard Pile',           cat:'Cards & Piles',  templateType:'fp-discard',       desc:'Fellowship discard — hover to browse', displayType:'HUD' },
+  { id:'el-fp-dead',            name:'FP Dead Pile',              cat:'Cards & Piles',  templateType:'fp-dead',          desc:'Killed companions — permanent removal (FP only, Shadow has no dead pile)', displayType:'HUD' },
+  { id:'el-sh-draw',            name:'Shadow Draw Deck',          cat:'Cards & Piles',  templateType:'sh-draw',          desc:'Shadow draw pile — face-down stack with card count', displayType:'HUD' },
+  { id:'el-sh-discard',         name:'Shadow Discard Pile',       cat:'Cards & Piles',  templateType:'sh-discard',       desc:'Shadow discard — defeated minions go here (no dead pile for Shadow)', displayType:'HUD' },
 
   // ── Ring-bearer & Corruption ──
-  { id:'el-ring-bearer',       name:'Ring-bearer Portrait',      cat:'Ring-bearer',    templateType:'ring-spinner',     desc:'Frodo/Sam with ornate frame', displayType:'Board Zone' },
-  { id:'el-one-ring',          name:'The One Ring',              cat:'Ring-bearer',    templateType:null,               desc:'One Ring card display', displayType:'Board Zone' },
+  { id:'el-one-ring-wait',     name:'One Ring (FP Wait)',        cat:'Ring-bearer',    templateType:'ring-spinner',     desc:'Spinning One Ring overlay seen by FP player during Shadow assignment phase. Centered on board with quotes.', displayType:'Modal' },
   { id:'el-burden-tracker',    name:'Burden/Corruption Tracker', cat:'Ring-bearer',    templateType:'baradur',          desc:'Visual burden count (Barad-dûr tower)', displayType:'Board Zone' },
   { id:'el-corruption-signal', name:'Corruption Urgency Signal', cat:'Ring-bearer',    templateType:null,               desc:'High burden alert (screen color shift? sound?)', displayType:'HUD', openQ:8 },
   { id:'el-resistance-meter',  name:'Resistance Meter',          cat:'Ring-bearer',    templateType:null,               desc:'Ring-bearer resistance vs burdens', displayType:'HUD' },
 
   // ── Phase & Turn ──
-  { id:'el-phase-tracker',     name:'Phase Tracker',             cat:'Phase & Turn',   templateType:'phase-tracker',    desc:'7-phase icon bar with active highlight', displayType:'HUD' },
+  { id:'el-phase-jewel',       name:'Phase Jewel',               cat:'Phase & Turn',   templateType:'phase-jewel',      desc:'Compact circular jeweled phase indicator. Center symbol morphs per phase, 7 colored jewels around it. Hover=phase list with explanations', displayType:'HUD' },
   { id:'el-turn-counter',      name:'Turn Counter',              cat:'Phase & Turn',   templateType:null,               desc:'Current turn number', displayType:'HUD' },
   { id:'el-priority-indicator',name:'Priority Indicator',        cat:'Phase & Turn',   templateType:null,               desc:'Whose turn to act (visual signal)', displayType:'HUD', openQ:7 },
   { id:'el-pass-button',       name:'Pass Button',               cat:'Phase & Turn',   templateType:'pass-btn',         desc:'Pass priority button', displayType:'Board Zone' },
@@ -448,6 +504,13 @@ const GAME_ELEMENTS = [
   { id:'el-voice-toggle',      name:'Voice Lines Toggle',        cat:'Audio & Effects',templateType:null,               desc:'Character catchphrase on/off', displayType:'Settings' },
   { id:'el-event-flash-art',   name:'Event Flash Art',           cat:'Audio & Effects',templateType:null,               desc:'Full-bleed dramatic illustrations for major events', displayType:'HUD' },
 
+  // ── Board Frame / Border Art ──
+  { id:'el-border-1',          name:'Border 1',                  cat:'Board Frame',    templateType:'border-1',         desc:'Opaque border art piece — gargoyle, crumbling wall, vine-wrapped sword, etc. Position freely.', displayType:'Board Zone' },
+  { id:'el-border-2',          name:'Border 2',                  cat:'Board Frame',    templateType:'border-2',         desc:'Opaque border art piece', displayType:'Board Zone' },
+  { id:'el-border-3',          name:'Border 3',                  cat:'Board Frame',    templateType:'border-3',         desc:'Opaque border art piece', displayType:'Board Zone' },
+  { id:'el-border-4',          name:'Border 4',                  cat:'Board Frame',    templateType:'border-4',         desc:'Opaque border art piece', displayType:'Board Zone' },
+  { id:'el-border-5',          name:'Border 5',                  cat:'Board Frame',    templateType:'border-5',         desc:'Opaque border art piece', displayType:'Board Zone' },
+
   // ── Multiplayer ──
   { id:'el-waiting-state',     name:'Multiplayer Waiting State', cat:'Multiplayer',    templateType:null,               desc:'Visual while waiting for opponent', displayType:'Modal', openQ:3 },
   { id:'el-timer',             name:'Turn Timer',                cat:'Multiplayer',    templateType:null,               desc:'Optional time limit per action', displayType:'HUD' },
@@ -458,14 +521,157 @@ const GAME_ELEMENTS = [
 const SHAPE_OPTIONS = [
   { id:'rect',        label:'Rectangle' },
   { id:'circle',      label:'Circle' },
-  { id:'arc',         label:'Arc (quarter TL)' },
-  { id:'quarter-bl',  label:'Arc (quarter BL)' },
-  { id:'quarter-br',  label:'Arc (quarter BR)' },
+  { id:'arc',         label:'Arc Fill (TL)' },
+  { id:'quarter-bl',  label:'Arc Fill (BL)' },
+  { id:'quarter-br',  label:'Arc Fill (BR)' },
+  { id:'arc-wide-up',   label:'Wide Arc (curves up)' },
+  { id:'arc-wide-down', label:'Wide Arc (curves down)' },
+  { id:'arc-band-tl', label:'Arc Band (TL)' },
+  { id:'arc-band-tr', label:'Arc Band (TR)' },
+  { id:'arc-band-bl', label:'Arc Band (BL)' },
+  { id:'arc-band-br', label:'Arc Band (BR)' },
+  { id:'corner-tl',   label:'Corner Bracket (TL)' },
+  { id:'corner-tr',   label:'Corner Bracket (TR)' },
+  { id:'corner-bl',   label:'Corner Bracket (BL)' },
+  { id:'corner-br',   label:'Corner Bracket (BR)' },
   { id:'triangle',    label:'Triangle' },
   { id:'diamond',     label:'Diamond' },
   { id:'hexagon',     label:'Hexagon' },
   { id:'pentagon',    label:'Pentagon' },
 ];
+
+// Generate arc band SVG clipPaths (outer arc minus inner arc = band/crescent)
+// objectBoundingBox coords: (0,0)=top-left, (1,1)=bottom-right
+// Screen-coord angles: 0°=right, 90°=down, 180°=left, 270°=up (clockwise)
+(function generateArcBandClipPaths() {
+  const defs = document.getElementById('arc-band-defs');
+  const N = 40;
+  const inner = 0.35; // inner radius fraction (35% cutout = 65% band width)
+
+  // Each corner: circle center + angle sweep for the visible quarter
+  const corners = {
+    tl: { cx: 0, cy: 0, startA: 0,   endA: 90  }, // right → down
+    tr: { cx: 1, cy: 0, startA: 90,  endA: 180 }, // down → left
+    bl: { cx: 0, cy: 1, startA: 270, endA: 360 }, // up → right
+    br: { cx: 1, cy: 1, startA: 180, endA: 270 }, // left → up
+  };
+
+  for (const [corner, cfg] of Object.entries(corners)) {
+    const outerPts = [], innerPts = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const deg = cfg.startA + t * (cfg.endA - cfg.startA);
+      const rad = deg * Math.PI / 180;
+      outerPts.push({ x: cfg.cx + Math.cos(rad), y: cfg.cy + Math.sin(rad) });
+      innerPts.push({ x: cfg.cx + inner * Math.cos(rad), y: cfg.cy + inner * Math.sin(rad) });
+    }
+    // Polygon: outer arc forward, inner arc reversed → band shape
+    let d = `M ${outerPts[0].x.toFixed(4)} ${outerPts[0].y.toFixed(4)}`;
+    for (let i = 1; i <= N; i++) d += ` L ${outerPts[i].x.toFixed(4)} ${outerPts[i].y.toFixed(4)}`;
+    for (let i = N; i >= 0; i--) d += ` L ${innerPts[i].x.toFixed(4)} ${innerPts[i].y.toFixed(4)}`;
+    d += ' Z';
+
+    const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+    clipPath.setAttribute('id', `arc-band-${corner}`);
+    clipPath.setAttribute('clipPathUnits', 'objectBoundingBox');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    clipPath.appendChild(path);
+    defs.appendChild(clipPath);
+  }
+
+  // Wide arcs: ~60° arc segments spanning side to side (curved zone bands)
+  // These are NOT corner pieces — they span the full element width as a curved strip.
+  // 'up' = concave down (battle line curving toward the viewer)
+  // 'down' = concave up (battle line curving away)
+  {
+    const arcN = 60; // smoothness
+    // For a 60° arc: radius = chord / (2*sin(30°)) = chord / 1 = chord
+    // Sag = R * (1 - cos(30°)) ≈ 0.134 * chord
+    // In objectBoundingBox coords, chord = 1 (full width)
+    // We scale the arc sag to fill most of the element height
+
+    // Arc curving UP (outer arc at top, inner arc below it)
+    {
+      const outerPts = [], innerPts = [];
+      for (let i = 0; i <= arcN; i++) {
+        const t = i / arcN; // 0..1 across width
+        // Parameterize a circular arc: angle from -30° to +30° (60° total)
+        const angle = (-30 + t * 60) * Math.PI / 180;
+        // Outer arc: R=1 centered below at (0.5, cy), sag normalized to fill top ~40% of element
+        const outerSag = 0.35;
+        const ox = 0.5 + Math.sin(angle) * 0.5 / Math.sin(30 * Math.PI / 180);
+        const oy = outerSag * (1 - Math.cos(angle) / Math.cos(0)) / (1 - Math.cos(30 * Math.PI / 180));
+        outerPts.push({ x: Math.max(0, Math.min(1, ox)), y: Math.max(0, Math.min(1, oy)) });
+        // Inner arc: same shape offset down
+        innerPts.push({ x: Math.max(0, Math.min(1, ox)), y: Math.max(0, Math.min(1, oy + 0.6)) });
+      }
+      let d = `M ${outerPts[0].x.toFixed(4)} ${outerPts[0].y.toFixed(4)}`;
+      for (let i = 1; i <= arcN; i++) d += ` L ${outerPts[i].x.toFixed(4)} ${outerPts[i].y.toFixed(4)}`;
+      for (let i = arcN; i >= 0; i--) d += ` L ${innerPts[i].x.toFixed(4)} ${innerPts[i].y.toFixed(4)}`;
+      d += ' Z';
+      const cp = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+      cp.setAttribute('id', 'arc-wide-up'); cp.setAttribute('clipPathUnits', 'objectBoundingBox');
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d);
+      cp.appendChild(p); defs.appendChild(cp);
+    }
+
+    // Arc curving DOWN (mirror: outer arc at bottom, inner arc above)
+    {
+      const outerPts = [], innerPts = [];
+      for (let i = 0; i <= arcN; i++) {
+        const t = i / arcN;
+        const angle = (-30 + t * 60) * Math.PI / 180;
+        const outerSag = 0.35;
+        const ox = 0.5 + Math.sin(angle) * 0.5 / Math.sin(30 * Math.PI / 180);
+        const rawY = outerSag * (1 - Math.cos(angle) / Math.cos(0)) / (1 - Math.cos(30 * Math.PI / 180));
+        // Flip vertically: 1 - y
+        outerPts.push({ x: Math.max(0, Math.min(1, ox)), y: Math.max(0, Math.min(1, 1 - rawY)) });
+        innerPts.push({ x: Math.max(0, Math.min(1, ox)), y: Math.max(0, Math.min(1, 1 - rawY - 0.6)) });
+      }
+      let d = `M ${outerPts[0].x.toFixed(4)} ${outerPts[0].y.toFixed(4)}`;
+      for (let i = 1; i <= arcN; i++) d += ` L ${outerPts[i].x.toFixed(4)} ${outerPts[i].y.toFixed(4)}`;
+      for (let i = arcN; i >= 0; i--) d += ` L ${innerPts[i].x.toFixed(4)} ${innerPts[i].y.toFixed(4)}`;
+      d += ' Z';
+      const cp = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+      cp.setAttribute('id', 'arc-wide-down'); cp.setAttribute('clipPathUnits', 'objectBoundingBox');
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d);
+      cp.appendChild(p); defs.appendChild(cp);
+    }
+  }
+
+  // Corner brackets: 90° corner with concave arc cutout on inner edge
+  // Like a picture frame corner piece with a scooped-out interior
+  const cornerBrackets = {
+    tl: { corner: [0,0], edge1: [1,0], edge2: [0,1], arcCx: 1, arcCy: 1, startDeg: 270, endDeg: 180 },
+    tr: { corner: [1,0], edge1: [1,1], edge2: [0,0], arcCx: 0, arcCy: 1, startDeg: 0,   endDeg: -90 },
+    bl: { corner: [0,1], edge1: [0,0], edge2: [1,1], arcCx: 1, arcCy: 0, startDeg: 180, endDeg: 90 },
+    br: { corner: [1,1], edge1: [0,1], edge2: [1,0], arcCx: 0, arcCy: 0, startDeg: 90,  endDeg: 0 },
+  };
+
+  for (const [id, cfg] of Object.entries(cornerBrackets)) {
+    const arcPts = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const deg = cfg.startDeg + t * (cfg.endDeg - cfg.startDeg);
+      const rad = deg * Math.PI / 180;
+      arcPts.push({ x: cfg.arcCx + Math.cos(rad), y: cfg.arcCy + Math.sin(rad) });
+    }
+    // Path: corner → edge1 → concave arc → edge2 → close
+    let d = `M ${cfg.corner[0]} ${cfg.corner[1]}`;
+    d += ` L ${cfg.edge1[0]} ${cfg.edge1[1]}`;
+    for (let i = 0; i <= N; i++) d += ` L ${arcPts[i].x.toFixed(4)} ${arcPts[i].y.toFixed(4)}`;
+    d += ' Z';
+
+    const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+    clipPath.setAttribute('id', `corner-${id}`);
+    clipPath.setAttribute('clipPathUnits', 'objectBoundingBox');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    clipPath.appendChild(path);
+    defs.appendChild(clipPath);
+  }
+})();
 
 // Visual type options (presentation style, not function)
 const VISUAL_TYPES = [
@@ -482,12 +688,12 @@ const VISUAL_TYPES = [
 // ═══════════════════════════════════════════════════════════════
 
 const LANDSCAPE_COMP_TYPES = new Set([
-  'fellowship-zone', 'shadow-zone', 'adventure-path', 'twilight-pool', 'baradur',
+  'fellowship-zone', 'shadow-zone', 'twilight-pool', 'baradur',
 ]);
 
 // Game element IDs that are landscape-relevant (matching the above + non-template landscape items)
 const LANDSCAPE_ELEMENT_IDS = new Set([
-  'el-fellowship-zone', 'el-shadow-zone', 'el-adventure-path', 'el-twilight-pool',
+  'el-fellowship-zone', 'el-shadow-zone', 'el-twilight-pool',
   'el-burden-tracker', 'el-support-area-fp', 'el-support-area-sh',
   'el-site-background', 'el-site-advance-anim',
 ]);
@@ -503,6 +709,129 @@ function isCompLandscapeRelevant(comp) {
 
 function isElementLandscapeRelevant(elem) {
   return LANDSCAPE_ELEMENT_IDS.has(elem.id) || LANDSCAPE_CATEGORIES.has(elem.cat);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PERSPECTIVE AUTO-LAYOUT — landscape zones become parallelograms
+// ═══════════════════════════════════════════════════════════════
+
+// Components that auto-adjust to camera (ground-plane zones ONLY, not UI)
+// These are "geography" — they exist on the game board's physical surface
+const PERSPECTIVE_COMP_TYPES = new Set([
+  'fellowship-zone', 'shadow-zone',
+]);
+
+// Layers that are part of the game world geography (affected by perspective/isometric)
+// vs UI chrome that must remain fixed-size regardless of camera angle
+const GEOGRAPHY_LAYERS = new Set(['landscape', 'shadow', 'neutral', 'fellowship']);
+const UI_LAYERS = new Set(['frame', 'interface', 'hand']);
+
+function isCompPerspective(comp) {
+  return PERSPECTIVE_COMP_TYPES.has(comp.type);
+}
+
+/**
+ * Compute a CSS transform string for a landscape component based on camera params.
+ * Turns rectangles into perspective-correct parallelograms.
+ *
+ * The math: components on the "ground plane" converge toward the vanishing point
+ * as they approach the horizon. Components near the horizon are narrower (width
+ * compression) and skewed more (parallelogram effect). Components near the bottom
+ * of the board are closest to the viewer and least affected.
+ *
+ * Returns { transform, transformOrigin } for CSS application.
+ */
+/**
+ * Compute ONLY the camera/perspective portion of the transform for geography zones.
+ * Returns convergence, depth scaling, parallelogram skew, and zoom.
+ * Rotation is handled separately in renderComp().
+ *
+ * IMPORTANT: If the component has manual rotation, perspective is skipped entirely.
+ * The perspective math assumes horizontal strips — it produces nonsensical results
+ * on rotated zones. Manual rotation = user controls orientation, camera stays out.
+ */
+function computePerspectiveTransform(comp) {
+  // Manual rotation overrides perspective — user is positioning manually
+  if (comp.rotation) return { transform: '', transformOrigin: '' };
+
+  const hz = state.horizonY;
+  const vx = state.vanishX || 50;
+  const tilt = state.boardTiltX || 0;
+  const zoom = state.boardZoom || 1.0;
+
+  // No camera effects at all
+  if (tilt === 0 && zoom === 1.0) return { transform: '', transformOrigin: '' };
+
+  // Zoom-only (no tilt): just scale geography zones uniformly
+  if (tilt === 0) {
+    return { transform: `scale(${zoom})`, transformOrigin: '50% 50%' };
+  }
+
+  const cx = comp.x + comp.w / 2;
+  const effY = getEffectiveY(comp);
+  const cy = effY + comp.h / 2;
+
+  const groundRange = Math.max(1, 100 - hz);
+  const depthFactor = Math.max(0, Math.min(1, (cy - hz) / groundRange));
+  const tiltIntensity = Math.min(1, tilt / 35);
+
+  // Width compression toward horizon
+  const minWidthScale = 1 - 0.45 * tiltIntensity;
+  const widthScale = minWidthScale + (1 - minWidthScale) * depthFactor;
+
+  // Horizontal convergence toward VP
+  const convergenceStrength = (1 - depthFactor) * tiltIntensity * 0.35;
+  const shiftX = (vx - cx) * convergenceStrength;
+
+  // Parallelogram skew
+  const sideOffset = (cx - vx) / 50;
+  const skewDeg = sideOffset * (1 - depthFactor) * tiltIntensity * 12;
+
+  // Vertical compression toward horizon
+  const minHeightScale = 1 - 0.3 * tiltIntensity;
+  const heightScale = minHeightScale + (1 - minHeightScale) * depthFactor;
+
+  // Apply camera zoom
+  const finalWidthScale = widthScale * zoom;
+  const finalHeightScale = heightScale * zoom;
+
+  // Build perspective-only transform (NO component rotation — that's handled in renderComp)
+  const parts = [];
+  if (Math.abs(shiftX) > 0.1) parts.push(`translateX(${shiftX.toFixed(1)}%)`);
+  if (Math.abs(finalWidthScale - 1) > 0.005 || Math.abs(finalHeightScale - 1) > 0.005) {
+    parts.push(`scale(${finalWidthScale.toFixed(3)}, ${finalHeightScale.toFixed(3)})`);
+  }
+  if (Math.abs(skewDeg) > 0.1) parts.push(`skewX(${skewDeg.toFixed(1)}deg)`);
+
+  return {
+    transform: parts.join(' '),
+    transformOrigin: `${((vx - comp.x) / comp.w * 100).toFixed(0)}% 50%`,
+  };
+}
+
+/**
+ * Toggle board perspective between FP and Shadow.
+ * Shadow view flips the board: Shadow zone is near (bottom), Fellowship is far (top).
+ * The landscape itself mirrors — Shadow player looks from the opposite direction.
+ */
+function enterFullView() {
+  state._savedZoom = state.boardZoom;
+  document.body.classList.add('full-view');
+  state.selectedIds = [];
+  resizeBoard();
+  renderAll();
+}
+
+function exitFullView() {
+  document.body.classList.remove('full-view');
+  resizeBoard();
+  renderAll();
+}
+
+// Perspective mirroring removed — both players see the same board orientation.
+// The board layout is designed once and works for both sides.
+function getEffectiveY(comp) {
+  return comp.y;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -529,12 +858,18 @@ let state = {
   showVanishPoint: false,
   boardZoom: 1.0,
   landscapeMode: false,
+  // playerSide removed — no perspective mirroring, both players see the same layout
   showRightPanels: true,
   undoStack: [],
   redoStack: [],
   elementConfig: {},
   loadedLayoutName: null,
   loadedLayoutData: null,
+  fileHandle: null, // File System Access API handle for in-place save
+  groups: [], // [{id, name, memberIds:[]}]
+  nextGroupId: 1,
+  snapEnabled: true,
+  snapThreshold: 1.0, // % of board — how close before snapping kicks in
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -542,15 +877,17 @@ let state = {
 // ═══════════════════════════════════════════════════════════════
 
 function saveUndo() {
-  state.undoStack.push(JSON.stringify(state.components));
+  state.undoStack.push(JSON.stringify({ components: state.components, groups: state.groups }));
   if (state.undoStack.length > 60) state.undoStack.shift();
   state.redoStack = [];
 }
 
 function undo() {
   if (!state.undoStack.length) { setStatus('Nothing to undo.'); return; }
-  state.redoStack.push(JSON.stringify(state.components));
-  state.components = JSON.parse(state.undoStack.pop());
+  state.redoStack.push(JSON.stringify({ components: state.components, groups: state.groups }));
+  const snapshot = JSON.parse(state.undoStack.pop());
+  state.components = snapshot.components || snapshot;
+  state.groups = snapshot.groups || [];
   state.selectedIds = [];
   renderAll();
   setStatus('Undone.');
@@ -558,8 +895,10 @@ function undo() {
 
 function redo() {
   if (!state.redoStack.length) { setStatus('Nothing to redo.'); return; }
-  state.undoStack.push(JSON.stringify(state.components));
-  state.components = JSON.parse(state.redoStack.pop());
+  state.undoStack.push(JSON.stringify({ components: state.components, groups: state.groups }));
+  const snapshot = JSON.parse(state.redoStack.pop());
+  state.components = snapshot.components || snapshot;
+  state.groups = snapshot.groups || [];
   state.selectedIds = [];
   renderAll();
   setStatus('Redone.');
@@ -575,8 +914,10 @@ function resizeBoard() {
   const wrap = document.getElementById('board-wrap');
   const board = document.getElementById('board');
   const ratio = ratios[state.boardRatio] || 16/9;
-  const ww = wrap.clientWidth - 30;
-  const wh = wrap.clientHeight - 30;
+  const isFullView = document.body.classList.contains('full-view');
+  const pad = isFullView ? 0 : 30;
+  const ww = wrap.clientWidth - pad;
+  const wh = wrap.clientHeight - pad;
   let bw = ww, bh = ww / ratio;
   if (bh > wh) { bh = wh; bw = wh * ratio; }
   board.style.width  = bw + 'px';
@@ -592,19 +933,31 @@ function resizeBoard() {
 function setBoardRatio(r) { state.boardRatio = r; resizeBoard(); }
 
 function applyBoardTilt() {
+  // No CSS transform on the container — it would scale ALL children (UI + geography).
+  // Instead, zoom is folded into computePerspectiveTransform() so only geography zones scale.
+  // UI chrome (borders, HUD, hand) stays at designed pixel size regardless of camera.
   const outer = document.getElementById('board-outer');
-  const tx = state.boardTiltX || 0;
-  const ty = state.boardTiltY || 0;
-  const d  = state.perspectiveDepth || 900;
-  const vx = state.vanishX !== undefined ? state.vanishX : 50;
-  const vy = state.vanishY !== undefined ? state.vanishY : 50;
-  const zoom = state.boardZoom || 1.0;
-  outer.style.perspectiveOrigin = `${vx}% ${vy}%`;
-  if (tx === 0 && ty === 0 && zoom === 1.0) { outer.style.transform = 'none'; outer.style.perspective = 'none'; }
-  else {
-    outer.style.perspective = d + 'px';
-    outer.style.transform = `scale(${zoom}) rotateX(${tx}deg) rotateY(${ty}deg)`;
-  }
+  outer.style.transform = 'none';
+  outer.style.perspective = 'none';
+  updatePerspectiveZones();
+}
+
+function updatePerspectiveZones() {
+  state.components.forEach(comp => {
+    if (!isCompPerspective(comp)) return;
+    const el = document.querySelector(`.comp[data-id="${comp.id}"]`);
+    if (!el) return;
+    // Rebuild full transform: perspective + component rotation (separated concerns)
+    const persp = computePerspectiveTransform(comp);
+    const parts = [];
+    if (persp.transform) parts.push(persp.transform);
+    const rot = comp.rotation || 0, skX = comp.skewX || 0, skY = comp.skewY || 0;
+    if (rot) parts.push(`rotate(${rot}deg)`);
+    if (skX) parts.push(`skewX(${skX}deg)`);
+    if (skY) parts.push(`skewY(${skY}deg)`);
+    el.style.transform = parts.length ? parts.join(' ') : 'none';
+    if (persp.transformOrigin) el.style.transformOrigin = persp.transformOrigin;
+  });
 }
 
 function renderVanishPoint() {
@@ -706,8 +1059,34 @@ function renderComp(comp) {
   el.style.opacity = opacity;
   el.style.zIndex  = state.layers.findIndex(l => l.id === comp.layer) * 10 + (comp.zIndex||0) + 1;
 
-  let transform = '';
-  if (rotation || skewX || skewY) transform = `rotate(${rotation}deg) skewX(${skewX}deg) skewY(${skewY}deg)`;
+  // Locked components show a lock badge and cannot be moved/resized
+  if (comp.locked) {
+    el.classList.add('locked');
+  }
+
+  // Gradient frame overlays (custom type on frame layer) are visual-only — click through
+  // Border pieces (border-1 through border-5) are selectable/moveable art elements
+  if (comp.layer === 'frame' && comp.type === 'custom') {
+    el.style.pointerEvents = 'none';
+  }
+
+  // Build transform: perspective (geography only) + rotation/skew (all components)
+  // These are independent: perspective is a camera effect, rotation is the component's own orientation.
+  let transformParts = [];
+
+  // 1. Perspective (convergence, depth scale, zoom) — geography zones only
+  if (isCompPerspective(comp)) {
+    const persp = computePerspectiveTransform(comp);
+    if (persp.transform) transformParts.push(persp.transform);
+    if (persp.transformOrigin) el.style.transformOrigin = persp.transformOrigin;
+  }
+
+  // 2. Component's own rotation/skew — ALL components, always
+  if (rotation) transformParts.push(`rotate(${rotation}deg)`);
+  if (skewX) transformParts.push(`skewX(${skewX}deg)`);
+  if (skewY) transformParts.push(`skewY(${skewY}deg)`);
+
+  const transform = transformParts.join(' ');
   if (transform) el.style.transform = transform;
 
   const inner = document.createElement('div');
@@ -750,7 +1129,11 @@ function renderComp(comp) {
   }
 
   // Specialized rendering
-  if (comp.type === 'baradur') inner.innerHTML = renderBaradur(comp);
+  if (comp.type === 'fellowship-zone' || comp.type === 'shadow-zone') {
+    const lbl = document.createElement('div'); lbl.className='comp-inner-label'; lbl.style.color=comp.color; lbl.textContent=comp.label; inner.appendChild(lbl);
+    inner.insertAdjacentHTML('beforeend', renderZoneCardGrid(comp, px));
+  }
+  else if (comp.type === 'baradur') { inner.innerHTML = renderBaradur(comp); inner.style.transformOrigin = 'top right'; }
   else if (comp.type === 'hand-fan') {
     inner.innerHTML = renderFanArc(comp, px);
     inner.style.borderRadius = '100% 0 0 0';
@@ -759,7 +1142,7 @@ function renderComp(comp) {
   }
   else if (comp.type === 'twilight-pool') inner.innerHTML = renderTwilightPool(comp);
   else if (comp.type === 'pass-btn') { inner.innerHTML = `<div style="font-size:9px;color:${comp.color};font-family:Georgia,serif;letter-spacing:1px;">↷ PASS</div>`; inner.style.borderRadius='20px'; }
-  else if (comp.type === 'phase-tracker') { inner.innerHTML = renderPhaseTracker(comp); inner.style.borderRadius='20px'; }
+  else if (comp.type === 'phase-jewel') { inner.innerHTML = renderPhaseJewel(comp); inner.style.borderRadius='12%'; }
   else if (comp.type === 'opp-hand') inner.innerHTML = renderOppHand(comp);
   else if (comp.type === 'ring-spinner') { inner.innerHTML = renderRingSpinner(comp); inner.style.background='transparent'; inner.style.border='none'; }
   else if (comp.isIcon && comp.svgType) inner.innerHTML = renderSVGIcon(comp.svgType, comp.color);
@@ -795,15 +1178,31 @@ function renderComp(comp) {
 // SPECIALIZED COMPONENT RENDERERS
 // ═══════════════════════════════════════════════════════════════
 
-function renderPhaseTracker(comp) {
-  const phases = ['Fellowship','Shadow','Maneuver','Archery','Assignment','Skirmish','Regroup'];
-  return `<div style="display:flex;align-items:center;gap:3px;padding:0 8px;">
-    ${phases.map((p,i) => `
-      <div style="display:flex;flex-direction:column;align-items:center;gap:1px;">
-        <div style="width:5px;height:5px;border-radius:50%;${i===0?'background:rgba(186,140,30,0.85);box-shadow:0 0 4px rgba(186,140,30,0.5);':'border:0.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.05);'}"></div>
-        <div style="font-size:5px;color:${i===0?'rgba(186,140,30,0.9)':'rgba(255,255,255,0.25)'};font-family:Georgia,serif;white-space:nowrap;">${p}</div>
-      </div>
-      ${i<phases.length-1?'<div style="width:5px;height:0.5px;background:rgba(255,255,255,0.08);flex-shrink:0;"></div>':''}`).join('')}
+function renderPhaseJewel(comp) {
+  const phases = [
+    { name:'Fellowship', color:'#c9a530', symbol:'🛡' },
+    { name:'Shadow',     color:'#9b5de5', symbol:'👁' },
+    { name:'Maneuver',   color:'#45b7aa', symbol:'♟' },
+    { name:'Archery',    color:'#5aad5a', symbol:'🏹' },
+    { name:'Assignment', color:'#d4893e', symbol:'⚔' },
+    { name:'Skirmish',   color:'#c43c3c', symbol:'🗡' },
+    { name:'Regroup',    color:'#b0b8c8', symbol:'✦' },
+  ];
+  const cx=50, cy=50, r=34, jewelR=5;
+  const jewels = phases.map((p,i) => {
+    const angle = -90 + (i * 360 / phases.length);
+    const rad = angle * Math.PI / 180;
+    const x = cx + r * Math.cos(rad);
+    const y = cy + r * Math.sin(rad);
+    const active = i === 0;
+    return `<circle cx="${x}" cy="${y}" r="${jewelR}" fill="${p.color}" opacity="${active?1:0.3}" stroke="${active?'#fff':'none'}" stroke-width="${active?1.5:0}"/>`;
+  });
+  return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+    <svg viewBox="0 0 100 100" style="width:90%;height:90%;">
+      <circle cx="${cx}" cy="${cy}" r="18" fill="rgba(20,18,30,0.8)" stroke="rgba(160,130,60,0.5)" stroke-width="1"/>
+      <text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="central" fill="${phases[0].color}" font-size="16">${phases[0].symbol}</text>
+      ${jewels.join('')}
+    </svg>
   </div>`;
 }
 
@@ -876,6 +1275,8 @@ function renderBaradur(comp) {
   const shake = t > 0.9 ? 'animation: baradur-pulse 1.5s ease-in-out infinite;' : '';
 
   return `<div style="position:relative;width:100%;height:100%;overflow:visible;opacity:${masterOp};${shake}">
+    <!-- Dotted outline: maximum extent at 12 burdens. Growth goes down+left from top-right anchor. -->
+    <div style="position:absolute;inset:0;border:1.5px dashed rgba(150,30,30,0.35);border-radius:3px;pointer-events:none;z-index:5;"></div>
     <!-- Atmospheric glow -->
     <div style="position:absolute;top:${eyeY - glowSize*0.3}%;left:50%;transform:translateX(-50%);width:${glowSize}%;height:${glowSize}%;border-radius:50%;background:radial-gradient(ellipse,rgba(180,30,10,${glowIntensity}) 0%,rgba(120,15,5,${glowIntensity*0.4}) 40%,transparent 70%);pointer-events:none;z-index:0;"></div>
 
@@ -909,6 +1310,61 @@ function renderBaradur(comp) {
     <!-- Burden count -->
     <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:${7+t*3}px;color:${labelColor};font-family:Georgia,serif;white-space:nowrap;z-index:4;text-shadow:0 0 ${4+t*8}px rgba(200,40,10,${0.3+t*0.5});">${b > 0 ? b + ' burden' + (b!==1?'s':'') : 'no burdens'}</div>
   </div>`;
+}
+
+function renderZoneCardGrid(comp, px) {
+  const w = px.w, h = px.h;
+  const bp = boardPx();
+
+  // ── Absolute standee footprint (fixed real-world size, scaled only by perspective) ──
+  const NEAR_BASE_W_PCT = 4.2;  // % of board width at nearest distance
+  const BASE_RATIO = 3;          // width:depth
+
+  // ── Perspective depth scaling ──
+  const hz = state.horizonY;
+  const tilt = state.boardTiltX || 0;
+  const tiltIntensity = Math.min(1, tilt / 35);
+  const groundRange = Math.max(1, 100 - hz);
+  const zoneCenterY = comp.y + comp.h / 2;
+  const depthFactor = Math.max(0, Math.min(1, (zoneCenterY - hz) / groundRange));
+  const minScale = 1 - 0.45 * tiltIntensity;
+  const perspScale = minScale + (1 - minScale) * depthFactor;
+
+  // ── Grid cell size = standee base footprint at this depth ──
+  const cellW = bp.w * (NEAR_BASE_W_PCT / 100) * perspScale;
+  const cellH = cellW / BASE_RATIO;
+
+  // ── Count how many cells fit ──
+  const pad = 2;
+  const cols = Math.max(1, Math.floor((w - pad * 2) / cellW));
+  const rows = Math.max(1, Math.floor((h - pad * 2) / cellH));
+  const total = cols * rows;
+
+  // Center the grid in the zone
+  const gridW = cols * cellW, gridH = rows * cellH;
+  const offX = (w - gridW) / 2, offY = (h - gridH) / 2;
+
+  const isFP = comp.type === 'fellowship-zone';
+  const stroke = isFP ? 'rgba(220,170,40,0.2)' : 'rgba(120,80,180,0.2)';
+  const textCol = isFP ? 'rgba(220,170,40,0.4)' : 'rgba(120,80,180,0.4)';
+
+  let svg = '';
+
+  // Draw grid lines
+  for (let c = 0; c <= cols; c++) {
+    const x = offX + c * cellW;
+    svg += `<line x1="${x}" y1="${offY}" x2="${x}" y2="${offY + gridH}" stroke="${stroke}" stroke-width="0.5"/>`;
+  }
+  for (let r = 0; r <= rows; r++) {
+    const y = offY + r * cellH;
+    svg += `<line x1="${offX}" y1="${y}" x2="${offX + gridW}" y2="${y}" stroke="${stroke}" stroke-width="0.5"/>`;
+  }
+
+  // Stats: cols × rows = total
+  const depthLabel = tilt > 0 ? `  depth ${(perspScale * 100).toFixed(0)}%` : '';
+  svg += `<text x="${w - 4}" y="${h - 3}" text-anchor="end" font-size="8" font-family="Georgia,serif" fill="${textCol}">${cols}×${rows} = ${total} slots${depthLabel}</text>`;
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="position:absolute;inset:0;overflow:visible;pointer-events:none;">${svg}</svg>`;
 }
 
 function renderFanArc(comp, px) {
@@ -1016,6 +1472,7 @@ function initHorizonDrag() {
     const board=document.getElementById('board'), rect=board.getBoundingClientRect();
     state.horizonY = Math.max(-100,Math.min(200,(e.clientY-rect.top)/rect.height*100));
     renderHorizonLine();
+    updatePerspectiveZones();
     renderPropsPanel();
     if (state.showNegSpace) updateNegSpaceCanvas();
   });
@@ -1064,71 +1521,333 @@ function renderLandscape() {
 
 let dragState = null;
 
+// Helper: build the rotation-only CSS transform for a component (no perspective)
+function compRotationTransform(c) {
+  const rot = c.rotation || 0, skX = c.skewX || 0, skY = c.skewY || 0;
+  if (!rot && !skX && !skY) return '';
+  let t = '';
+  if (rot) t += `rotate(${rot}deg)`;
+  if (skX) t += ` skewX(${skX}deg)`;
+  if (skY) t += ` skewY(${skY}deg)`;
+  return t.trim();
+}
+
 function attachDrag(el, comp) {
   el.addEventListener('mousedown', e => {
     if (e.button === 2) return;
-    if (e.target.classList.contains('rotate-handle')) {
-      e.preventDefault(); e.stopPropagation(); saveUndo();
-      const board=document.getElementById('board'), rect=board.getBoundingClientRect();
-      const px=pctToPx(comp);
-      const cx=rect.left+px.x+px.w/2, cy=rect.top+px.y+px.h/2;
-      dragState={type:'rotate',comp,cx,cy,startAngle:Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI,startRot:comp.rotation||0};
+
+    // Locked: select only, no drag
+    if (comp.locked) {
+      e.preventDefault(); e.stopPropagation();
+      if (!e.shiftKey) state.selectedIds = [comp.id];
+      else if (!state.selectedIds.includes(comp.id)) state.selectedIds.push(comp.id);
+      expandSelectionToGroups(); renderAll();
       return;
     }
-    if (e.target.classList.contains('rh')) return;
-    e.preventDefault(); e.stopPropagation();
-    if (!e.shiftKey) { if (!state.selectedIds.includes(comp.id)) { state.selectedIds=[comp.id]; renderAll(); } }
-    else { if (!state.selectedIds.includes(comp.id)) state.selectedIds.push(comp.id); renderAll(); }
-    saveUndo();
-    dragState={type:'move',startMouse:{x:e.clientX,y:e.clientY},startPositions:state.selectedIds.map(id=>{const c=state.components.find(c=>c.id===id);return{id,x:c.x,y:c.y};}),bpx:boardPx()};
-  });
-  el.querySelectorAll('.rh').forEach(rh => {
-    rh.addEventListener('mousedown', e => {
+
+    // Rotate handle
+    if (e.target.classList.contains('rotate-handle')) {
       e.preventDefault(); e.stopPropagation(); saveUndo();
-      dragState={type:'resize',handle:rh.dataset.handle,comp,startMouse:{x:e.clientX,y:e.clientY},startComp:{x:comp.x,y:comp.y,w:comp.w,h:comp.h},bpx:boardPx()};
+      const rect = document.getElementById('board').getBoundingClientRect();
+      const px = pctToPx(comp);
+      const cx = rect.left + px.x + px.w / 2;
+      const cy = rect.top + px.y + px.h / 2;
+      dragState = {
+        type: 'rotate', comp, cx, cy,
+        startAngle: Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI,
+        startRot: comp.rotation || 0,
+      };
+      return;
+    }
+
+    // Resize handle
+    if (e.target.classList.contains('rh')) {
+      e.preventDefault(); e.stopPropagation(); saveUndo();
+      dragState = {
+        type: 'resize',
+        handle: e.target.dataset.handle,
+        comp,
+        startMouse: { x: e.clientX, y: e.clientY },
+        startComp: { x: comp.x, y: comp.y, w: comp.w, h: comp.h },
+        bpx: boardPx(),
+      };
+      return;
+    }
+
+    // Move: select component, set up drag
+    e.preventDefault(); e.stopPropagation();
+
+    // Update selection
+    if (!e.shiftKey) {
+      if (!state.selectedIds.includes(comp.id)) {
+        state.selectedIds = [comp.id];
+        expandSelectionToGroups();
+        renderAll();
+      }
+    } else {
+      if (!state.selectedIds.includes(comp.id)) {
+        state.selectedIds.push(comp.id);
+        expandSelectionToGroups();
+        renderAll();
+      }
+    }
+
+    saveUndo();
+
+    // Capture start positions for all selected components
+    const bpx = boardPx();
+    dragState = {
+      type: 'move',
+      startMouse: { x: e.clientX, y: e.clientY },
+      startPositions: state.selectedIds.map(id => {
+        const c = state.components.find(c => c.id === id);
+        return { id, x: c.x, y: c.y };
+      }),
+      bpx,
+    };
+
+    // Immediately set rotation-only transforms on all selected perspective comps
+    // so the first mousemove doesn't cause a visual jump
+    state.selectedIds.forEach(id => {
+      const c = state.components.find(c => c.id === id);
+      const domEl = document.querySelector(`.comp[data-id="${id}"]`);
+      if (domEl && c && isCompPerspective(c)) {
+        domEl.style.transform = compRotationTransform(c) || 'none';
+        domEl.style.transformOrigin = 'center center';
+      }
     });
   });
 }
 
+// ── MOUSEMOVE: handle all drag types ──
 document.addEventListener('mousemove', e => {
   if (!dragState) return;
+  const bpx = dragState.bpx || boardPx();
+
+  // ── ROTATE ──
   if (dragState.type === 'rotate') {
-    const angle=Math.atan2(e.clientY-dragState.cy,e.clientX-dragState.cx)*180/Math.PI;
-    let newRot=(dragState.startRot+(angle-dragState.startAngle))%360;
-    if (e.shiftKey) newRot=Math.round(newRot/15)*15;
-    dragState.comp.rotation=newRot;
-    const el=document.querySelector(`.comp[data-id="${dragState.comp.id}"]`);
-    if (el) el.style.transform=`rotate(${newRot}deg) skewX(${dragState.comp.skewX||0}deg) skewY(${dragState.comp.skewY||0}deg)`;
-    renderPropsPanel(); return;
+    const angle = Math.atan2(e.clientY - dragState.cy, e.clientX - dragState.cx) * 180 / Math.PI;
+    let newRot = (dragState.startRot + (angle - dragState.startAngle)) % 360;
+    if (e.shiftKey) newRot = Math.round(newRot / 15) * 15;
+    dragState.comp.rotation = newRot;
+    const el = document.querySelector(`.comp[data-id="${dragState.comp.id}"]`);
+    if (el) {
+      el.style.transform = compRotationTransform(dragState.comp) || 'none';
+      el.style.transformOrigin = 'center center';
+    }
+    if (!dragState._propsRAF) {
+      dragState._propsRAF = requestAnimationFrame(() => { renderPropsPanel(); dragState._propsRAF = null; });
+    }
+    return;
   }
-  const dx=(e.clientX-dragState.startMouse.x)/dragState.bpx.w*100;
-  const dy=(e.clientY-dragState.startMouse.y)/dragState.bpx.h*100;
+
+  const dx = (e.clientX - dragState.startMouse.x) / bpx.w * 100;
+  const dy = (e.clientY - dragState.startMouse.y) / bpx.h * 100;
+
+  // ── MOVE ──
   if (dragState.type === 'move') {
-    dragState.startPositions.forEach(sp=>{const c=state.components.find(c=>c.id===sp.id);if(c){c.x=Math.max(0,Math.min(100-c.w,sp.x+dx));c.y=Math.max(0,Math.min(100-c.h,sp.y+dy));}});
-    state.selectedIds.forEach(id=>{const c=state.components.find(c=>c.id===id);const el=document.querySelector(`.comp[data-id="${id}"]`);if(el&&c){const bpx=boardPx();el.style.left=c.x/100*bpx.w+'px';el.style.top=c.y/100*bpx.h+'px';}});
+    // Update model positions from start + delta
+    dragState.startPositions.forEach(sp => {
+      const c = state.components.find(c => c.id === sp.id);
+      if (c) {
+        c.x = Math.max(0, Math.min(100 - c.w, sp.x + dx));
+        c.y = Math.max(0, Math.min(100 - c.h, sp.y + dy));
+      }
+    });
+
+    // Snap (unlocked components + board edges only)
+    if (state.snapEnabled && !e.altKey) {
+      if (!dragState._snapTargets) dragState._snapTargets = getSnapTargets(state.selectedIds);
+      const primary = state.components.find(c => c.id === state.selectedIds[0]);
+      if (primary) {
+        const { snapX, snapY } = applySnap(primary, dragState._snapTargets);
+        if (snapX) state.selectedIds.forEach(id => { const c = state.components.find(c => c.id === id); if (c) c.x += snapX.delta; });
+        if (snapY) state.selectedIds.forEach(id => { const c = state.components.find(c => c.id === id); if (c) c.y += snapY.delta; });
+        renderSnapGuides(snapX, snapY);
+      }
+    } else { clearSnapGuides(); }
+
+    // Update DOM: position only, rotation preserved, no perspective during drag
+    state.selectedIds.forEach(id => {
+      const c = state.components.find(c => c.id === id);
+      const el = document.querySelector(`.comp[data-id="${id}"]`);
+      if (el && c) {
+        el.style.left = (c.x / 100 * bpx.w) + 'px';
+        el.style.top = (c.y / 100 * bpx.h) + 'px';
+      }
+    });
+
     if (state.showNegSpace) updateNegSpaceCanvas();
-    renderPropsPanel();
+    if (!dragState._propsRAF) {
+      dragState._propsRAF = requestAnimationFrame(() => { renderPropsPanel(); dragState._propsRAF = null; });
+    }
   }
+
+  // ── RESIZE ──
   if (dragState.type === 'resize') {
-    const sc=dragState.startComp, h=dragState.handle, c=dragState.comp;
-    let nx=sc.x,ny=sc.y,nw=sc.w,nh=sc.h; const MIN=0.5;
-    if (h.includes('r')) nw=Math.max(MIN,sc.w+dx);
-    if (h.includes('l')) {const d=Math.min(dx,sc.w-MIN);nx=sc.x+d;nw=sc.w-d;}
-    if (h==='bm'||h==='bl'||h==='br') nh=Math.max(MIN,sc.h+dy);
-    if (h==='tm'||h==='tl'||h==='tr') {const d=Math.min(dy,sc.h-MIN);ny=sc.y+d;nh=sc.h-d;}
-    c.x=Math.max(0,nx);c.y=Math.max(0,ny);c.w=Math.min(100-c.x,nw);c.h=Math.min(100-c.y,nh);
-    const el=document.querySelector(`.comp[data-id="${c.id}"]`);
-    if (el){const bpx=boardPx();el.style.left=c.x/100*bpx.w+'px';el.style.top=c.y/100*bpx.h+'px';el.style.width=c.w/100*bpx.w+'px';el.style.height=c.h/100*bpx.h+'px';}
+    const sc = dragState.startComp, h = dragState.handle, c = dragState.comp;
+    let nx = sc.x, ny = sc.y, nw = sc.w, nh = sc.h;
+    const MIN = 0.5;
+
+    // Rotate mouse delta into component's local space so handles
+    // stretch in the visually correct direction after rotation
+    const rot = (c.rotation || 0) * Math.PI / 180;
+    const ldx = dx * Math.cos(rot) + dy * Math.sin(rot);   // local-X delta
+    const ldy = -dx * Math.sin(rot) + dy * Math.cos(rot);  // local-Y delta
+
+    if (h.includes('r')) nw = Math.max(MIN, sc.w + ldx);
+    if (h.includes('l')) { const d = Math.min(ldx, sc.w - MIN); nx = sc.x + d; nw = sc.w - d; }
+    if (h === 'bm' || h === 'bl' || h === 'br') nh = Math.max(MIN, sc.h + ldy);
+    if (h === 'tm' || h === 'tl' || h === 'tr') { const d = Math.min(ldy, sc.h - MIN); ny = sc.y + d; nh = sc.h - d; }
+
+    // Shift = lock aspect ratio
+    if (e.shiftKey && sc.w > 0 && sc.h > 0) {
+      const aspect = sc.w / sc.h;
+      if (h === 'ml' || h === 'mr') nh = nw / aspect;
+      else if (h === 'tm' || h === 'bm') nw = nh * aspect;
+      else {
+        if (Math.abs(nw - sc.w) >= Math.abs(nh - sc.h)) nh = nw / aspect;
+        else nw = nh * aspect;
+        if (h.includes('l')) nx = sc.x + sc.w - nw;
+        if (h.includes('t')) ny = sc.y + sc.h - nh;
+      }
+    }
+
+    c.x = Math.max(0, nx); c.y = Math.max(0, ny);
+    c.w = Math.min(100 - c.x, nw); c.h = Math.min(100 - c.y, nh);
+
+    // Snap resize edges
+    if (state.snapEnabled && !e.altKey) {
+      if (!dragState._snapTargets) dragState._snapTargets = getSnapTargets([c.id]);
+      const th = state.snapThreshold;
+      if (h.includes('r')) { const s = snapValue(c.x + c.w, dragState._snapTargets.x, th); if (s !== null) c.w = s - c.x; }
+      if (h.includes('l')) { const s = snapValue(c.x, dragState._snapTargets.x, th); if (s !== null) { c.w += c.x - s; c.x = s; } }
+      if (h === 'bm' || h === 'bl' || h === 'br') { const s = snapValue(c.y + c.h, dragState._snapTargets.y, th); if (s !== null) c.h = s - c.y; }
+      if (h === 'tm' || h === 'tl' || h === 'tr') { const s = snapValue(c.y, dragState._snapTargets.y, th); if (s !== null) { c.h += c.y - s; c.y = s; } }
+      const snapX = h.includes('r') ? (snapValue(c.x + c.w, dragState._snapTargets.x, th) !== null ? { to: c.x + c.w } : null) :
+                    h.includes('l') ? (snapValue(c.x, dragState._snapTargets.x, th) !== null ? { to: c.x } : null) : null;
+      const snapY = (h === 'bm' || h === 'bl' || h === 'br') ? (snapValue(c.y + c.h, dragState._snapTargets.y, th) !== null ? { to: c.y + c.h } : null) :
+                    (h === 'tm' || h === 'tl' || h === 'tr') ? (snapValue(c.y, dragState._snapTargets.y, th) !== null ? { to: c.y } : null) : null;
+      renderSnapGuides(snapX, snapY);
+    } else { clearSnapGuides(); }
+
+    // Update DOM
+    const el = document.querySelector(`.comp[data-id="${c.id}"]`);
+    if (el) {
+      el.style.left = (c.x / 100 * bpx.w) + 'px';
+      el.style.top = (c.y / 100 * bpx.h) + 'px';
+      el.style.width = (c.w / 100 * bpx.w) + 'px';
+      el.style.height = (c.h / 100 * bpx.h) + 'px';
+    }
+
     if (state.showNegSpace) updateNegSpaceCanvas();
-    renderPropsPanel();
+    if (!dragState._propsRAF) {
+      dragState._propsRAF = requestAnimationFrame(() => { renderPropsPanel(); dragState._propsRAF = null; });
+    }
   }
 });
 
-document.addEventListener('mouseup', () => { if (dragState) { dragState=null; renderAll(); } });
-document.getElementById('board').addEventListener('mousedown', e => {
-  if (e.button===2) return;
-  if (e.target===e.currentTarget || e.target.id==='bg-landscape' || e.target.closest('#bg-landscape') || e.target.closest('#grid-overlay')) { state.selectedIds=[]; renderAll(); }
+// ── MOUSEUP: end drag, rebuild everything cleanly ──
+document.addEventListener('mouseup', () => {
+  if (dragState) {
+    dragState = null;
+    clearSnapGuides();
+    renderAll(); // Full rebuild: perspective, rotation, everything reapplied correctly
+  }
 });
+
+// ── BOARD CLICK: deselect when clicking empty space ──
+document.getElementById('board').addEventListener('mousedown', e => {
+  if (e.button === 2) return;
+  if (e.target === e.currentTarget || e.target.id === 'bg-landscape' ||
+      e.target.closest('#bg-landscape') || e.target.closest('#grid-overlay')) {
+    state.selectedIds = [];
+    renderAll();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// SNAP TO EDGES
+// ═══════════════════════════════════════════════════════════════
+
+function getSnapTargets(excludeIds) {
+  // Collect edges and centers from UNLOCKED, non-dragged components only.
+  // Locked UI chrome is excluded — too many snap points make dragging sticky.
+  const targets = { x: [], y: [] };
+  const exclude = new Set(excludeIds);
+  state.components.forEach(c => {
+    if (exclude.has(c.id) || !c.visible || c.locked) return;
+    const layer = state.layers.find(l => l.id === c.layer);
+    if (layer && !layer.visible) return;
+    targets.x.push(c.x, c.x + c.w, c.x + c.w / 2);
+    targets.y.push(c.y, c.y + c.h, c.y + c.h / 2);
+  });
+  // Board edges and center
+  targets.x.push(0, 50, 100);
+  targets.y.push(0, 50, 100);
+  return targets;
+}
+
+function snapValue(val, targets, threshold) {
+  let best = null, bestDist = threshold;
+  for (const t of targets) {
+    const d = Math.abs(val - t);
+    if (d < bestDist) { bestDist = d; best = t; }
+  }
+  return best;
+}
+
+function applySnap(comp, targets) {
+  if (!state.snapEnabled) return { snapX: null, snapY: null };
+  const th = state.snapThreshold;
+  const edges = {
+    x: [comp.x, comp.x + comp.w, comp.x + comp.w / 2],
+    y: [comp.y, comp.y + comp.h, comp.y + comp.h / 2],
+  };
+  let snapX = null, snapY = null;
+  // Find best snap for any edge
+  let bestDx = th, bestDy = th;
+  for (const ex of edges.x) {
+    const s = snapValue(ex, targets.x, th);
+    if (s !== null && Math.abs(ex - s) < bestDx) {
+      bestDx = Math.abs(ex - s);
+      snapX = { from: ex, to: s, delta: s - ex };
+    }
+  }
+  for (const ey of edges.y) {
+    const s = snapValue(ey, targets.y, th);
+    if (s !== null && Math.abs(ey - s) < bestDy) {
+      bestDy = Math.abs(ey - s);
+      snapY = { from: ey, to: s, delta: s - ey };
+    }
+  }
+  return { snapX, snapY };
+}
+
+function renderSnapGuides(snapX, snapY) {
+  let svg = document.getElementById('snap-guides');
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id = 'snap-guides';
+    svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;';
+    document.getElementById('board').appendChild(svg);
+  }
+  svg.innerHTML = '';
+  const bpx = boardPx();
+  if (snapX) {
+    const x = snapX.to / 100 * bpx.w;
+    svg.innerHTML += `<line x1="${x}" y1="0" x2="${x}" y2="${bpx.h}" stroke="rgba(80,200,255,0.5)" stroke-width="1" stroke-dasharray="4,4"/>`;
+  }
+  if (snapY) {
+    const y = snapY.to / 100 * bpx.h;
+    svg.innerHTML += `<line x1="0" y1="${y}" x2="${bpx.w}" y2="${y}" stroke="rgba(80,200,255,0.5)" stroke-width="1" stroke-dasharray="4,4"/>`;
+  }
+}
+
+function clearSnapGuides() {
+  const svg = document.getElementById('snap-guides');
+  if (svg) svg.innerHTML = '';
+}
 
 // ═══════════════════════════════════════════════════════════════
 // HOVER TOOLTIP
@@ -1145,10 +1864,21 @@ function showHoverTooltip(comp, e) {
     const propsEl = document.getElementById('ht-props');
     const layerObj = state.layers.find(l => l.id === comp.layer);
     nameEl.textContent = comp.label;
+    const bpx = boardPx();
+    const pxW = (comp.w / 100 * bpx.w).toFixed(0);
+    const pxH = (comp.h / 100 * bpx.h).toFixed(0);
+    const ar = (comp.w / 100 * bpx.w) / (comp.h / 100 * bpx.h);
+    let arTag = '';
+    if (Math.abs(ar - 1) < 0.02) arTag = ' (square)';
+    else if (Math.abs(ar - 1.618) < 0.05 || Math.abs(ar - 0.618) < 0.03) arTag = ' (golden)';
+    else if (Math.abs(ar - 16/9) < 0.05 || Math.abs(ar - 9/16) < 0.03) arTag = ' (16:9)';
+    else if (Math.abs(ar - 4/3) < 0.05 || Math.abs(ar - 3/4) < 0.03) arTag = ' (4:3)';
     propsEl.innerHTML = `
       <div class="ht-row">Layer: <span class="ht-val">${layerObj ? layerObj.name : comp.layer}</span></div>
       <div class="ht-row">Position: <span class="ht-val">${comp.x.toFixed(1)}%, ${comp.y.toFixed(1)}%</span></div>
       <div class="ht-row">Size: <span class="ht-val">${comp.w.toFixed(1)}% × ${comp.h.toFixed(1)}%</span></div>
+      <div class="ht-row">Pixels: <span class="ht-val">${pxW} × ${pxH}px</span></div>
+      <div class="ht-row">Ratio: <span class="ht-val">${ar.toFixed(2)}:1${arTag}</span></div>
       <div class="ht-row">Rotation: <span class="ht-val">${(comp.rotation||0).toFixed(1)}°</span></div>
       <div class="ht-row">Opacity: <span class="ht-val">${((comp.opacity!==undefined?comp.opacity:1)*100).toFixed(0)}%</span></div>
       ${comp.shape && comp.shape !== 'rect' ? `<div class="ht-row">Shape: <span class="ht-val">${comp.shape}</span></div>` : ''}
@@ -1179,6 +1909,7 @@ function hideHoverTooltip() {
 const ctxMenu = document.getElementById('ctx-menu');
 
 function showContextMenu(x, y, items) {
+  hideContextMenu();
   let html = '';
   for (const item of items) {
     if (item.sep) { html += '<div class="ctx-sep"></div>'; continue; }
@@ -1204,17 +1935,45 @@ function showContextMenu(x, y, items) {
     html += `<div class="ctx-item${item.danger?' danger':''}" onclick="${item.action}">${item.label}${item.key?`<span class="ctx-key">${item.key}</span>`:''}${item.active?'  ✓':''}</div>`;
   }
   ctxMenu.innerHTML = html;
+  ctxMenu.style.left = '-9999px';
+  ctxMenu.style.top = '-9999px';
   ctxMenu.style.display = 'block';
-  ctxMenu.style.left = '0px';
-  ctxMenu.style.top = '0px';
+  ctxMenu.classList.add('show');
+  ctxMenu.offsetHeight; // force reflow
   const menuRect = ctxMenu.getBoundingClientRect();
   const menuW = menuRect.width, menuH = menuRect.height;
-  ctxMenu.style.left = Math.min(x, window.innerWidth - menuW - 8) + 'px';
-  ctxMenu.style.top  = Math.min(y, window.innerHeight - menuH - 8) + 'px';
-  ctxMenu.classList.add('show');
+  ctxMenu.style.left = Math.max(8, Math.min(x, window.innerWidth - menuW - 8)) + 'px';
+  ctxMenu.style.top  = Math.max(8, Math.min(y, window.innerHeight - menuH - 8)) + 'px';
+  // Position submenus within viewport — JS only, no CSS :hover
+  ctxMenu.querySelectorAll('.ctx-submenu').forEach(sub => {
+    sub.addEventListener('mouseenter', () => {
+      // Close all sibling submenus first
+      ctxMenu.querySelectorAll('.ctx-sub-items').forEach(s => s.style.display = 'none');
+      const subItems = sub.querySelector('.ctx-sub-items');
+      if (!subItems) return;
+      const parentRect = sub.getBoundingClientRect();
+      subItems.style.display = 'block';
+      subItems.offsetHeight;
+      const subRect = subItems.getBoundingClientRect();
+      let left = parentRect.right;
+      let top = parentRect.top - 4;
+      if (left + subRect.width > window.innerWidth - 8) left = parentRect.left - subRect.width;
+      if (top + subRect.height > window.innerHeight - 8) top = window.innerHeight - subRect.height - 8;
+      if (top < 8) top = 8;
+      subItems.style.left = left + 'px';
+      subItems.style.top = top + 'px';
+    });
+    sub.addEventListener('mouseleave', () => {
+      const subItems = sub.querySelector('.ctx-sub-items');
+      if (subItems) subItems.style.display = 'none';
+    });
+  });
 }
 
-function hideContextMenu() { ctxMenu.classList.remove('show'); ctxMenu.style.display = 'none'; }
+function hideContextMenu() { ctxMenu.classList.remove('show'); ctxMenu.style.display = 'none'; if (ctxMenuLeaveTimer) { clearTimeout(ctxMenuLeaveTimer); ctxMenuLeaveTimer = null; } }
+let ctxMenuLeaveTimer = null;
+ctxMenu.addEventListener('mouseenter', () => { if (ctxMenuLeaveTimer) { clearTimeout(ctxMenuLeaveTimer); ctxMenuLeaveTimer = null; } });
+ctxMenu.addEventListener('mouseleave', () => { ctxMenuLeaveTimer = setTimeout(hideContextMenu, 400); });
 document.addEventListener('click', e => { if (!ctxMenu.contains(e.target)) hideContextMenu(); });
 document.addEventListener('mousedown', e => { if (!ctxMenu.contains(e.target)) hideContextMenu(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') hideContextMenu(); });
@@ -1226,7 +1985,7 @@ document.getElementById('board').addEventListener('contextmenu', e => {
   if (compEl) {
     const comp = state.components.find(c => c.id === parseInt(compEl.dataset.id));
     if (!comp) return;
-    if (!state.selectedIds.includes(comp.id)) { state.selectedIds = [comp.id]; renderAll(); }
+    if (!state.selectedIds.includes(comp.id)) { state.selectedIds = [comp.id]; expandSelectionToGroups(); renderAll(); }
     showComponentContextMenu(e.clientX, e.clientY, comp);
   } else {
     showBoardContextMenu(e.clientX, e.clientY);
@@ -1255,6 +2014,8 @@ function showComponentContextMenu(x, y, comp) {
     { sep: true },
     { label: 'Center Horizontally', action: `hideContextMenu();saveUndo();centerComp(${comp.id},'h')` },
     { label: 'Center Vertically', action: `hideContextMenu();saveUndo();centerComp(${comp.id},'v')` },
+    { label: 'Rotate 90° CW', action: `hideContextMenu();rotateComp90(${comp.id},90)`, key: 'R' },
+    { label: 'Rotate 90° CCW', action: `hideContextMenu();rotateComp90(${comp.id},-90)`, key: '⇧R' },
     { sep: true },
     { label: 'Duplicate', action: `hideContextMenu();duplicateComp(${comp.id})`, key: 'Ctrl+D' },
     { label: 'Bring Forward', action: `hideContextMenu();bringForward(${comp.id})` },
@@ -1265,11 +2026,44 @@ function showComponentContextMenu(x, y, comp) {
       action: `hideContextMenu();updateComp(${comp.id},'layer','${l.id}')`
     }))},
     { sep: true },
+    { label: comp.locked ? '🔓 Unlock' : '🔒 Lock Position', action: `hideContextMenu();toggleCompLock(${comp.id})` },
     { label: 'Reset to Original', action: `hideContextMenu();resetToOriginal(${comp.id})` },
     { label: 'Toggle Visibility', action: `hideContextMenu();toggleCompVis(${comp.id},event)` },
-    { label: 'Delete', action: `hideContextMenu();saveUndo();deleteComp(${comp.id})`, key: 'Del', danger: true },
+    { sep: true },
   ];
+  const compGroup = getGroupForComp(comp.id);
+  if (compGroup) {
+    items.push({ label: `Group: ${compGroup.name}`, submenu: [
+      { label: 'Select Group', action: `hideContextMenu();selectGroup(${compGroup.id})` },
+      { label: 'Rename Group', action: `hideContextMenu();renameGroup(${compGroup.id})` },
+      { label: 'Ungroup', action: `hideContextMenu();ungroupSelected()` },
+    ]});
+  }
+  if (state.selectedIds.length >= 2) {
+    items.push({ label: 'Group Selected', action: 'hideContextMenu();groupSelected()', key: 'Ctrl+G' });
+  }
+  items.push(
+    { sep: true },
+    { label: 'Delete', action: `hideContextMenu();saveUndo();deleteComp(${comp.id})`, key: 'Del', danger: true },
+  );
   showContextMenu(x, y, items);
+}
+
+function toggleCompLock(id) {
+  const c = state.components.find(c => c.id === id);
+  if (c) {
+    saveUndo();
+    c.locked = !c.locked;
+    renderAll();
+  }
+}
+
+function rotateComp90(id, deg) {
+  const c = state.components.find(c => c.id === id);
+  if (!c || c.locked) return;
+  saveUndo();
+  c.rotation = ((c.rotation || 0) + deg) % 360;
+  renderAll();
 }
 
 function showBoardContextMenu(x, y) {
@@ -1637,7 +2431,9 @@ function renderLayerPanel() {
         const compDimmed = state.landscapeMode && !isCompLandscapeRelevant(comp);
         const row = document.createElement('div');
         row.className = 'comp-row' + (state.selectedIds.includes(comp.id)?' selected':'') + (compDimmed ? ' landscape-grayed' : '');
-        row.innerHTML = `<div class="comp-vis ${comp.visible?'':'hidden'}" onclick="toggleCompVis(${comp.id},event)">●</div><div class="comp-name">${comp.label}</div>`;
+        const cGroup = getGroupForComp(comp.id);
+        const groupBadge = cGroup ? `<span style="font-size:7px;color:rgba(186,140,30,0.5);margin-left:auto;flex-shrink:0;" title="${cGroup.name}">⚑</span>` : '';
+        row.innerHTML = `<div class="comp-vis ${comp.visible?'':'hidden'}" onclick="toggleCompVis(${comp.id},event)">●</div><div class="comp-name">${comp.locked?'🔒 ':''}${comp.label}</div>${groupBadge}`;
         row.addEventListener('click', e => { if (e.target.classList.contains('comp-vis')) return; state.selectedIds=[comp.id]; renderAll(); });
         row.addEventListener('contextmenu', e => { e.preventDefault(); state.selectedIds=[comp.id]; renderAll(); showComponentContextMenu(e.clientX,e.clientY,comp); });
         items.appendChild(row);
@@ -1655,6 +2451,62 @@ function toggleCompVis(compId, e) { if(e)e.stopPropagation(); const c=state.comp
 // PROPERTIES PANEL
 // ═══════════════════════════════════════════════════════════════
 
+function renderDimensionsInfo(comp) {
+  const bpx = boardPx();
+  const pxW = (comp.w / 100 * bpx.w).toFixed(0);
+  const pxH = (comp.h / 100 * bpx.h).toFixed(0);
+  // True aspect ratio accounting for 16:9 board
+  const ratioW = comp.w * 16, ratioH = comp.h * 9;
+  const ar = ratioW / ratioH;
+  // Simplify ratio for display
+  const gcd = (a, b) => b < 0.01 ? a : gcd(b, a % b);
+  const g = gcd(ratioW, ratioH);
+  const rW = (ratioW / g).toFixed(1).replace(/\.0$/, '');
+  const rH = (ratioH / g).toFixed(1).replace(/\.0$/, '');
+  // Classify the ratio
+  let ratioTag = '', ratioColor = 'rgba(255,255,255,0.3)';
+  if (Math.abs(ar - 1) < 0.02) { ratioTag = 'SQUARE'; ratioColor = 'rgba(80,200,120,0.7)'; }
+  else if (Math.abs(ar - 1.618) < 0.05 || Math.abs(ar - 0.618) < 0.03) { ratioTag = 'GOLDEN'; ratioColor = 'rgba(220,180,50,0.7)'; }
+  else if (Math.abs(ar - 16/9) < 0.05 || Math.abs(ar - 9/16) < 0.03) { ratioTag = '16:9'; ratioColor = 'rgba(120,160,220,0.6)'; }
+  else if (Math.abs(ar - 4/3) < 0.05 || Math.abs(ar - 3/4) < 0.03) { ratioTag = '4:3'; ratioColor = 'rgba(120,160,220,0.6)'; }
+  else if (Math.abs(ar - 3/2) < 0.05 || Math.abs(ar - 2/3) < 0.03) { ratioTag = '3:2'; ratioColor = 'rgba(120,160,220,0.6)'; }
+  // Visual ratio bar
+  const barMax = 60;
+  const barW = ar >= 1 ? barMax : Math.round(barMax * ar);
+  const barH = ar <= 1 ? barMax : Math.round(barMax / ar);
+  const id = comp.id;
+  return `
+    <div style="margin:5px 0 2px;padding:4px 6px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.06);border-radius:3px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+        <div style="width:${barW}px;height:${barH > 20 ? 20 : barH}px;border:1px solid rgba(186,140,30,0.4);border-radius:2px;background:rgba(186,140,30,0.08);flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.5);">${pxW} × ${pxH} px</div>
+          <div style="font-size:8px;color:${ratioColor};">${rW}:${rH} ${ratioTag ? '— ' + ratioTag : ''} ${ar >= 1 ? '(w)' : '(h)'}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;">
+        <button class="prop-btn" style="flex:1;min-width:0;margin:0;padding:2px 4px;font-size:7px;" onclick="saveUndo();makeCompRatio(${id},1,1)">1:1</button>
+        <button class="prop-btn" style="flex:1;min-width:0;margin:0;padding:2px 4px;font-size:7px;" onclick="saveUndo();makeCompRatio(${id},1.618,1)">Golden W</button>
+        <button class="prop-btn" style="flex:1;min-width:0;margin:0;padding:2px 4px;font-size:7px;" onclick="saveUndo();makeCompRatio(${id},1,1.618)">Golden H</button>
+        <button class="prop-btn" style="flex:1;min-width:0;margin:0;padding:2px 4px;font-size:7px;" onclick="saveUndo();makeCompRatio(${id},4,3)">4:3</button>
+        <button class="prop-btn" style="flex:1;min-width:0;margin:0;padding:2px 4px;font-size:7px;" onclick="saveUndo();makeCompRatio(${id},16,9)">16:9</button>
+        <button class="prop-btn" style="flex:1;min-width:0;margin:0;padding:2px 4px;font-size:7px;" onclick="saveUndo();makeCompRatio(${id},3,2)">3:2</button>
+      </div>
+    </div>`;
+}
+
+// Set component to target aspect ratio, adjusting H to match W
+// Accounts for 16:9 board: actual pixel ratio = (w% * boardW) / (h% * boardH)
+function makeCompRatio(id, rw, rh) {
+  const c = state.components.find(c => c.id === id);
+  if (!c) return;
+  const bpx = boardPx();
+  const currentPxW = c.w / 100 * bpx.w;
+  const targetPxH = currentPxW * rh / rw;
+  c.h = targetPxH / bpx.h * 100;
+  renderAll();
+}
+
 function renderPropsPanel() {
   const body = document.getElementById('props-body');
 
@@ -1667,7 +2519,7 @@ function renderPropsPanel() {
       <div class="prop-row">
         <div class="prop-label">HORIZON (${state.horizonY.toFixed(0)}%)</div>
         <div class="prop-val-row"><input type="range" min="-100" max="200" value="${state.horizonY.toFixed(0)}" class="prop-slider" style="flex:1;"
-          oninput="state.horizonY=parseFloat(this.value);renderHorizonLine();if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${state.horizonY.toFixed(0)}" style="width:42px;text-align:right;" onchange="state.horizonY=parseFloat(this.value);renderHorizonLine();if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">%</span></div>
+          oninput="state.horizonY=parseFloat(this.value);renderHorizonLine();updatePerspectiveZones();if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${state.horizonY.toFixed(0)}" style="width:42px;text-align:right;" onchange="state.horizonY=parseFloat(this.value);renderHorizonLine();updatePerspectiveZones();if(state.showNegSpace)updateNegSpaceCanvas();this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">%</span></div>
       </div>
       <div class="toggle-row"><input type="checkbox" ${state.showHorizon?'checked':''} onchange="state.showHorizon=this.checked;renderHorizonLine();"><span>Horizon line</span></div>
       <div class="toggle-row"><input type="checkbox" ${state.showNegSpace?'checked':''} onchange="state.showNegSpace=this.checked;updateNegSpaceCanvas();"><span>Neg. space glow</span></div>
@@ -1701,12 +2553,17 @@ function renderPropsPanel() {
         <button class="prop-btn" onclick="applyCameraPreset('enclosed')">Enclosed</button>
         <button class="prop-btn" onclick="applyCameraPreset('overhead')">Overhead</button>
       </div>
-      <button class="prop-btn" onclick="applyIsometricToAll()">Apply perspective to all zones</button>
+      <button class="prop-btn" onclick="applyIsometricToAll()">Apply perspective to geography zones</button>
       <div class="prop-section">BURDENS</div>
       <div class="prop-row">
         <div class="prop-val-row"><input type="range" min="0" max="12" value="${state.burdens}" class="prop-slider" style="flex:1;" oninput="setBurdens(this.value);this.parentElement.querySelector('.prop-val').textContent=this.value;"><span class="prop-val">${state.burdens}</span></div>
         <div style="font-size:7px;color:rgba(255,255,255,0.2);margin-top:2px;">${state.burdens===0?'Distant — full tower, faint':state.burdens<=4?'Approaching — tower growing':state.burdens<=8?'Close — Eye prominent':state.burdens<=11?'Imminent — Eye dominates':'Corruption threshold'}</div>
       </div>
+      <div class="prop-section">SNAPPING</div>
+      <div class="toggle-row"><input type="checkbox" ${state.snapEnabled?'checked':''} onchange="state.snapEnabled=this.checked;document.querySelector('#topbar input[onchange*=snapEnabled]').checked=this.checked;"><span>Snap to edges</span></div>
+      <div class="prop-row"><div class="prop-label">THRESHOLD</div>
+        <div class="prop-val-row"><input type="range" min="0.3" max="3.0" step="0.1" value="${state.snapThreshold}" class="prop-slider" style="flex:1;" oninput="state.snapThreshold=parseFloat(this.value);this.parentElement.querySelector('.prop-val').textContent=this.value+'%';"><span class="prop-val">${state.snapThreshold}%</span></div></div>
+      <div class="prop-note" style="margin-top:2px;">Hold Alt while dragging to bypass snap</div>
       <div class="prop-section">STATS</div>
       <div class="prop-note">${state.components.length} components · ${state.components.filter(c=>c.visible).length} visible</div>
     `;
@@ -1733,6 +2590,11 @@ function renderPropsPanel() {
         <button class="prop-btn" onclick="alignSelected('distributeH')">Dist. H</button>
         <button class="prop-btn" onclick="alignSelected('distributeV')">Dist. V</button>
       </div>
+      <div class="prop-section">GROUPING</div>
+      <div class="prop-row-2">
+        <button class="prop-btn" onclick="groupSelected()">Group (Ctrl+G)</button>
+        <button class="prop-btn" onclick="ungroupSelected()">Ungroup</button>
+      </div>
       <div style="height:8px;"></div>
       <button class="prop-btn danger" onclick="deleteSelected()">Delete selected</button>
     `;
@@ -1744,8 +2606,11 @@ function renderPropsPanel() {
   const rot=(comp.rotation||0).toFixed(1), op=((comp.opacity!==undefined?comp.opacity:1)*100).toFixed(0);
   const skX=(comp.skewX||0).toFixed(1), skY=(comp.skewY||0).toFixed(1);
 
+  const singleGroup = getGroupForComp(comp.id);
+  const groupInfo = singleGroup ? `<div class="prop-row"><div class="prop-label">GROUP</div><div style="display:flex;align-items:center;gap:4px;"><span style="font-size:9px;color:rgba(186,140,30,0.7);">⚑ ${singleGroup.name}</span><button class="prop-btn" style="width:auto;margin:0;padding:2px 6px;font-size:8px;" onclick="selectGroup(${singleGroup.id})">Select All</button></div></div>` : '';
   body.innerHTML = `
     <div class="prop-row"><div class="prop-label">LABEL</div><input class="prop-input" value="${comp.label}" onchange="updateComp(${comp.id},'label',this.value)"></div>
+    ${groupInfo}
     <div class="prop-section">POSITION & SIZE (%)</div>
     <div class="prop-row-2">
       <div><div class="prop-label">X</div><input class="prop-input" type="number" step="0.1" value="${comp.x.toFixed(1)}" onchange="updateComp(${comp.id},'x',parseFloat(this.value))"></div>
@@ -1755,6 +2620,7 @@ function renderPropsPanel() {
       <div><div class="prop-label">W</div><input class="prop-input" type="number" step="0.1" value="${comp.w.toFixed(1)}" onchange="updateComp(${comp.id},'w',parseFloat(this.value))"></div>
       <div><div class="prop-label">H</div><input class="prop-input" type="number" step="0.1" value="${comp.h.toFixed(1)}" onchange="updateComp(${comp.id},'h',parseFloat(this.value))"></div>
     </div>
+    ${renderDimensionsInfo(comp)}
     <div class="prop-section">TRANSFORM</div>
     <div class="prop-row"><div class="prop-label">ROTATION</div>
       <div class="prop-val-row"><input type="range" min="-180" max="180" step="1" value="${rot}" class="prop-slider" style="flex:1;" oninput="updateComp(${comp.id},'rotation',parseFloat(this.value));this.parentElement.querySelector('.prop-input').value=this.value;"><input class="prop-input" type="number" step="1" value="${parseFloat(rot).toFixed(0)}" style="width:42px;text-align:right;" onchange="updateComp(${comp.id},'rotation',parseFloat(this.value));this.parentElement.querySelector('.prop-slider').value=this.value;"><span style="font-size:8px;color:rgba(255,255,255,0.3);">°</span></div></div>
@@ -1801,7 +2667,7 @@ function centerComp(id, axis) {
 }
 
 function duplicateComp(id) { const c=state.components.find(c=>c.id===id); if(!c)return; saveUndo(); const nc={...c,id:state.nextId++,x:c.x+2,y:c.y+2}; state.components.push(nc); state.selectedIds=[nc.id]; renderAll(); }
-function deleteComp(id) { state.components=state.components.filter(c=>c.id!==id); state.selectedIds=state.selectedIds.filter(i=>i!==id); renderAll(); }
+function deleteComp(id) { state.components=state.components.filter(c=>c.id!==id); state.selectedIds=state.selectedIds.filter(i=>i!==id); state.groups.forEach(g=>{g.memberIds=g.memberIds.filter(m=>m!==id);}); state.groups=state.groups.filter(g=>g.memberIds.length>0); renderAll(); }
 function deleteSelected() { saveUndo(); state.selectedIds.forEach(id=>{state.components=state.components.filter(c=>c.id!==id);}); state.selectedIds=[]; renderAll(); }
 function bringForward(id) { const c=state.components.find(c=>c.id===id); if(c){c.zIndex=(c.zIndex||0)+1;renderAll();} }
 function sendBackward(id) { const c=state.components.find(c=>c.id===id); if(c){c.zIndex=Math.max(0,(c.zIndex||0)-1);renderAll();} }
@@ -1848,20 +2714,24 @@ function applyIsometricToAll() {
   const tx = state.boardTiltX || 0;
   if (tx === 0) { setStatus('Set a tilt angle first.'); return; }
   saveUndo();
-  // Apply a proportional skewX to all components based on board tilt
-  // This makes zones look like they "agree" with the isometric view
+  // Apply a proportional skewX to geography components ONLY
+  // UI chrome (frame, interface, hand layers) stays fixed — never skewed
   const skewFactor = tx * 0.35;
+  let count = 0;
   state.components.forEach(comp => {
     // Skip landscape backgrounds — they fill the board
     if (comp.type === 'terrain-bg' || comp.type === 'sky-bg') return;
+    // Skip UI layers — borders, HUD, hand must not be affected by perspective
+    if (UI_LAYERS.has(comp.layer)) return;
     comp.skewX = -skewFactor;
     // Apply slight vertical compression based on position
     // Objects higher on the board get slightly more foreshortening
     const verticalPos = comp.y / 100;
     comp.skewY = verticalPos * skewFactor * 0.15;
+    count++;
   });
   renderAll();
-  setStatus(`Applied isometric skew (${skewFactor.toFixed(1)}°) to ${state.components.length} zones`);
+  setStatus(`Applied isometric skew (${skewFactor.toFixed(1)}°) to ${count} geography zones (UI unchanged)`);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1881,6 +2751,64 @@ function alignSelected(mode) {
   else if (mode==='distributeH') { comps.sort((a,b)=>a.x-b.x); const tg=comps[comps.length-1].x-comps[0].x-comps.slice(0,-1).reduce((s,c)=>s+c.w,0); const g=tg/(comps.length-1); let cur=comps[0].x+comps[0].w; for(let i=1;i<comps.length-1;i++){comps[i].x=cur+g;cur=comps[i].x+comps[i].w;} }
   else if (mode==='distributeV') { comps.sort((a,b)=>a.y-b.y); const tg=comps[comps.length-1].y-comps[0].y-comps.slice(0,-1).reduce((s,c)=>s+c.h,0); const g=tg/(comps.length-1); let cur=comps[0].y+comps[0].h; for(let i=1;i<comps.length-1;i++){comps[i].y=cur+g;cur=comps[i].y+comps[i].h;} }
   renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GROUPS
+// ═══════════════════════════════════════════════════════════════
+
+function getGroupForComp(compId) {
+  return state.groups.find(g => g.memberIds.includes(compId));
+}
+
+function selectGroup(groupId) {
+  const group = state.groups.find(g => g.id === groupId);
+  if (group) { state.selectedIds = [...group.memberIds]; renderAll(); }
+}
+
+function groupSelected() {
+  if (state.selectedIds.length < 2) { setStatus('Select 2+ items to group.'); return; }
+  saveUndo();
+  // Remove selected items from any existing groups
+  state.selectedIds.forEach(id => {
+    state.groups.forEach(g => { g.memberIds = g.memberIds.filter(m => m !== id); });
+  });
+  // Clean up empty groups
+  state.groups = state.groups.filter(g => g.memberIds.length > 0);
+  // Create new group
+  const group = { id: state.nextGroupId++, name: 'Group ' + (state.nextGroupId - 1), memberIds: [...state.selectedIds] };
+  state.groups.push(group);
+  renderAll();
+  setStatus(`Grouped ${group.memberIds.length} items → ${group.name}`);
+}
+
+function ungroupSelected() {
+  saveUndo();
+  const groupsToRemove = new Set();
+  state.selectedIds.forEach(id => {
+    const g = getGroupForComp(id);
+    if (g) groupsToRemove.add(g.id);
+  });
+  state.groups = state.groups.filter(g => !groupsToRemove.has(g.id));
+  renderAll();
+  setStatus('Ungrouped.');
+}
+
+function renameGroup(groupId) {
+  const g = state.groups.find(g => g.id === groupId);
+  if (!g) return;
+  const name = prompt('Group name:', g.name);
+  if (name) { g.name = name; renderAll(); }
+}
+
+function expandSelectionToGroups() {
+  // When selecting a comp that's in a group, auto-select all group members
+  const expanded = new Set(state.selectedIds);
+  state.selectedIds.forEach(id => {
+    const g = getGroupForComp(id);
+    if (g) g.memberIds.forEach(m => expanded.add(m));
+  });
+  state.selectedIds = [...expanded];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1932,214 +2860,374 @@ function toggleHorizon() { state.showHorizon=!state.showHorizon; renderHorizonLi
 // ═══════════════════════════════════════════════════════════════
 
 function buildSaveData(name) {
-  return JSON.stringify({ name: name || state.loadedLayoutName || 'untitled', components:state.components, layers:state.layers, boardRatio:state.boardRatio, nextId:state.nextId, horizonY:state.horizonY, elementConfig:state.elementConfig, boardTiltX:state.boardTiltX, boardTiltY:state.boardTiltY, perspectiveDepth:state.perspectiveDepth, vanishX:state.vanishX, vanishY:state.vanishY, boardZoom:state.boardZoom }, null, 2);
+  return JSON.stringify({ name: name || state.loadedLayoutName || 'untitled', components:state.components, layers:state.layers, boardRatio:state.boardRatio, nextId:state.nextId, horizonY:state.horizonY, elementConfig:state.elementConfig, boardTiltX:state.boardTiltX, boardTiltY:state.boardTiltY, perspectiveDepth:state.perspectiveDepth, vanishX:state.vanishX, vanishY:state.vanishY, boardZoom:state.boardZoom, groups:state.groups, nextGroupId:state.nextGroupId }, null, 2);
 }
 
-function exportJSON() {
+async function exportJSON() {
+  const dataStr = buildSaveData();
+  // If we have a file handle from Load, overwrite in place
+  if (state.fileHandle) {
+    try {
+      const writable = await state.fileHandle.createWritable();
+      await writable.write(dataStr);
+      await writable.close();
+      state.loadedLayoutData = JSON.parse(dataStr);
+      setStatus('Saved: ' + state.loadedLayoutName);
+      return;
+    } catch(err) {
+      // Permission denied or handle stale — fall through to download
+      setStatus('Handle expired — downloading instead.');
+    }
+  }
+  // Fallback: trigger download
   const filename = (state.loadedLayoutName || 'lotr_tcg_layout').replace(/[^a-zA-Z0-9_\-— ]/g,'') + '.json';
-  const data = buildSaveData();
-  const blob = new Blob([data],{type:'application/json'});
+  const blob = new Blob([dataStr],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
-  setStatus('Saved: ' + filename);
+  setStatus('Saved (downloaded): ' + filename);
 }
 
-function exportJSONAs() {
+async function exportJSONAs() {
   const name = prompt('Save layout as:', state.loadedLayoutName || 'my-layout');
   if (!name) return;
   state.loadedLayoutName = name;
-  // Update baseline to this new save
   const dataStr = buildSaveData(name);
   state.loadedLayoutData = JSON.parse(dataStr);
+
+  // Use File System Access API if available — pick a new file location
+  if (window.showSaveFilePicker) {
+    try {
+      const saveOpts = {
+        suggestedName: name.replace(/[^a-zA-Z0-9_\-— ]/g,'') + '.json',
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+      };
+      if (state.lastDirHandle) saveOpts.startIn = state.lastDirHandle;
+      const handle = await window.showSaveFilePicker(saveOpts);
+      const writable = await handle.createWritable();
+      await writable.write(dataStr);
+      await writable.close();
+      state.fileHandle = handle; // subsequent Saves go to this new file
+      setStatus('Saved as: ' + name);
+      return;
+    } catch(err) {
+      if (err.name === 'AbortError') return;
+      setStatus('Save picker failed — downloading instead.');
+    }
+  }
+  // Fallback: trigger download
   const filename = name.replace(/[^a-zA-Z0-9_\-— ]/g,'') + '.json';
   const blob = new Blob([dataStr],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
-  setStatus('Saved as: ' + filename);
+  setStatus('Saved as (downloaded): ' + filename);
 }
 
-function exportCompositionGuide() {
-  const W = 1920, H = 1080; // 16:9 at 1080p
+// Legacy stub — redirects to new unified guide
+function exportCompositionGuide(mode) { exportMJGuide(); }
+
+function exportMJGuide() {
+  const W = 1920, H = 1080;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
+  const layoutName = state.loadedLayoutName || 'custom';
 
-  // Background — dark neutral
-  ctx.fillStyle = '#1a1a1a';
+  // ── 1. BACKGROUND — neutral dark ──
+  ctx.fillStyle = '#111114';
   ctx.fillRect(0, 0, W, H);
 
-  // Horizon line
+  // ── 2. UI MASK — smooth hull of all opaque UI elements ──
+  // Collect bounding boxes of all visible opaque UI components
+  const uiComps = state.components.filter(c =>
+    c.visible && UI_LAYERS.has(c.layer) && c.coverType === 'opaque'
+  );
+
+  // Render UI mask: paint each UI element as a solid block, then blur
+  // to create a smooth contour instead of blocky rectangles
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = W; maskCanvas.height = H;
+  const mctx = maskCanvas.getContext('2d');
+  mctx.fillStyle = '#000';
+  mctx.fillRect(0, 0, W, H);
+
+  // Draw UI regions in white on the mask
+  mctx.fillStyle = '#fff';
+  uiComps.forEach(c => {
+    const x = c.x / 100 * W, y = c.y / 100 * H;
+    const w = c.w / 100 * W, h = c.h / 100 * H;
+    const rot = c.rotation || 0;
+    mctx.save();
+    if (rot) {
+      mctx.translate(x + w / 2, y + h / 2);
+      mctx.rotate(rot * Math.PI / 180);
+      mctx.translate(-(x + w / 2), -(y + h / 2));
+    }
+    // Expand slightly for padding
+    const pad = 8;
+    if (c.shape === 'circle') {
+      mctx.beginPath();
+      mctx.ellipse(x + w / 2, y + h / 2, w / 2 + pad, h / 2 + pad, 0, 0, Math.PI * 2);
+      mctx.fill();
+    } else {
+      mctx.fillRect(x - pad, y - pad, w + pad * 2, h + pad * 2);
+    }
+    mctx.restore();
+  });
+
+  // Blur the mask to smooth edges (simulate convex hull smoothing)
+  mctx.filter = 'blur(18px)';
+  mctx.drawImage(maskCanvas, 0, 0);
+  mctx.filter = 'none';
+
+  // Threshold: anything above 50% brightness becomes the mask
+  const maskData = mctx.getImageData(0, 0, W, H);
+  for (let i = 0; i < maskData.data.length; i += 4) {
+    const v = maskData.data[i] > 100 ? 255 : 0;
+    maskData.data[i] = maskData.data[i + 1] = maskData.data[i + 2] = v;
+  }
+  mctx.putImageData(maskData, 0, 0);
+
+  // Blur again for final smooth contour
+  mctx.filter = 'blur(6px)';
+  mctx.drawImage(maskCanvas, 0, 0);
+  mctx.filter = 'none';
+
+  // Draw the mask onto main canvas as a semi-transparent dark overlay
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  ctx.drawImage(maskCanvas, 0, 0);
+  ctx.globalAlpha = 1.0;
+  ctx.restore();
+
+  // Draw smooth contour line around the mask
+  // Use edge detection on the mask to find the outline
+  const edgeCanvas = document.createElement('canvas');
+  edgeCanvas.width = W; edgeCanvas.height = H;
+  const ectx = edgeCanvas.getContext('2d');
+  const finalMask = mctx.getImageData(0, 0, W, H);
+  const edgeData = ectx.createImageData(W, H);
+  for (let y = 1; y < H - 1; y++) {
+    for (let x = 1; x < W - 1; x++) {
+      const idx = (y * W + x) * 4;
+      const c = finalMask.data[idx];
+      const l = finalMask.data[idx - 4];
+      const r = finalMask.data[idx + 4];
+      const u = finalMask.data[(idx - W * 4)];
+      const d = finalMask.data[(idx + W * 4)];
+      if (c > 128 && (l < 128 || r < 128 || u < 128 || d < 128)) {
+        edgeData.data[idx] = 140; edgeData.data[idx + 1] = 120;
+        edgeData.data[idx + 2] = 60; edgeData.data[idx + 3] = 200;
+      }
+    }
+  }
+  ectx.putImageData(edgeData, 0, 0);
+  // Soften the edge line
+  ectx.filter = 'blur(1.5px)';
+  ectx.drawImage(edgeCanvas, 0, 0);
+  ectx.filter = 'none';
+  ctx.drawImage(edgeCanvas, 0, 0);
+
+  // ── 3. HORIZON LINE ──
   const horizPx = state.horizonY / 100 * H;
-  if (state.horizonY >= -10 && state.horizonY <= 110) {
-    ctx.strokeStyle = 'rgba(255,200,50,0.6)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([12, 6]);
+  if (state.horizonY >= -5 && state.horizonY <= 105) {
+    ctx.strokeStyle = 'rgba(255,200,50,0.35)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([8, 4]);
     ctx.beginPath(); ctx.moveTo(0, horizPx); ctx.lineTo(W, horizPx); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(255,200,50,0.7)';
-    ctx.font = '14px Georgia';
-    ctx.fillText('HORIZON ' + state.horizonY.toFixed(0) + '%', W - 180, horizPx - 8);
-  }
-
-  // Draw each component as a composition zone
-  const dynamicComps = state.components.filter(c => c.visible && c.coverType === 'dynamic');
-  const opaqueComps = state.components.filter(c => c.visible && c.coverType === 'opaque');
-  const transComps = state.components.filter(c => c.visible && c.coverType === 'translucent');
-
-  // First pass: mark "flat ground needed" areas (dynamic zones — where cards land)
-  dynamicComps.forEach(c => {
-    const x = c.x / 100 * W, y = c.y / 100 * H;
-    const w = c.w / 100 * W, h = c.h / 100 * H;
-    // Green fill = flat ground needed
-    ctx.fillStyle = 'rgba(80,200,80,0.15)';
-    ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = 'rgba(80,200,80,0.6)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, w, h);
-    // Label
-    ctx.fillStyle = 'rgba(80,200,80,0.8)';
-    ctx.font = 'bold 13px Georgia';
-    ctx.fillText(c.label + ' — FLAT GROUND', x + 8, y + 18);
+    ctx.fillStyle = 'rgba(255,200,50,0.45)';
     ctx.font = '11px Georgia';
-    ctx.fillStyle = 'rgba(80,200,80,0.5)';
-    ctx.fillText('Cards land here. Needs level terrain.', x + 8, y + 34);
-  });
-
-  // Opaque zones — "UI covers this area"
-  opaqueComps.forEach(c => {
-    const x = c.x / 100 * W, y = c.y / 100 * H;
-    const w = c.w / 100 * W, h = c.h / 100 * H;
-    ctx.fillStyle = 'rgba(100,100,255,0.12)';
-    ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = 'rgba(100,100,255,0.4)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(x, y, w, h);
-    ctx.fillStyle = 'rgba(100,100,255,0.5)';
-    ctx.font = '10px Georgia';
-    ctx.fillText(c.label + ' (UI)', x + 4, y + 14);
-  });
-
-  // Translucent zones — landscape shows through
-  transComps.forEach(c => {
-    const x = c.x / 100 * W, y = c.y / 100 * H;
-    const w = c.w / 100 * W, h = c.h / 100 * H;
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
-    ctx.strokeRect(x, y, w, h);
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    ctx.font = '10px Georgia';
-    ctx.fillText(c.label + ' (see-through)', x + 4, y + 14);
-  });
-
-  // Paint ALL areas not covered by dynamic/opaque zones as "open landscape" in gold
-  // Create a mask: start with full canvas, subtract zone rectangles
-  const coveredRects = state.components.filter(c => c.visible && (c.coverType === 'dynamic' || c.coverType === 'opaque'))
-    .map(c => ({ x: c.x / 100 * W, y: c.y / 100 * H, w: c.w / 100 * W, h: c.h / 100 * H }));
-
-  // Draw a faint gold wash over the entire board first
-  ctx.fillStyle = 'rgba(255,160,40,0.06)';
-  ctx.fillRect(0, 0, W, H);
-  // Then cut out the zones (draw dark over them to erase the gold wash)
-  ctx.fillStyle = '#1a1a1a';
-  coveredRects.forEach(r => ctx.fillRect(r.x, r.y, r.w, r.h));
-
-  // Add "open landscape" labels in the largest gaps
-  ctx.fillStyle = 'rgba(255,160,40,0.8)';
-  ctx.font = 'bold 18px Georgia';
-  // Try center of board
-  const centerX = W * 0.5, centerY = H * 0.42;
-  let centerClear = true;
-  for (const r of coveredRects) {
-    if (centerX > r.x && centerX < r.x + r.w && centerY > r.y && centerY < r.y + r.h) { centerClear = false; break; }
-  }
-  if (centerClear) {
-    // Dark backing for readability
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(centerX - 200, centerY - 20, 400, 50);
-    ctx.fillStyle = 'rgba(255,160,40,0.9)';
-    ctx.font = 'bold 18px Georgia';
-    ctx.fillText('OPEN LANDSCAPE — DRAMATIC TERRAIN OK', centerX - 190, centerY + 2);
-    ctx.font = '12px Georgia';
-    ctx.fillStyle = 'rgba(255,160,40,0.6)';
-    ctx.fillText('Cliffs, water, ruins, trees — anything visually interesting', centerX - 172, centerY + 22);
+    ctx.fillText('horizon', W - 80, horizPx - 5);
   }
 
-  // Camera info box — bottom left
-  const zoom = state.boardZoom || 1.0;
-  const tilt = state.boardTiltX || 0;
-  ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.fillRect(20, H - 120, 400, 100);
-  ctx.strokeStyle = 'rgba(255,200,50,0.4)';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(20, H - 120, 400, 100);
-  ctx.fillStyle = 'rgba(255,200,50,0.85)';
-  ctx.font = 'bold 13px Georgia';
-  ctx.fillText('CAMERA SPEC', 34, H - 98);
-  ctx.font = '12px Georgia';
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  const layoutName = state.loadedLayoutName || 'custom';
-  ctx.fillText('Layout: ' + layoutName, 34, H - 78);
-  ctx.fillText('Horizon: ' + state.horizonY.toFixed(0) + '%   Tilt: ' + tilt + '\u00B0   Zoom: ' + zoom.toFixed(2) + '\u00D7', 34, H - 58);
-  const feel = tilt < 10 ? 'Low angle — vast, open, cinematic' :
-               tilt < 20 ? 'Medium angle — balanced, natural' :
-               tilt < 30 ? 'High angle — enclosed, pressing' : 'Overhead — claustrophobic, map-like';
-  ctx.fillText('Feel: ' + feel, 34, H - 38);
+  // ── 4. STAMP POSITIONS — from fellowship-zone and shadow-zone components ──
+  // Stamps are the standee positions — small circles showing where flat ground is needed.
+  // FP stamps = gold, SH stamps = purple.
+  const fpComps = state.components.filter(c => c.type === 'fellowship-zone' && c.visible);
+  const shComps = state.components.filter(c => c.type === 'shadow-zone' && c.visible);
 
-  // Legend — top right
-  ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.fillRect(W - 280, 10, 260, 90);
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-  ctx.strokeRect(W - 280, 10, 260, 90);
-  ctx.font = 'bold 11px Georgia';
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  ctx.fillText('COMPOSITION GUIDE', W - 268, 30);
-  ctx.font = '11px Georgia';
-  ctx.fillStyle = 'rgba(80,200,80,0.8)';
-  ctx.fillText('\u25A0 Flat ground (cards land here)', W - 268, 50);
-  ctx.fillStyle = 'rgba(100,100,255,0.6)';
-  ctx.fillText('\u25A0 UI overlay (landscape hidden)', W - 268, 66);
-  ctx.fillStyle = 'rgba(255,160,40,0.6)';
-  ctx.fillText('\u25A0 Open landscape (dramatic terrain OK)', W - 268, 82);
+  function drawStamp(ctx, xPct, yPct, color, fillColor, radius) {
+    const px = xPct / 100 * W;
+    const py = yPct / 100 * H;
+    // Soft glow
+    const grad = ctx.createRadialGradient(px, py, 0, px, py, radius * 2.5);
+    grad.addColorStop(0, fillColor);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(px, py, radius * 2.5, 0, Math.PI * 2); ctx.fill();
+    // Solid circle
+    ctx.fillStyle = fillColor;
+    ctx.beginPath(); ctx.arc(px, py, radius, 0, Math.PI * 2); ctx.fill();
+    // Border ring
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(px, py, radius, 0, Math.PI * 2); ctx.stroke();
+  }
 
-  // Export
+  const stampR = 18; // pixels — roughly standee base width at 1920px
+
+  // Draw FP stamps — gold
+  fpComps.forEach(comp => {
+    // Use the zone's center as a single stamp cluster anchor, then
+    // generate a grid of stamps within the zone bounds
+    const zx = comp.x, zy = comp.y, zw = comp.w, zh = comp.h;
+    const stampSpacing = 7; // % between stamps
+    const cols = Math.max(1, Math.floor(zw / stampSpacing));
+    const rows = Math.max(1, Math.floor(zh / stampSpacing));
+    for (let r = 0; r < rows && r < 4; r++) {
+      for (let c = 0; c < cols && c < 4; c++) {
+        // Stagger odd rows
+        const ox = (r % 2) * (stampSpacing * 0.4);
+        const sx = zx + stampSpacing * 0.5 + c * stampSpacing + ox;
+        const sy = zy + stampSpacing * 0.5 + r * stampSpacing;
+        if (sx < zx + zw && sy < zy + zh) {
+          drawStamp(ctx, sx, sy, 'rgba(220,170,40,0.7)', 'rgba(220,170,40,0.12)', stampR);
+        }
+      }
+    }
+  });
+
+  // Draw SH stamps — purple
+  shComps.forEach(comp => {
+    const zx = comp.x, zy = comp.y, zw = comp.w, zh = comp.h;
+    const stampSpacing = 7;
+    const cols = Math.max(1, Math.floor(zw / stampSpacing));
+    const rows = Math.max(1, Math.floor(zh / stampSpacing));
+    for (let r = 0; r < rows && r < 4; r++) {
+      for (let c = 0; c < cols && c < 4; c++) {
+        const ox = (r % 2) * (stampSpacing * 0.4);
+        const sx = zx + stampSpacing * 0.5 + c * stampSpacing + ox;
+        const sy = zy + stampSpacing * 0.5 + r * stampSpacing;
+        if (sx < zx + zw && sy < zy + zh) {
+          drawStamp(ctx, sx, sy, 'rgba(120,80,180,0.7)', 'rgba(120,80,180,0.12)', stampR);
+        }
+      }
+    }
+  });
+
+  // ── 5. LABELS ──
+  // "UI COVER" label on the mask area
+  ctx.fillStyle = 'rgba(140,120,60,0.5)';
+  ctx.font = '10px Georgia';
+  ctx.fillText('UI COVER — featureless fill', 40, 22);
+
+  // "FLAT SPOTS" near stamp clusters
+  if (fpComps.length > 0) {
+    const fc = fpComps[0];
+    ctx.fillStyle = 'rgba(220,170,40,0.6)';
+    ctx.font = '10px Georgia';
+    ctx.fillText('FLAT GROUND (fellowship)', fc.x / 100 * W, (fc.y + fc.h) / 100 * H + 14);
+  }
+  if (shComps.length > 0) {
+    const sc = shComps[0];
+    ctx.fillStyle = 'rgba(120,80,180,0.6)';
+    ctx.font = '10px Georgia';
+    ctx.fillText('FLAT GROUND (shadow)', sc.x / 100 * W, (sc.y + sc.h) / 100 * H + 14);
+  }
+
+  // ── 6. LEGEND ──
+  const legX = W - 280, legY = H - 100;
+  ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.beginPath(); ctx.roundRect(legX, legY, 264, 88, 6); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.roundRect(legX, legY, 264, 88, 6); ctx.stroke();
+
+  ctx.font = 'bold 10px Georgia';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('MJ COMPOSITION GUIDE', legX + 12, legY + 16);
+  ctx.font = '10px Georgia';
+
+  // Legend items
+  const items = [
+    ['rgba(140,120,60,0.6)', 'UI cover (featureless fill)'],
+    ['rgba(220,170,40,0.7)', 'Flat ground — fellowship standees'],
+    ['rgba(120,80,180,0.7)', 'Flat ground — shadow standees'],
+    ['rgba(255,255,255,0.3)', 'Open — dramatic terrain features'],
+  ];
+  items.forEach(([col, label], i) => {
+    ctx.fillStyle = col;
+    if (i === 0) {
+      ctx.fillRect(legX + 12, legY + 26 + i * 16, 10, 10);
+    } else {
+      ctx.beginPath(); ctx.arc(legX + 17, legY + 31 + i * 16, 5, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText(label, legX + 30, legY + 35 + i * 16);
+  });
+
+  // ── 7. LAYOUT NAME ──
+  ctx.fillStyle = 'rgba(186,140,30,0.6)';
+  ctx.font = 'bold 12px Georgia';
+  ctx.fillText(layoutName, 40, H - 16);
+
+  // ── EXPORT ──
   canvas.toBlob(blob => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = (layoutName || 'composition') + '-guide.png';
+    a.download = (layoutName || 'composition').replace(/[^a-zA-Z0-9_\-— ]/g, '') + '-mj-guide.png';
     a.click();
-    setStatus('Composition guide exported.');
+    setStatus('MJ composition guide exported.');
   });
 }
 
-function importJSON() {
-  const input=document.createElement('input'); input.type='file'; input.accept='.json';
-  input.onchange = e => {
-    const reader=new FileReader();
-    reader.onload = ev => {
-      try {
-        const data=JSON.parse(ev.target.result);
-        if (data.components) state.components=data.components;
-        if (data.layers) state.layers=data.layers;
-        if (data.boardRatio) state.boardRatio=data.boardRatio;
-        if (data.nextId) state.nextId=data.nextId;
-        if (data.horizonY!==undefined) state.horizonY=data.horizonY;
-        if (data.elementConfig) state.elementConfig=data.elementConfig;
-        if (data.boardTiltX!==undefined) state.boardTiltX=data.boardTiltX;
-        if (data.boardTiltY!==undefined) state.boardTiltY=data.boardTiltY;
-        if (data.perspectiveDepth!==undefined) state.perspectiveDepth=data.perspectiveDepth;
-        if (data.vanishX!==undefined) state.vanishX=data.vanishX;
-        if (data.vanishY!==undefined) state.vanishY=data.vanishY;
-        if (data.boardZoom!==undefined) state.boardZoom=data.boardZoom;
-        // Store as baseline for "Reset to Default Layout"
-        state.loadedLayoutName = data.name || e.target.files[0].name.replace('.json','');
-        state.loadedLayoutData = JSON.parse(JSON.stringify(data));
-        applyBoardTilt(); renderVanishPoint();
-        buildChecklist(); renderAll(); setStatus('Layout loaded: ' + state.loadedLayoutName);
-      } catch(err) { setStatus('Error loading JSON.'); }
+function applyLoadedData(data, name) {
+  if (data.components) state.components=data.components;
+  if (data.layers) state.layers=data.layers;
+  if (data.boardRatio) state.boardRatio=data.boardRatio;
+  if (data.nextId) state.nextId=data.nextId;
+  if (data.horizonY!==undefined) state.horizonY=data.horizonY;
+  if (data.elementConfig) state.elementConfig=data.elementConfig;
+  if (data.boardTiltX!==undefined) state.boardTiltX=data.boardTiltX;
+  if (data.boardTiltY!==undefined) state.boardTiltY=data.boardTiltY;
+  if (data.perspectiveDepth!==undefined) state.perspectiveDepth=data.perspectiveDepth;
+  if (data.vanishX!==undefined) state.vanishX=data.vanishX;
+  if (data.vanishY!==undefined) state.vanishY=data.vanishY;
+  if (data.boardZoom!==undefined) state.boardZoom=data.boardZoom;
+  state.groups = data.groups || [];
+  state.nextGroupId = data.nextGroupId || (state.groups.length ? Math.max(...state.groups.map(g=>g.id)) + 1 : 1);
+  state.loadedLayoutName = name;
+  state.loadedLayoutData = JSON.parse(JSON.stringify(data));
+  applyBoardTilt(); renderVanishPoint();
+  buildChecklist(); renderAll(); setStatus('Layout loaded: ' + state.loadedLayoutName);
+}
+
+async function importJSON() {
+  // Use File System Access API if available — gives us a handle for in-place save
+  if (window.showOpenFilePicker) {
+    try {
+      const opts = {
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+        multiple: false,
+      };
+      // Recall the last-used directory so the picker opens where you left off
+      if (state.lastDirHandle) opts.startIn = state.lastDirHandle;
+      const [handle] = await window.showOpenFilePicker(opts);
+      const file = await handle.getFile();
+      const text = await file.text();
+      const data = JSON.parse(text);
+      state.fileHandle = handle;
+      // Store the directory for next time (resolve parent is not available,
+      // so we store the file handle itself — the picker remembers the folder)
+      state.lastDirHandle = handle;
+      applyLoadedData(data, data.name || file.name.replace('.json',''));
+    } catch(err) {
+      if (err.name !== 'AbortError') setStatus('Error loading: ' + err.message);
+    }
+  } else {
+    // Fallback: classic file input
+    const input=document.createElement('input'); input.type='file'; input.accept='.json';
+    input.onchange = e => {
+      const reader=new FileReader();
+      reader.onload = ev => {
+        try {
+          const data=JSON.parse(ev.target.result);
+          state.fileHandle = null; // no handle in fallback mode
+          applyLoadedData(data, data.name || e.target.files[0].name.replace('.json',''));
+        } catch(err) { setStatus('Error loading JSON.'); }
+      };
+      reader.readAsText(e.target.files[0]);
     };
-    reader.readAsText(e.target.files[0]);
-  };
-  input.click();
+    input.click();
+  }
 }
 
 function setStatus(msg) {
@@ -2157,9 +3245,39 @@ document.addEventListener('keydown', e => {
   if ((e.metaKey||e.ctrlKey) && (e.key==='y'||(e.key==='z'&&e.shiftKey))) { e.preventDefault(); redo(); return; }
   if ((e.metaKey||e.ctrlKey) && e.key==='d') { e.preventDefault(); if(state.selectedIds.length===1)duplicateComp(state.selectedIds[0]); return; }
   if ((e.metaKey||e.ctrlKey) && e.key==='a') { e.preventDefault(); selectAll(true); return; }
+  if ((e.metaKey||e.ctrlKey) && e.key==='g' && !e.shiftKey) { e.preventDefault(); groupSelected(); return; }
+  if ((e.metaKey||e.ctrlKey) && e.key==='g' && e.shiftKey) { e.preventDefault(); ungroupSelected(); return; }
   if (inInput) return;
+  if ((e.key==='r' || e.key==='R') && !dragState) {
+    if (state.selectedIds.length >= 1) {
+      const deg = e.shiftKey ? -90 : 90;
+      state.selectedIds.forEach(id => rotateComp90(id, deg));
+    }
+    return;
+  }
   if (e.key==='Delete'||e.key==='Backspace') deleteSelected();
-  if (e.key==='Escape') { selectAll(false); hideContextMenu(); hideMasterModal(); }
+  if (e.key==='Escape') { if (document.body.classList.contains('full-view')) { exitFullView(); return; } selectAll(false); hideContextMenu(); hideMasterModal(); }
+  // Tab = cycle through overlapping items at the selected item's position
+  if (e.key==='Tab') {
+    e.preventDefault();
+    if (state.selectedIds.length === 1) {
+      const cur = state.components.find(c => c.id === state.selectedIds[0]);
+      if (cur) {
+        // Find all components that overlap with the current selection's center
+        const cx = cur.x + cur.w / 2;
+        const cy = cur.y + cur.h / 2;
+        const overlapping = state.components.filter(c =>
+          c.visible && cx >= c.x && cx <= c.x + c.w && cy >= c.y && cy <= c.y + c.h
+        );
+        if (overlapping.length > 1) {
+          const idx = overlapping.findIndex(c => c.id === cur.id);
+          const next = overlapping[(idx + 1) % overlapping.length];
+          state.selectedIds = [next.id];
+          renderAll();
+        }
+      }
+    }
+  }
   if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) {
     e.preventDefault();
     const d = e.shiftKey ? 0.5 : 0.1;
@@ -2183,6 +3301,8 @@ function loadDefault() {
   if (state.loadedLayoutData) {
     const data = state.loadedLayoutData;
     state.components = JSON.parse(JSON.stringify(data.components || []));
+    state.groups = JSON.parse(JSON.stringify(data.groups || []));
+    state.nextGroupId = data.nextGroupId || (state.groups.length ? Math.max(...state.groups.map(g=>g.id)) + 1 : 1);
     state.selectedIds = [];
     if (data.nextId) state.nextId = data.nextId;
     if (data.horizonY !== undefined) state.horizonY = data.horizonY;
@@ -2197,13 +3317,16 @@ function loadDefault() {
     return;
   }
   // Otherwise use hardcoded default
-  state.components=[]; state.selectedIds=[]; state.nextId=1;
-  const defaults = ['baradur','phase-tracker','shadow-zone','opp-hand','opp-piles','ring-spinner',
-    'twilight-pool','adventure-path','fellowship-zone','your-piles','hand-fan','pass-btn','action-log','left-dock','right-dock'];
+  state.components=[]; state.selectedIds=[]; state.nextId=1; state.groups=[]; state.nextGroupId=1;
+  const defaults = ['baradur','phase-jewel','shadow-zone','opp-hand','ring-spinner',
+    'twilight-pool','adventure-hud','fellowship-zone','hand-fan','pass-btn','action-log','left-dock','right-dock',
+    'fp-draw','fp-discard','fp-dead','sh-draw','sh-discard'];
   const overrides = {
     'hand-fan':{x:52,y:55,w:48,h:45},'pass-btn':{x:45,y:94,w:10,h:5},'shadow-zone':{x:1,y:8,w:98,h:11},
     'fellowship-zone':{x:1,y:38,w:98,h:18},
-    'twilight-pool':{x:43,y:21,w:14,h:15},'adventure-path':{x:10,y:53,w:68,h:7},'baradur':{x:93,y:1,w:4,h:10},
+    'twilight-pool':{x:43,y:21,w:14,h:15},'adventure-hud':{x:7,y:1,w:10,h:5},'baradur':{x:93,y:1,w:4,h:10},
+    'fp-draw':{x:91,y:44,w:4,h:6},'fp-discard':{x:96,y:44,w:4,h:6},'fp-dead':{x:91,y:51,w:4,h:6},
+    'sh-draw':{x:91,y:9,w:4,h:6},'sh-discard':{x:96,y:9,w:4,h:6},
   };
   defaults.forEach(type => { const t=COMP_TEMPLATES.find(t=>t.type===type); if(t)addComponent({...t,...(overrides[type]||{})}); });
   state.selectedIds=[];
@@ -2219,6 +3342,23 @@ initHorizonDrag();
 resizeBoard();
 // Editor opens empty — user loads a layout or starts fresh
 window.addEventListener('resize', () => resizeBoard());
+
+// Auto-load a layout via ?load=<path relative to this page>.
+// Requires serving over http (fetch is blocked on file://). In-place save is
+// unavailable for auto-loaded files — Save falls back to Save As.
+(async function autoLoadFromURL() {
+  const p = new URLSearchParams(location.search).get('load');
+  if (!p) return;
+  try {
+    const res = await fetch(p);
+    if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+    const data = await res.json();
+    state.fileHandle = null;
+    applyLoadedData(data, data.name || decodeURIComponent(p.split('/').pop()).replace('.json', ''));
+  } catch (err) {
+    setStatus('Auto-load failed: ' + err.message);
+  }
+})();
 </script>
 </body>
 </html>

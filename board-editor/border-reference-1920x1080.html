@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Border Reference — 1920×1080 Pixel-Perfect</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #ccc;
+  min-height: 100vh;
+}
+
+/* ── Controls ── */
+#controls {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(0,0,0,0.92); border-bottom: 1px solid #333;
+  padding: 8px 16px; display: flex; gap: 16px; align-items: center;
+  font-size: 12px;
+}
+#controls label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+#controls button {
+  background: #222; border: 1px solid #555; color: #ccc; padding: 4px 12px;
+  border-radius: 3px; cursor: pointer; font-size: 11px;
+}
+#controls button:hover { background: #333; }
+#controls .sep { width: 1px; height: 20px; background: #444; }
+#controls select { background: #222; border: 1px solid #555; color: #ccc; padding: 2px 6px; font-size: 11px; }
+
+/* ── Board ── */
+#board-wrap {
+  margin-top: 50px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#board {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ── Pieces ── */
+.piece {
+  position: absolute;
+  pointer-events: none;
+}
+.piece-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Clip-path shapes */
+.shape-corner-tl .piece-fill { clip-path: url(#corner-tl); }
+.shape-corner-tr .piece-fill { clip-path: url(#corner-tr); }
+.shape-corner-bl .piece-fill { clip-path: url(#corner-bl); }
+.shape-corner-br .piece-fill { clip-path: url(#corner-br); }
+.shape-quarter-bl .piece-fill { border-radius: 0 0 0 100%; }
+.shape-quarter-br .piece-fill { border-radius: 0 0 100% 0; }
+.shape-circle .piece-fill { border-radius: 50%; }
+
+/* ── Labels ── */
+.piece-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  line-height: 1.4;
+  pointer-events: none;
+  z-index: 50;
+  text-shadow: 0 0 3px rgba(0,0,0,0.9);
+}
+.piece-label .name { font-weight: 600; font-size: 10px; }
+.piece-label .dims { font-size: 8px; color: rgba(255,200,80,0.8); }
+.piece-label .bounds { font-size: 7px; color: rgba(150,200,255,0.6); }
+body.hide-labels .piece-label { display: none; }
+
+/* ── Dimension lines ── */
+.dim-line {
+  position: absolute;
+  pointer-events: none;
+  z-index: 40;
+}
+body.hide-dims .dim-line { display: none; }
+
+/* ── Highlight modes ── */
+.piece.highlight-border { outline: 2px solid rgba(0,255,255,0.7); outline-offset: -1px; z-index: 30; }
+.piece.highlight-inset { outline: 2px dashed rgba(255,100,100,0.7); outline-offset: -1px; z-index: 30; }
+
+/* ── Group colors ── */
+.group-l-border .piece-fill { background: rgba(12,10,8,0.95); }
+.group-narsil .piece-fill { background: rgba(14,12,10,0.95); }
+.group-portrait .piece-fill { background: rgba(12,10,8,0.95); }
+.inset-area .piece-fill { background: rgba(20,60,100,0.5); border: 1px dashed rgba(100,180,255,0.4); }
+
+/* ── Export mode (clean) ── */
+body.export-mode #controls { display: none; }
+body.export-mode #board { background: transparent; }
+body.export-mode .piece-label { display: none; }
+body.export-mode .dim-line { display: none; }
+body.export-mode .inset-area .piece-fill {
+  background: transparent;
+  border: none;
+}
+
+/* ── Landscape placeholder ── */
+.landscape-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #0a0f18 0%, #0d1520 30%, #0e1822 60%, #0a1218 100%);
+  z-index: 0;
+}
+body.export-mode .landscape-bg { background: #000; }
+body.mask-mode .landscape-bg { background: #000; }
+body.mask-mode .group-l-border .piece-fill,
+body.mask-mode .group-narsil .piece-fill,
+body.mask-mode .group-portrait .piece-fill { background: #fff; }
+body.mask-mode .inset-area .piece-fill { background: #000; border: none; }
+body.mask-mode .piece-label { display: none; }
+body.mask-mode #controls { display: none; }
+
+/* Zoom */
+body.zoom-fit #board-wrap { transform: scale(var(--fit-scale)); transform-origin: top center; }
+</style>
+</head>
+<body>
+
+<!-- SVG clip-path definitions -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs id="clip-defs"></defs>
+</svg>
+
+<div id="controls">
+  <span style="color:#ba8c1e;font-weight:600;letter-spacing:1px">BORDER REFERENCE 1920×1080</span>
+  <div class="sep"></div>
+  <label><input type="checkbox" id="chk-labels" checked onchange="document.body.classList.toggle('hide-labels',!this.checked)"> Labels</label>
+  <label><input type="checkbox" id="chk-dims" checked onchange="document.body.classList.toggle('hide-dims',!this.checked)"> Dims</label>
+  <label><input type="checkbox" id="chk-insets" checked onchange="toggleInsets(this.checked)"> Show Insets</label>
+  <div class="sep"></div>
+  <select id="sel-highlight" onchange="highlightGroup(this.value)">
+    <option value="all">All Groups</option>
+    <option value="l-border">L-Border Frame Only</option>
+    <option value="narsil">Narsil Shelf Only</option>
+    <option value="portrait">Portrait Bracket Only</option>
+  </select>
+  <div class="sep"></div>
+  <button onclick="setMode('normal')">Normal</button>
+  <button onclick="setMode('mask')">Mask (B&W)</button>
+  <button onclick="setMode('export')">Clean Export</button>
+  <div class="sep"></div>
+  <label><input type="checkbox" id="chk-fit" onchange="toggleFit(this.checked)"> Fit to Window</label>
+  <span id="zoom-label" style="font-size:10px;color:#666"></span>
+</div>
+
+<div id="board-wrap">
+  <div id="board">
+    <div class="landscape-bg"></div>
+    <!-- Pieces injected by JS -->
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// LAYOUT DATA (from open-field.json, consistent across all layouts)
+// ═══════════════════════════════════════════════════════════════
+
+const BOARD_W = 1920;
+const BOARD_H = 1080;
+
+// Convert percentage → pixels
+function px(pct, total) { return pct / 100 * total; }
+
+// All frame-layer components with their exact positions
+const COMPONENTS = [
+  // ── L-BORDER STRUCTURAL PIECES ──
+  { id:28, type:'border-spine',             label:'Left Spine',           group:'l-border', role:'structure', x:0,     y:0,     w:3,     h:100,    shape:null },
+  { id:20, type:'border-top-shelf',         label:'Top Shelf',            group:'l-border', role:'structure', x:2.7,   y:0,     w:22,    h:9,      shape:null },
+  { id:23, type:'border-upper-bracket',     label:'Upper Bracket',        group:'l-border', role:'structure', x:3,     y:9,     w:14.75, h:25.7,   shape:'corner-tl' },
+  { id:27, type:'border-lower-bracket',     label:'Lower Bracket',        group:'l-border', role:'structure', x:3,     y:65,    w:15.78, h:26,     shape:'corner-bl' },
+  { id:37, type:'border-bottom-shelf-left', label:'Bottom Shelf Left',    group:'l-border', role:'structure', x:15.25, y:82.33, w:11.55, h:9.13,   shape:'corner-br' },
+  { id:21, type:'border-bottom-shelf-mid',  label:'Bottom Shelf Mid',     group:'l-border', role:'structure', x:26.8,  y:82.33, w:11.81, h:8.67,   shape:null },
+  { id:26, type:'border-bottom-strip',      label:'Bottom Strip',         group:'l-border', role:'structure', x:2.7,   y:91,    w:36,    h:9,      shape:null },
+  { id:40, type:'border-horn-bracket',      label:'Horn Bracket',         group:'l-border', role:'structure', x:38.6,  y:91,    w:11.06, h:9,      shape:null },
+
+  // ── L-BORDER INSET ELEMENTS (cutout areas) ──
+  { id:3,  type:'twilight-pool',   label:'Twilight Pool\n(Mirror of Galadriel)', group:'l-border', role:'inset', x:1.5,   y:1.5,   w:6.69,  h:12.55,  shape:null },
+  { id:2,  type:'adventure-hud',   label:'Adventure HUD\n(Map/Compass)',         group:'l-border', role:'inset', x:9.69,  y:1.5,   w:5.21,  h:8.57,   shape:null },
+  { id:1,  type:'phase-jewel',     label:'Phase Jewel\n(7 Phase Circle)',        group:'l-border', role:'inset', x:16.4,  y:1.5,   w:7.05,  h:12.32,  shape:'circle' },
+  { id:39, type:'doors-of-durin',  label:'Doors of Durin\n(Game Log)',           group:'l-border', role:'inset', x:1.5,   y:85,    w:4.79,  h:10.68,  shape:null },
+  { id:8,  type:'palantir',        label:'Palantír\n(Pile Browser)',             group:'l-border', role:'inset', x:10,    y:76,    w:12.2,  h:21,     shape:'circle' },
+  { id:9,  type:'draw-deck',       label:'Red Book\n(Draw Deck)',               group:'l-border', role:'inset', x:28.5,  y:85,    w:8.33,  h:12,     shape:null },
+  { id:41, type:'horn-of-gondor',  label:'Horn of Gondor\n(Pass/Done)',          group:'l-border', role:'inset', x:40.48, y:93,    w:7.3,   h:5,      shape:null },
+
+  // ── NARSIL SHELF ──
+  { id:42, type:'border-narsil-left-cap',  label:'Narsil Left Cap',   group:'narsil', role:'structure', x:34.87, y:0,  w:4,    h:7.8,  shape:'quarter-bl' },
+  { id:22, type:'border-narsil-shelf',     label:'Narsil Shelf',      group:'narsil', role:'structure', x:38.87, y:0,  w:36.3, h:7.8,  shape:null },
+  { id:43, type:'border-narsil-right-cap', label:'Narsil Right Cap',  group:'narsil', role:'structure', x:75.17, y:0,  w:3.75, h:7.8,  shape:'quarter-br' },
+  { id:25, type:'narsil-shards',           label:'Narsil Shards\n(Decorative)',  group:'narsil', role:'inset', x:37, y:1.5, w:38, h:5, shape:null },
+
+  // ── PORTRAIT BRACKET ──
+  { id:44, type:'border-1',     label:'Portrait Bracket', group:'portrait', role:'structure', x:93.64846870838882, y:34.7, w:6.351531291611181, h:22.013931085263717, shape:null },
+  { id:45, type:'custom',       label:'Portrait Frame 1', group:'portrait', role:'inset', x:94.51398135818907, y:36.7036853449421, w:4.620505992010651, h:7.8056470615950815, shape:null },
+  { id:46, type:'custom',       label:'Portrait Frame 2', group:'portrait', role:'inset', x:94.51398135818907, y:47.112882702395176, w:4.620505992010651, h:7.8056470615950815, shape:null },
+];
+
+// Also: opponent hand count (floating, no border backing)
+const OPP_HAND = { id:5, type:'opp-hand-count', label:'Opponent Hand\n(Floating)', group:'floating', role:'inset', x:95.35, y:1, w:4, h:6, shape:null };
+
+// ═══════════════════════════════════════════════════════════════
+// GENERATE CLIP PATHS (identical algorithm to board editor v4)
+// ═══════════════════════════════════════════════════════════════
+
+(function generateClipPaths() {
+  const defs = document.getElementById('clip-defs');
+  const N = 40;
+
+  const cornerBrackets = {
+    tl: { corner: [0,0], edge1: [1,0], edge2: [0,1], arcCx: 1, arcCy: 1, startDeg: 270, endDeg: 180 },
+    tr: { corner: [1,0], edge1: [1,1], edge2: [0,0], arcCx: 0, arcCy: 1, startDeg: 0,   endDeg: -90 },
+    bl: { corner: [0,1], edge1: [0,0], edge2: [1,1], arcCx: 1, arcCy: 0, startDeg: 180, endDeg: 90 },
+    br: { corner: [1,1], edge1: [0,1], edge2: [1,0], arcCx: 0, arcCy: 0, startDeg: 90,  endDeg: 0 },
+  };
+
+  for (const [id, cfg] of Object.entries(cornerBrackets)) {
+    const arcPts = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const deg = cfg.startDeg + t * (cfg.endDeg - cfg.startDeg);
+      const rad = deg * Math.PI / 180;
+      arcPts.push({ x: cfg.arcCx + Math.cos(rad), y: cfg.arcCy + Math.sin(rad) });
+    }
+    let d = `M ${cfg.corner[0]} ${cfg.corner[1]}`;
+    d += ` L ${cfg.edge1[0]} ${cfg.edge1[1]}`;
+    for (let i = 0; i <= N; i++) d += ` L ${arcPts[i].x.toFixed(4)} ${arcPts[i].y.toFixed(4)}`;
+    d += ' Z';
+
+    const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+    clipPath.setAttribute('id', `corner-${id}`);
+    clipPath.setAttribute('clipPathUnits', 'objectBoundingBox');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    clipPath.appendChild(path);
+    defs.appendChild(clipPath);
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER PIECES
+// ═══════════════════════════════════════════════════════════════
+
+const board = document.getElementById('board');
+
+function renderPiece(c) {
+  const xPx = Math.round(px(c.x, BOARD_W));
+  const yPx = Math.round(px(c.y, BOARD_H));
+  const wPx = Math.round(px(c.w, BOARD_W));
+  const hPx = Math.round(px(c.h, BOARD_H));
+
+  const el = document.createElement('div');
+  el.className = `piece group-${c.group} ${c.role === 'inset' ? 'inset-area' : ''}`;
+  if (c.shape) el.classList.add(`shape-${c.shape}`);
+  el.dataset.group = c.group;
+  el.dataset.role = c.role;
+  el.style.cssText = `left:${xPx}px; top:${yPx}px; width:${wPx}px; height:${hPx}px; z-index:${c.role === 'inset' ? 15 : 5};`;
+
+  const fill = document.createElement('div');
+  fill.className = 'piece-fill';
+  el.appendChild(fill);
+
+  const label = document.createElement('div');
+  label.className = 'piece-label';
+  label.innerHTML = `
+    <span class="name">${c.label.replace(/\n/g,'<br>')}</span>
+    <span class="dims">${wPx}×${hPx}px</span>
+    <span class="bounds">(${xPx},${yPx}) → (${xPx+wPx},${yPx+hPx})</span>
+  `;
+  el.appendChild(label);
+
+  board.appendChild(el);
+  return el;
+}
+
+// Render all pieces
+COMPONENTS.forEach(renderPiece);
+renderPiece(OPP_HAND);
+
+// ═══════════════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════════════
+
+function toggleInsets(show) {
+  document.querySelectorAll('.inset-area').forEach(el => {
+    el.style.display = show ? '' : 'none';
+  });
+}
+
+function highlightGroup(val) {
+  document.querySelectorAll('.piece').forEach(el => {
+    if (val === 'all') {
+      el.style.opacity = '';
+    } else {
+      el.style.opacity = el.dataset.group === val ? '1' : '0.15';
+    }
+  });
+}
+
+function setMode(mode) {
+  document.body.classList.remove('export-mode', 'mask-mode');
+  if (mode === 'mask') document.body.classList.add('mask-mode');
+  if (mode === 'export') document.body.classList.add('export-mode');
+}
+
+function toggleFit(fit) {
+  if (fit) {
+    const scale = Math.min(window.innerWidth / 1920, (window.innerHeight - 50) / 1080);
+    document.body.style.setProperty('--fit-scale', scale);
+    document.body.classList.add('zoom-fit');
+    document.getElementById('zoom-label').textContent = `(${Math.round(scale*100)}%)`;
+  } else {
+    document.body.classList.remove('zoom-fit');
+    document.getElementById('zoom-label').textContent = '';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONSOLE OUTPUT — FULL SPEC DUMP
+// ═══════════════════════════════════════════════════════════════
+
+console.log('=== BORDER REFERENCE — PIXEL SPECS ===\n');
+
+const groups = { 'l-border': 'L-BORDER FRAME', 'narsil': 'NARSIL SHELF', 'portrait': 'PORTRAIT BRACKET' };
+for (const [gid, gname] of Object.entries(groups)) {
+  console.log(`\n── ${gname} ──`);
+  const members = COMPONENTS.filter(c => c.group === gid);
+  const structures = members.filter(c => c.role === 'structure');
+  const insets = members.filter(c => c.role === 'inset');
+
+  console.log('  STRUCTURAL PIECES:');
+  structures.forEach(c => {
+    const xP = Math.round(px(c.x,BOARD_W)), yP = Math.round(px(c.y,BOARD_H));
+    const wP = Math.round(px(c.w,BOARD_W)), hP = Math.round(px(c.h,BOARD_H));
+    console.log(`    ${c.label}: ${wP}×${hP}px at (${xP},${yP})${c.shape ? ' shape='+c.shape : ''}`);
+  });
+
+  if (insets.length) {
+    console.log('  INSET CUTOUTS:');
+    insets.forEach(c => {
+      const xP = Math.round(px(c.x,BOARD_W)), yP = Math.round(px(c.y,BOARD_H));
+      const wP = Math.round(px(c.w,BOARD_W)), hP = Math.round(px(c.h,BOARD_H));
+      console.log(`    ${c.label.replace(/\n/,' ')}: ${wP}×${hP}px at (${xP},${yP})${c.shape ? ' shape='+c.shape : ''}`);
+    });
+  }
+}
+</script>
+</body>
+</html>

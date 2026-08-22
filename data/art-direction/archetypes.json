@@ -1,0 +1,370 @@
+{
+  "system": "stamps",
+  "description": "Each archetype defines organic stamp positions instead of monolithic zones. Stamps are individual standee-sized spots where cards can be placed. MJ fills the space BETWEEN stamps with interesting landscape features.",
+  "stampSize": {
+    "description": "Each stamp represents one standee position — a small flat spot on the terrain.",
+    "widthPct": 5.0,
+    "heightPct": 4.0,
+    "note": "At 1920x1080: ~96x43px base footprint. Card art rises above this."
+  },
+  "archetypes": [
+    {
+      "id": "open-field",
+      "name": "Open Field",
+      "number": 1,
+      "terrainCategories": ["Plains/Grassland", "Battlefield", "Pastoral/Farmland"],
+      "cardCount": 43,
+      "camera": { "tiltX": [8, 10], "horizonY": [18, 28], "zoom": [0.92, 1.0] },
+      "narrative": "Two forces facing across an open plain. Wind in the grass. The Pelennor feeling.",
+      "filmReferences": ["Rohirrim charge at Pelennor", "Rohan plains ride", "Shire green hills"],
+      "groundPlane": "Grassland, trampled earth, or scorched battlefield. Flat stamp spots among tall grass, scattered rocks, wheel ruts.",
+      "dramaticFeatures": ["Distant mountains on horizon", "Siege towers at edges", "Windswept grass between stamps", "Scattered weapons/banners"],
+      "stamps": {
+        "fellowship": [
+          { "x": 8,  "y": 38, "note": "front-left" },
+          { "x": 14, "y": 35, "note": "front" },
+          { "x": 20, "y": 38, "note": "front-right" },
+          { "x": 10, "y": 46, "note": "mid-left" },
+          { "x": 17, "y": 44, "note": "mid-center" },
+          { "x": 24, "y": 46, "note": "mid-right" },
+          { "x": 8,  "y": 54, "note": "back-left" },
+          { "x": 15, "y": 52, "note": "back-center" },
+          { "x": 22, "y": 55, "note": "back-right" },
+          { "x": 12, "y": 60, "note": "reserve-left" },
+          { "x": 19, "y": 62, "note": "reserve-right" }
+        ],
+        "shadow": [
+          { "x": 55, "y": 22, "note": "front-left" },
+          { "x": 63, "y": 20, "note": "front" },
+          { "x": 71, "y": 22, "note": "front-right" },
+          { "x": 80, "y": 24, "note": "far-right flank" },
+          { "x": 52, "y": 30, "note": "mid-left" },
+          { "x": 60, "y": 28, "note": "mid" },
+          { "x": 68, "y": 30, "note": "mid-right" },
+          { "x": 76, "y": 32, "note": "wide-right" },
+          { "x": 56, "y": 38, "note": "back-left" },
+          { "x": 64, "y": 36, "note": "back" },
+          { "x": 72, "y": 38, "note": "back-right" },
+          { "x": 58, "y": 50, "note": "flanking south" },
+          { "x": 66, "y": 52, "note": "flanking south-right" }
+        ]
+      }
+    },
+    {
+      "id": "city",
+      "name": "City / Urban",
+      "number": 2,
+      "terrainCategories": ["City/Urban", "Village/Dwelling"],
+      "cardCount": 45,
+      "camera": { "tiltX": [10, 14], "horizonY": [30, 40], "zoom": [0.95, 1.0] },
+      "narrative": "Street combat, courtyard defense. Architecture channels movement.",
+      "filmReferences": ["Bree rain-slicked streets", "Edoras steps to Meduseld", "Minas Tirith white tiers"],
+      "groundPlane": "Cobblestones, flagstones, steps. Flat stamp spots on paved ground between architectural features.",
+      "dramaticFeatures": ["Archways and columns between stamps", "Tiered city levels", "Torch/lantern light", "Market debris, carts"],
+      "stamps": {
+        "fellowship": [
+          { "x": 18, "y": 50, "note": "courtyard-left" },
+          { "x": 26, "y": 48, "note": "courtyard-center" },
+          { "x": 34, "y": 50, "note": "courtyard-right" },
+          { "x": 42, "y": 52, "note": "courtyard-far-right" },
+          { "x": 20, "y": 58, "note": "steps-left" },
+          { "x": 28, "y": 56, "note": "steps-center" },
+          { "x": 36, "y": 58, "note": "steps-right" },
+          { "x": 22, "y": 66, "note": "rear-left" },
+          { "x": 30, "y": 64, "note": "rear-center" },
+          { "x": 38, "y": 66, "note": "rear-right" },
+          { "x": 25, "y": 72, "note": "reserve" }
+        ],
+        "shadow": [
+          { "x": 22, "y": 12, "note": "street-far-left" },
+          { "x": 30, "y": 10, "note": "street-center-left" },
+          { "x": 38, "y": 12, "note": "street-center" },
+          { "x": 46, "y": 10, "note": "street-center-right" },
+          { "x": 54, "y": 12, "note": "street-far-right" },
+          { "x": 25, "y": 20, "note": "alley-left" },
+          { "x": 33, "y": 18, "note": "mid-left" },
+          { "x": 41, "y": 20, "note": "mid-center" },
+          { "x": 49, "y": 18, "note": "mid-right" },
+          { "x": 28, "y": 28, "note": "approach-left" },
+          { "x": 36, "y": 26, "note": "approach-center" },
+          { "x": 44, "y": 28, "note": "approach-right" }
+        ]
+      }
+    },
+    {
+      "id": "underground",
+      "name": "Underground / Cavern",
+      "number": 3,
+      "terrainCategories": ["Underground/Cavern"],
+      "cardCount": 19,
+      "camera": { "tiltX": [10, 14], "horizonY": [50, 65], "zoom": [1.0, 1.1] },
+      "narrative": "Torchlight pools in darkness. A chasm between two groups. Echoing halls.",
+      "filmReferences": ["Dwarrowdelf pillared hall", "Bridge of Khazad-dum", "Balin's Tomb", "Paths of the Dead"],
+      "groundPlane": "Carved stone, natural cave rock, bridge surface. Flat stamp spots are islands of light in darkness.",
+      "dramaticFeatures": ["Massive pillars between stamps", "Chasm/void in the gap", "Shaft of light from above", "Stalactites, mine carts, runes"],
+      "stamps": {
+        "fellowship": [
+          { "x": 10, "y": 50, "note": "torch-pool-left" },
+          { "x": 18, "y": 48, "note": "torch-pool-center" },
+          { "x": 14, "y": 56, "note": "behind-pillar" },
+          { "x": 22, "y": 54, "note": "mid-right" },
+          { "x": 8,  "y": 62, "note": "rear-left" },
+          { "x": 16, "y": 60, "note": "rear-center" },
+          { "x": 24, "y": 62, "note": "rear-right" },
+          { "x": 12, "y": 68, "note": "deep-reserve" },
+          { "x": 20, "y": 70, "note": "deep-reserve-right" }
+        ],
+        "shadow": [
+          { "x": 55, "y": 14, "note": "emerging-left" },
+          { "x": 63, "y": 12, "note": "emerging-center" },
+          { "x": 71, "y": 14, "note": "emerging-right" },
+          { "x": 58, "y": 22, "note": "mid-left" },
+          { "x": 66, "y": 20, "note": "mid-center" },
+          { "x": 74, "y": 22, "note": "mid-right" },
+          { "x": 60, "y": 30, "note": "advance-left" },
+          { "x": 68, "y": 28, "note": "advance-center" },
+          { "x": 76, "y": 30, "note": "advance-right" },
+          { "x": 64, "y": 36, "note": "vanguard" }
+        ]
+      }
+    },
+    {
+      "id": "forest",
+      "name": "Forest",
+      "number": 4,
+      "terrainCategories": ["Forest"],
+      "cardCount": 15,
+      "camera": { "tiltX": [10, 14], "horizonY": [45, 55], "zoom": [1.0, 1.05] },
+      "narrative": "Surrounded. Shadow flanks from both sides through the trees. Classic ambush.",
+      "filmReferences": ["Fangorn deep green", "Trollshaw stone trolls", "Ithilien overgrown ruins"],
+      "groundPlane": "Forest floor — roots, moss, leaf litter. Flat clearings at stamp spots. Massive trunks between.",
+      "dramaticFeatures": ["Tree trunks framing stamps", "Dappled light shafts", "Overgrown ruins", "Ground mist between positions"],
+      "stamps": {
+        "fellowship": [
+          { "x": 30, "y": 34, "note": "clearing-front-left" },
+          { "x": 38, "y": 32, "note": "clearing-front-center" },
+          { "x": 46, "y": 34, "note": "clearing-front-right" },
+          { "x": 28, "y": 42, "note": "clearing-mid-left" },
+          { "x": 36, "y": 40, "note": "clearing-mid" },
+          { "x": 44, "y": 42, "note": "clearing-mid-right" },
+          { "x": 32, "y": 50, "note": "clearing-rear-left" },
+          { "x": 40, "y": 48, "note": "clearing-rear" },
+          { "x": 48, "y": 50, "note": "clearing-rear-right" },
+          { "x": 36, "y": 56, "note": "deep-reserve" }
+        ],
+        "shadow": [
+          { "x": 5,  "y": 15, "note": "treeline-far-left" },
+          { "x": 12, "y": 20, "note": "treeline-left" },
+          { "x": 8,  "y": 30, "note": "flank-left-advance" },
+          { "x": 15, "y": 35, "note": "flank-left-close" },
+          { "x": 6,  "y": 45, "note": "flank-left-deep" },
+          { "x": 65, "y": 50, "note": "treeline-far-right" },
+          { "x": 72, "y": 45, "note": "treeline-right" },
+          { "x": 68, "y": 58, "note": "flank-right-advance" },
+          { "x": 75, "y": 55, "note": "flank-right-close" },
+          { "x": 70, "y": 65, "note": "flank-right-deep" },
+          { "x": 60, "y": 18, "note": "ambush-ridge" },
+          { "x": 78, "y": 35, "note": "ambush-rear" }
+        ]
+      }
+    },
+    {
+      "id": "water",
+      "name": "River / Waterway",
+      "number": 5,
+      "terrainCategories": ["River/Waterway", "Marsh/Swamp"],
+      "cardCount": 26,
+      "camera": { "tiltX": [8, 12], "horizonY": [22, 30], "zoom": [0.92, 1.0] },
+      "narrative": "Two sides of a river. The water divides. Stamps on both banks with the river between.",
+      "filmReferences": ["Anduin boat journey", "Argonath statues", "Buckleberry ferry", "Dead Marshes mist"],
+      "groundPlane": "Riverbank gravel, sand, reeds, boat decks. Flat spots on the banks. Water fills the middle.",
+      "dramaticFeatures": ["Flowing water between stamp clusters", "Reeds and fallen logs", "Mist at water surface", "Boats at shore"],
+      "stamps": {
+        "fellowship": [
+          { "x": 10, "y": 55, "note": "bank-far-left" },
+          { "x": 18, "y": 58, "note": "bank-left" },
+          { "x": 26, "y": 56, "note": "bank-center-left" },
+          { "x": 34, "y": 58, "note": "bank-center" },
+          { "x": 42, "y": 56, "note": "bank-center-right" },
+          { "x": 50, "y": 58, "note": "bank-right" },
+          { "x": 14, "y": 65, "note": "shore-back-left" },
+          { "x": 22, "y": 64, "note": "shore-back" },
+          { "x": 30, "y": 66, "note": "shore-back-center" },
+          { "x": 38, "y": 64, "note": "shore-back-right" },
+          { "x": 46, "y": 66, "note": "shore-far-right" }
+        ],
+        "shadow": [
+          { "x": 15, "y": 14, "note": "far-bank-left" },
+          { "x": 23, "y": 12, "note": "far-bank-center-left" },
+          { "x": 31, "y": 14, "note": "far-bank-center" },
+          { "x": 39, "y": 12, "note": "far-bank-center-right" },
+          { "x": 47, "y": 14, "note": "far-bank-right" },
+          { "x": 55, "y": 12, "note": "far-bank-far-right" },
+          { "x": 18, "y": 22, "note": "far-shore-left" },
+          { "x": 26, "y": 20, "note": "far-shore-center" },
+          { "x": 34, "y": 22, "note": "far-shore-right" },
+          { "x": 42, "y": 20, "note": "far-shore-far-right" }
+        ]
+      }
+    },
+    {
+      "id": "mountain",
+      "name": "Mountain / Pass",
+      "number": 6,
+      "terrainCategories": ["Mountain/Pass", "Hills/Ruins"],
+      "cardCount": 21,
+      "camera": { "tiltX": [10, 14], "horizonY": [35, 50], "zoom": [1.0, 1.05] },
+      "narrative": "The enemy has the high ground. FP stamps on a lower plateau, SH stamps above on the ridge.",
+      "filmReferences": ["Caradhras blizzard", "Weathertop night attack", "Emyn Muil rocky maze", "Amon Hen hilltop"],
+      "groundPlane": "Rocky plateaus, scree, exposed stone. Flat spots on ledges and clearings. Slopes between.",
+      "dramaticFeatures": ["Rock outcrops between stamps", "Snow-capped peaks above", "Ruined stone pillars", "Narrow ledge paths"],
+      "stamps": {
+        "fellowship": [
+          { "x": 10, "y": 52, "note": "plateau-left" },
+          { "x": 18, "y": 50, "note": "plateau-center-left" },
+          { "x": 26, "y": 52, "note": "plateau-center" },
+          { "x": 34, "y": 50, "note": "plateau-center-right" },
+          { "x": 42, "y": 52, "note": "plateau-right" },
+          { "x": 14, "y": 60, "note": "lower-left" },
+          { "x": 22, "y": 58, "note": "lower-center" },
+          { "x": 30, "y": 60, "note": "lower-right" },
+          { "x": 38, "y": 58, "note": "lower-far-right" },
+          { "x": 18, "y": 66, "note": "base-left" },
+          { "x": 26, "y": 68, "note": "base-center" }
+        ],
+        "shadow": [
+          { "x": 22, "y": 14, "note": "ridge-left" },
+          { "x": 30, "y": 12, "note": "ridge-center-left" },
+          { "x": 38, "y": 14, "note": "ridge-center" },
+          { "x": 46, "y": 12, "note": "ridge-center-right" },
+          { "x": 54, "y": 14, "note": "ridge-right" },
+          { "x": 26, "y": 22, "note": "slope-left" },
+          { "x": 34, "y": 20, "note": "slope-center" },
+          { "x": 42, "y": 22, "note": "slope-right" },
+          { "x": 50, "y": 20, "note": "slope-far-right" },
+          { "x": 30, "y": 30, "note": "advance-left" },
+          { "x": 38, "y": 28, "note": "advance-center" },
+          { "x": 46, "y": 30, "note": "advance-right" }
+        ]
+      }
+    },
+    {
+      "id": "fortress",
+      "name": "Fortress / Siege",
+      "number": 7,
+      "terrainCategories": ["Fortress/Fortification"],
+      "cardCount": 14,
+      "camera": { "tiltX": [10, 14], "horizonY": [35, 45], "zoom": [1.0, 1.05] },
+      "narrative": "Defenders behind the wall, attackers before it. The wall divides everything.",
+      "filmReferences": ["Helm's Deep rain-soaked walls", "Hornburg gate", "Deeping Wall breach", "Minas Tirith Great Gates"],
+      "groundPlane": "Stone battlements (FP side), muddy churned field (SH side). Wall/gate feature between stamp clusters.",
+      "dramaticFeatures": ["Wall/gate structure between the two clusters", "Siege ladders, battering rams at edges", "Torch light on wet stone", "Battlements silhouetted"],
+      "stamps": {
+        "fellowship": [
+          { "x": 55, "y": 45, "note": "wall-post-left" },
+          { "x": 63, "y": 43, "note": "wall-post-center" },
+          { "x": 71, "y": 45, "note": "wall-post-right" },
+          { "x": 58, "y": 53, "note": "courtyard-left" },
+          { "x": 66, "y": 51, "note": "courtyard-center" },
+          { "x": 74, "y": 53, "note": "courtyard-right" },
+          { "x": 60, "y": 61, "note": "keep-left" },
+          { "x": 68, "y": 59, "note": "keep-center" },
+          { "x": 76, "y": 61, "note": "keep-right" },
+          { "x": 64, "y": 67, "note": "deep-reserve" }
+        ],
+        "shadow": [
+          { "x": 8,  "y": 15, "note": "siege-far-left" },
+          { "x": 16, "y": 12, "note": "siege-left" },
+          { "x": 24, "y": 15, "note": "siege-center-left" },
+          { "x": 32, "y": 12, "note": "siege-center" },
+          { "x": 40, "y": 15, "note": "siege-center-right" },
+          { "x": 12, "y": 24, "note": "advance-left" },
+          { "x": 20, "y": 22, "note": "advance-center-left" },
+          { "x": 28, "y": 24, "note": "advance-center" },
+          { "x": 36, "y": 22, "note": "advance-right" },
+          { "x": 16, "y": 32, "note": "at-wall-left" },
+          { "x": 24, "y": 30, "note": "at-wall-center" },
+          { "x": 32, "y": 32, "note": "at-wall-right" }
+        ]
+      }
+    },
+    {
+      "id": "sanctuary",
+      "name": "Elven Sanctuary",
+      "number": 8,
+      "terrainCategories": ["Elven Sanctuary"],
+      "cardCount": 14,
+      "camera": { "tiltX": [8, 12], "horizonY": [14, 28], "zoom": [0.90, 0.95] },
+      "narrative": "Fellowship sheltered in an elven haven. Shadow at the distant borders.",
+      "filmReferences": ["Rivendell terraces and waterfalls", "Lothlórien mallorn forest", "Grey Havens harbor"],
+      "groundPlane": "Elven stone terraces, garden paths, reflective pools. Elegant, smooth stamp surfaces.",
+      "dramaticFeatures": ["Waterfalls in background", "Mallorn trees with golden leaves", "Carved architecture", "Reflective pools between stamps"],
+      "stamps": {
+        "fellowship": [
+          { "x": 12, "y": 25, "note": "terrace-left" },
+          { "x": 20, "y": 22, "note": "terrace-center" },
+          { "x": 28, "y": 25, "note": "terrace-right" },
+          { "x": 10, "y": 33, "note": "garden-left" },
+          { "x": 18, "y": 30, "note": "garden-center" },
+          { "x": 26, "y": 33, "note": "garden-right" },
+          { "x": 14, "y": 40, "note": "path-left" },
+          { "x": 22, "y": 38, "note": "path-center" },
+          { "x": 30, "y": 40, "note": "path-right" },
+          { "x": 18, "y": 47, "note": "glade" }
+        ],
+        "shadow": [
+          { "x": 62, "y": 52, "note": "border-far" },
+          { "x": 70, "y": 55, "note": "border-center" },
+          { "x": 78, "y": 52, "note": "border-near" },
+          { "x": 65, "y": 62, "note": "edge-left" },
+          { "x": 73, "y": 60, "note": "edge-center" },
+          { "x": 81, "y": 62, "note": "edge-right" },
+          { "x": 68, "y": 70, "note": "deep-border-left" },
+          { "x": 76, "y": 68, "note": "deep-border-center" },
+          { "x": 60, "y": 45, "note": "scouting" },
+          { "x": 82, "y": 48, "note": "lurking" }
+        ]
+      }
+    },
+    {
+      "id": "dark-domain",
+      "name": "Dark Domain",
+      "number": 9,
+      "terrainCategories": ["Dark Stronghold", "Volcanic/Mordor"],
+      "cardCount": 32,
+      "camera": { "tiltX": [10, 14], "horizonY": [40, 55], "zoom": [1.0, 1.1] },
+      "narrative": "Enemy territory. Shadow stamps dominate the landscape, FP stamps are a tiny desperate cluster.",
+      "filmReferences": ["Isengard pits and furnaces", "Mount Doom slopes", "Mordor ash plains", "Black Gate approach", "Minas Morgul corpse-light"],
+      "groundPlane": "Ash, slag, scorched stone, cracked earth. Stamp spots are patches of solid ground among desolation.",
+      "dramaticFeatures": ["Lava rivers between stamps", "Industrial machinery", "The Eye on the horizon", "Smoke plumes, volcanic glow", "Twisted architecture"],
+      "stamps": {
+        "fellowship": [
+          { "x": 5,  "y": 58, "note": "survival-left" },
+          { "x": 12, "y": 55, "note": "survival-center" },
+          { "x": 19, "y": 58, "note": "survival-right" },
+          { "x": 8,  "y": 66, "note": "rear-left" },
+          { "x": 15, "y": 64, "note": "rear-center" },
+          { "x": 22, "y": 66, "note": "rear-right" },
+          { "x": 10, "y": 72, "note": "deep-reserve" },
+          { "x": 17, "y": 74, "note": "last-stand" }
+        ],
+        "shadow": [
+          { "x": 30, "y": 10, "note": "vanguard-left" },
+          { "x": 42, "y": 8,  "note": "vanguard-center" },
+          { "x": 54, "y": 10, "note": "vanguard-right" },
+          { "x": 68, "y": 12, "note": "vanguard-far-right" },
+          { "x": 35, "y": 22, "note": "line-left" },
+          { "x": 47, "y": 20, "note": "line-center" },
+          { "x": 59, "y": 22, "note": "line-right" },
+          { "x": 72, "y": 24, "note": "line-far-right" },
+          { "x": 40, "y": 34, "note": "mid-left" },
+          { "x": 52, "y": 32, "note": "mid-center" },
+          { "x": 64, "y": 34, "note": "mid-right" },
+          { "x": 45, "y": 46, "note": "press-left" },
+          { "x": 57, "y": 44, "note": "press-center" },
+          { "x": 69, "y": 46, "note": "press-right" }
+        ]
+      }
+    }
+  ]
+}

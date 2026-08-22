@@ -1,0 +1,2292 @@
+[
+  {
+    "blueprintId": "1_319",
+    "title": "Bag End",
+    "set": 1,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 1
+  },
+  {
+    "blueprintId": "1_320",
+    "title": "East Road",
+    "set": 1,
+    "terrain": "Pastoral/Farmland",
+    "archetype": "open-field",
+    "landscapeId": "shire-countryside",
+    "defaultVariant": "day",
+    "number": 2
+  },
+  {
+    "blueprintId": "1_321",
+    "title": "Farmer Maggot's Fields",
+    "set": 1,
+    "terrain": "Pastoral/Farmland",
+    "archetype": "open-field",
+    "landscapeId": "shire-countryside",
+    "defaultVariant": "day",
+    "number": 3
+  },
+  {
+    "blueprintId": "1_322",
+    "title": "Green Dragon Inn",
+    "set": 1,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 4
+  },
+  {
+    "blueprintId": "1_323",
+    "title": "Green Hill Country",
+    "set": 1,
+    "terrain": "Pastoral/Farmland",
+    "archetype": "open-field",
+    "landscapeId": "shire-countryside",
+    "defaultVariant": "day",
+    "number": 5
+  },
+  {
+    "blueprintId": "1_324",
+    "title": "The Prancing Pony",
+    "set": 1,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "bree-town",
+    "defaultVariant": "night",
+    "number": 6
+  },
+  {
+    "blueprintId": "1_325",
+    "title": "Shire Lookout Point",
+    "set": 1,
+    "terrain": "Pastoral/Farmland",
+    "archetype": "open-field",
+    "landscapeId": "shire-countryside",
+    "defaultVariant": "day",
+    "number": 7
+  },
+  {
+    "blueprintId": "1_326",
+    "title": "Westfarthing",
+    "set": 1,
+    "terrain": "Pastoral/Farmland",
+    "archetype": "open-field",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 8
+  },
+  {
+    "blueprintId": "1_327",
+    "title": "Bree Gate",
+    "set": 1,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "bree-town",
+    "defaultVariant": "night",
+    "number": 9
+  },
+  {
+    "blueprintId": "1_328",
+    "title": "Bree Streets",
+    "set": 1,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "bree-town",
+    "defaultVariant": "night",
+    "number": 10
+  },
+  {
+    "blueprintId": "1_329",
+    "title": "Breeland Forest",
+    "set": 1,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "bree-outskirts",
+    "defaultVariant": "night",
+    "number": 11
+  },
+  {
+    "blueprintId": "1_330",
+    "title": "Buckleberry Ferry",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "shire-countryside",
+    "defaultVariant": "day",
+    "number": 12
+  },
+  {
+    "blueprintId": "1_331",
+    "title": "Ettenmoors",
+    "set": 1,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "ettenmoors",
+    "defaultVariant": "day",
+    "number": 13
+  },
+  {
+    "blueprintId": "1_332",
+    "title": "Midgewater Marshes",
+    "set": 1,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "midgewater-marshes",
+    "defaultVariant": "dusk",
+    "number": 14
+  },
+  {
+    "blueprintId": "1_333",
+    "title": "Midgewater Moors",
+    "set": 1,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "midgewater-marshes",
+    "defaultVariant": "dusk",
+    "number": 15
+  },
+  {
+    "blueprintId": "1_334",
+    "title": "Trollshaw Forest",
+    "set": 1,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "trollshaw-forest",
+    "defaultVariant": "day",
+    "number": 16
+  },
+  {
+    "blueprintId": "1_335",
+    "title": "Weatherhills",
+    "set": 1,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "weathertop-ruins",
+    "defaultVariant": "night",
+    "number": 17
+  },
+  {
+    "blueprintId": "1_336",
+    "title": "Weathertop",
+    "set": 1,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "weathertop-ruins",
+    "defaultVariant": "night",
+    "number": 18
+  },
+  {
+    "blueprintId": "1_337",
+    "title": "Council Courtyard",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 19
+  },
+  {
+    "blueprintId": "1_338",
+    "title": "Ford of Bruinen",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 20
+  },
+  {
+    "blueprintId": "1_339",
+    "title": "Frodo's Bedroom",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 21
+  },
+  {
+    "blueprintId": "1_340",
+    "title": "Rivendell Terrace",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 22
+  },
+  {
+    "blueprintId": "1_341",
+    "title": "Rivendell Valley",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 23
+  },
+  {
+    "blueprintId": "1_342",
+    "title": "Rivendell Waterfall",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 24
+  },
+  {
+    "blueprintId": "1_343",
+    "title": "Balin's Tomb",
+    "set": 1,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 25
+  },
+  {
+    "blueprintId": "1_344",
+    "title": "Dwarrowdelf Chamber",
+    "set": 1,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 26
+  },
+  {
+    "blueprintId": "1_345",
+    "title": "Mithril Mine",
+    "set": 1,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 27
+  },
+  {
+    "blueprintId": "1_346",
+    "title": "Moria Lake",
+    "set": 1,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "moria-entrance",
+    "defaultVariant": "night",
+    "number": 28
+  },
+  {
+    "blueprintId": "1_347",
+    "title": "Moria Stairway",
+    "set": 1,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 29
+  },
+  {
+    "blueprintId": "1_348",
+    "title": "Pass of Caradhras",
+    "set": 1,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 30
+  },
+  {
+    "blueprintId": "1_349",
+    "title": "The Bridge of Khazad-dûm",
+    "set": 1,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-bridge",
+    "defaultVariant": "night",
+    "number": 31
+  },
+  {
+    "blueprintId": "1_350",
+    "title": "Dimrill Dale",
+    "set": 1,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "dimrill-dale",
+    "defaultVariant": "day",
+    "number": 32
+  },
+  {
+    "blueprintId": "1_351",
+    "title": "Galadriel's Glade",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "lothlorien",
+    "defaultVariant": "dusk",
+    "number": 33
+  },
+  {
+    "blueprintId": "1_352",
+    "title": "Lothlórien Woods",
+    "set": 1,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "lothlorien",
+    "defaultVariant": "dusk",
+    "number": 34
+  },
+  {
+    "blueprintId": "1_353",
+    "title": "Anduin Confluence",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 35
+  },
+  {
+    "blueprintId": "1_354",
+    "title": "Anduin Wilderland",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 36
+  },
+  {
+    "blueprintId": "1_355",
+    "title": "Silverlode Banks",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 37
+  },
+  {
+    "blueprintId": "1_356",
+    "title": "Anduin Banks",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 38
+  },
+  {
+    "blueprintId": "1_357",
+    "title": "Brown Lands",
+    "set": 1,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 39
+  },
+  {
+    "blueprintId": "1_358",
+    "title": "Pillars of the Kings",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "argonath",
+    "defaultVariant": "day",
+    "number": 40
+  },
+  {
+    "blueprintId": "1_359",
+    "title": "Shores of Nen Hithoel",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "nen-hithoel",
+    "defaultVariant": "day",
+    "number": 41
+  },
+  {
+    "blueprintId": "1_360",
+    "title": "Emyn Muil",
+    "set": 1,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "emyn-muil",
+    "defaultVariant": "day",
+    "number": 42
+  },
+  {
+    "blueprintId": "1_361",
+    "title": "Slopes of Amon Hen",
+    "set": 1,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "amon-hen",
+    "defaultVariant": "day",
+    "number": 43
+  },
+  {
+    "blueprintId": "1_362",
+    "title": "Summit of Amon Hen",
+    "set": 1,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "amon-hen",
+    "defaultVariant": "day",
+    "number": 44
+  },
+  {
+    "blueprintId": "1_363",
+    "title": "Tol Brandir",
+    "set": 1,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "nen-hithoel",
+    "defaultVariant": "day",
+    "number": 45
+  },
+  {
+    "blueprintId": "2_115",
+    "title": "Hobbiton Party Field",
+    "set": 2,
+    "terrain": "Pastoral/Farmland",
+    "archetype": "open-field",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 46
+  },
+  {
+    "blueprintId": "2_116",
+    "title": "Hobbiton Woods",
+    "set": 2,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 47
+  },
+  {
+    "blueprintId": "2_117",
+    "title": "Town Center",
+    "set": 2,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 48
+  },
+  {
+    "blueprintId": "2_118",
+    "title": "Great Chasm",
+    "set": 2,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 49
+  },
+  {
+    "blueprintId": "2_119",
+    "title": "Hollin",
+    "set": 2,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 50
+  },
+  {
+    "blueprintId": "2_120",
+    "title": "Valley of the Silverlode",
+    "set": 2,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "lothlorien",
+    "defaultVariant": "dusk",
+    "number": 51
+  },
+  {
+    "blueprintId": "3_119",
+    "title": "House of Elrond",
+    "set": 3,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 52
+  },
+  {
+    "blueprintId": "3_116",
+    "title": "Eregion Hills",
+    "set": 3,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 53
+  },
+  {
+    "blueprintId": "3_115",
+    "title": "Caras Galadhon",
+    "set": 3,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "lothlorien",
+    "defaultVariant": "dusk",
+    "number": 54
+  },
+  {
+    "blueprintId": "3_118",
+    "title": "The Great River",
+    "set": 3,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 55
+  },
+  {
+    "blueprintId": "3_117",
+    "title": "Gates of Argonath",
+    "set": 3,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "argonath",
+    "defaultVariant": "day",
+    "number": 56
+  },
+  {
+    "blueprintId": "3_120",
+    "title": "Wastes of Emyn Muil",
+    "set": 3,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "emyn-muil",
+    "defaultVariant": "day",
+    "number": 57
+  },
+  {
+    "blueprintId": "4_323",
+    "title": "East Wall of Rohan",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 58
+  },
+  {
+    "blueprintId": "4_324",
+    "title": "Eastemnet Downs",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 59
+  },
+  {
+    "blueprintId": "4_325",
+    "title": "Eastemnet Gullies",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 60
+  },
+  {
+    "blueprintId": "4_326",
+    "title": "Horse-country",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 61
+  },
+  {
+    "blueprintId": "4_327",
+    "title": "Plains of Rohan",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 62
+  },
+  {
+    "blueprintId": "4_328",
+    "title": "The Riddermark",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 63
+  },
+  {
+    "blueprintId": "4_329",
+    "title": "Western Emyn Muil",
+    "set": 4,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "emyn-muil",
+    "defaultVariant": "day",
+    "number": 64
+  },
+  {
+    "blueprintId": "4_330",
+    "title": "Derndingle",
+    "set": 4,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "fangorn-forest",
+    "defaultVariant": "day",
+    "number": 65
+  },
+  {
+    "blueprintId": "4_331",
+    "title": "Eastfold",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 66
+  },
+  {
+    "blueprintId": "4_332",
+    "title": "Fangorn Forest",
+    "set": 4,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "fangorn-forest",
+    "defaultVariant": "day",
+    "number": 67
+  },
+  {
+    "blueprintId": "4_333",
+    "title": "Plains of Rohan Camp",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 68
+  },
+  {
+    "blueprintId": "4_334",
+    "title": "Rohirrim Village",
+    "set": 4,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 69
+  },
+  {
+    "blueprintId": "4_335",
+    "title": "Uruk Camp",
+    "set": 4,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 70
+  },
+  {
+    "blueprintId": "4_336",
+    "title": "Wold of Rohan",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 71
+  },
+  {
+    "blueprintId": "4_337",
+    "title": "Barrows of Edoras",
+    "set": 4,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 72
+  },
+  {
+    "blueprintId": "4_338",
+    "title": "Golden Hall",
+    "set": 4,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 73
+  },
+  {
+    "blueprintId": "4_339",
+    "title": "Stables",
+    "set": 4,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 74
+  },
+  {
+    "blueprintId": "4_340",
+    "title": "Streets of Edoras",
+    "set": 4,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 75
+  },
+  {
+    "blueprintId": "4_341",
+    "title": "Throne Room",
+    "set": 4,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 76
+  },
+  {
+    "blueprintId": "4_342",
+    "title": "Westemnet Plains",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 77
+  },
+  {
+    "blueprintId": "4_343",
+    "title": "Ered Nimrais",
+    "set": 4,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "dunharrow",
+    "defaultVariant": "day",
+    "number": 78
+  },
+  {
+    "blueprintId": "4_344",
+    "title": "Westemnet Hills",
+    "set": 4,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 79
+  },
+  {
+    "blueprintId": "4_345",
+    "title": "White Mountains",
+    "set": 4,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "dunharrow",
+    "defaultVariant": "day",
+    "number": 80
+  },
+  {
+    "blueprintId": "4_346",
+    "title": "White Rocks",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 81
+  },
+  {
+    "blueprintId": "4_347",
+    "title": "Deep of Helm",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 82
+  },
+  {
+    "blueprintId": "4_348",
+    "title": "Deeping Wall",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 83
+  },
+  {
+    "blueprintId": "4_349",
+    "title": "Helm's Gate",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 84
+  },
+  {
+    "blueprintId": "4_350",
+    "title": "Hornburg Courtyard",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 85
+  },
+  {
+    "blueprintId": "4_351",
+    "title": "Hornburg Parapet",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 86
+  },
+  {
+    "blueprintId": "4_352",
+    "title": "Caves of Aglarond",
+    "set": 4,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "aglarond-caves",
+    "defaultVariant": "night",
+    "number": 87
+  },
+  {
+    "blueprintId": "4_353",
+    "title": "Great Hall",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-interior",
+    "defaultVariant": "night",
+    "number": 88
+  },
+  {
+    "blueprintId": "4_354",
+    "title": "Hornburg Armory",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-interior",
+    "defaultVariant": "night",
+    "number": 89
+  },
+  {
+    "blueprintId": "4_355",
+    "title": "Cavern Entrance",
+    "set": 4,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "aglarond-caves",
+    "defaultVariant": "night",
+    "number": 90
+  },
+  {
+    "blueprintId": "4_356",
+    "title": "Hornburg Causeway",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 91
+  },
+  {
+    "blueprintId": "4_357",
+    "title": "King's Room",
+    "set": 4,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-interior",
+    "defaultVariant": "night",
+    "number": 92
+  },
+  {
+    "blueprintId": "4_358",
+    "title": "Ring of Isengard",
+    "set": 4,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 93
+  },
+  {
+    "blueprintId": "4_359",
+    "title": "Wizard's Vale",
+    "set": 4,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 94
+  },
+  {
+    "blueprintId": "4_360",
+    "title": "Fortress of Orthanc",
+    "set": 4,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 95
+  },
+  {
+    "blueprintId": "4_361",
+    "title": "Orthanc Balcony",
+    "set": 4,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 96
+  },
+  {
+    "blueprintId": "4_362",
+    "title": "Orthanc Library",
+    "set": 4,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 97
+  },
+  {
+    "blueprintId": "4_363",
+    "title": "Palantír Chamber",
+    "set": 4,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 98
+  },
+  {
+    "blueprintId": "5_118",
+    "title": "Hornburg Wall",
+    "set": 5,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 99
+  },
+  {
+    "blueprintId": "5_119",
+    "title": "Nan Curunír",
+    "set": 5,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 100
+  },
+  {
+    "blueprintId": "5_120",
+    "title": "Caverns of Isengard",
+    "set": 5,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 101
+  },
+  {
+    "blueprintId": "6_115",
+    "title": "Rocks of Emyn Muil",
+    "set": 6,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "emyn-muil",
+    "defaultVariant": "day",
+    "number": 102
+  },
+  {
+    "blueprintId": "6_116",
+    "title": "Westfold",
+    "set": 6,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 103
+  },
+  {
+    "blueprintId": "6_117",
+    "title": "Meduseld",
+    "set": 6,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 104
+  },
+  {
+    "blueprintId": "6_118",
+    "title": "Hornburg Hall",
+    "set": 6,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-interior",
+    "defaultVariant": "night",
+    "number": 105
+  },
+  {
+    "blueprintId": "6_119",
+    "title": "Valley of Saruman",
+    "set": 6,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 106
+  },
+  {
+    "blueprintId": "6_120",
+    "title": "Saruman's Laboratory",
+    "set": 6,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 107
+  },
+  {
+    "blueprintId": "7_329",
+    "title": "Dunharrow Plateau",
+    "set": 7,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "dunharrow",
+    "defaultVariant": "day",
+    "number": 108
+  },
+  {
+    "blueprintId": "7_330",
+    "title": "Edoras Hall",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 109
+  },
+  {
+    "blueprintId": "7_331",
+    "title": "Isengard Ruined",
+    "set": 7,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-ruined",
+    "defaultVariant": "day",
+    "number": 110
+  },
+  {
+    "blueprintId": "7_332",
+    "title": "Rohirrim Road",
+    "set": 7,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 111
+  },
+  {
+    "blueprintId": "7_333",
+    "title": "Sleeping Quarters",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 112
+  },
+  {
+    "blueprintId": "7_334",
+    "title": "Steps of Edoras",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 113
+  },
+  {
+    "blueprintId": "7_335",
+    "title": "King's Tent",
+    "set": 7,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 114
+  },
+  {
+    "blueprintId": "7_336",
+    "title": "Rohirrim Camp",
+    "set": 7,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 115
+  },
+  {
+    "blueprintId": "7_337",
+    "title": "West Road",
+    "set": 7,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 116
+  },
+  {
+    "blueprintId": "7_338",
+    "title": "Beacon of Minas Tirith",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 117
+  },
+  {
+    "blueprintId": "7_339",
+    "title": "Hall of the Kings",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 118
+  },
+  {
+    "blueprintId": "7_340",
+    "title": "Tower of Ecthelion",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 119
+  },
+  {
+    "blueprintId": "7_341",
+    "title": "Anduin Banks",
+    "set": 7,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 120
+  },
+  {
+    "blueprintId": "7_342",
+    "title": "Osgiliath Fallen",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "osgiliath-ruins",
+    "defaultVariant": "dusk",
+    "number": 121
+  },
+  {
+    "blueprintId": "7_343",
+    "title": "Pelennor Plain",
+    "set": 7,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 122
+  },
+  {
+    "blueprintId": "7_344",
+    "title": "City Gates",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 123
+  },
+  {
+    "blueprintId": "7_345",
+    "title": "Pelennor Flat",
+    "set": 7,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 124
+  },
+  {
+    "blueprintId": "7_346",
+    "title": "Minas Tirith Fifth Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 125
+  },
+  {
+    "blueprintId": "7_347",
+    "title": "Minas Tirith First Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-circles",
+    "defaultVariant": "dusk",
+    "number": 126
+  },
+  {
+    "blueprintId": "7_348",
+    "title": "Minas Tirith Fourth Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-circles",
+    "defaultVariant": "dusk",
+    "number": 127
+  },
+  {
+    "blueprintId": "7_349",
+    "title": "Minas Tirith Second Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-circles",
+    "defaultVariant": "dusk",
+    "number": 128
+  },
+  {
+    "blueprintId": "7_350",
+    "title": "Minas Tirith Seventh Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 129
+  },
+  {
+    "blueprintId": "7_351",
+    "title": "Minas Tirith Sixth Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 130
+  },
+  {
+    "blueprintId": "7_352",
+    "title": "Minas Tirith Third Circle",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-circles",
+    "defaultVariant": "dusk",
+    "number": 131
+  },
+  {
+    "blueprintId": "7_353",
+    "title": "Osgiliath Crossing",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "osgiliath-ruins",
+    "defaultVariant": "dusk",
+    "number": 132
+  },
+  {
+    "blueprintId": "7_354",
+    "title": "Pelennor Grassland",
+    "set": 7,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 133
+  },
+  {
+    "blueprintId": "7_355",
+    "title": "Ruined Capitol",
+    "set": 7,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "osgiliath-ruins",
+    "defaultVariant": "dusk",
+    "number": 134
+  },
+  {
+    "blueprintId": "7_356",
+    "title": "Cross Roads",
+    "set": 7,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "ithilien-forest",
+    "defaultVariant": "day",
+    "number": 135
+  },
+  {
+    "blueprintId": "7_357",
+    "title": "Morgul Vale",
+    "set": 7,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "morgul-vale",
+    "defaultVariant": "night",
+    "number": 136
+  },
+  {
+    "blueprintId": "7_358",
+    "title": "Morgulduin",
+    "set": 7,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "morgul-vale",
+    "defaultVariant": "night",
+    "number": 137
+  },
+  {
+    "blueprintId": "7_359",
+    "title": "Northern Ithilien",
+    "set": 7,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "ithilien-forest",
+    "defaultVariant": "day",
+    "number": 138
+  },
+  {
+    "blueprintId": "7_360",
+    "title": "Dagorlad",
+    "set": 7,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mordor-wastes",
+    "defaultVariant": "dusk",
+    "number": 139
+  },
+  {
+    "blueprintId": "7_361",
+    "title": "Haunted Pass",
+    "set": 7,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "black-gate",
+    "defaultVariant": "dusk",
+    "number": 140
+  },
+  {
+    "blueprintId": "7_362",
+    "title": "Narchost",
+    "set": 7,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "black-gate",
+    "defaultVariant": "dusk",
+    "number": 141
+  },
+  {
+    "blueprintId": "7_363",
+    "title": "Slag Mounds",
+    "set": 7,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mordor-wastes",
+    "defaultVariant": "dusk",
+    "number": 142
+  },
+  {
+    "blueprintId": "8_117",
+    "title": "The Dimholt",
+    "set": 8,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "dunharrow",
+    "defaultVariant": "day",
+    "number": 143
+  },
+  {
+    "blueprintId": "8_118",
+    "title": "City of the Dead",
+    "set": 8,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "paths-of-dead",
+    "defaultVariant": "night",
+    "number": 144
+  },
+  {
+    "blueprintId": "8_119",
+    "title": "Crashed Gate",
+    "set": 8,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 145
+  },
+  {
+    "blueprintId": "8_120",
+    "title": "Osgiliath Channel",
+    "set": 8,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "osgiliath-ruins",
+    "defaultVariant": "dusk",
+    "number": 146
+  },
+  {
+    "blueprintId": "10_117",
+    "title": "Base of Mindolluin",
+    "set": 10,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "minas-tirith-upper",
+    "defaultVariant": "day",
+    "number": 147
+  },
+  {
+    "blueprintId": "10_118",
+    "title": "Pelennor Prairie",
+    "set": 10,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 148
+  },
+  {
+    "blueprintId": "10_119",
+    "title": "Steward's Tomb",
+    "set": 10,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 149
+  },
+  {
+    "blueprintId": "10_120",
+    "title": "Watchers of Cirith Ungol",
+    "set": 10,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "cirith-ungol",
+    "defaultVariant": "night",
+    "number": 150
+  },
+  {
+    "blueprintId": "11_227",
+    "title": "Anduin Banks",
+    "set": 11,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 151
+  },
+  {
+    "blueprintId": "11_228",
+    "title": "Anduin Confluence",
+    "set": 11,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 152
+  },
+  {
+    "blueprintId": "11_229",
+    "title": "Barazinbar",
+    "set": 11,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 153
+  },
+  {
+    "blueprintId": "11_230",
+    "title": "Buckland Homestead",
+    "set": 11,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 154
+  },
+  {
+    "blueprintId": "11_231",
+    "title": "Caras Galadhon",
+    "set": 11,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "lothlorien",
+    "defaultVariant": "dusk",
+    "number": 155
+  },
+  {
+    "blueprintId": "11_232",
+    "title": "Cavern Entrance",
+    "set": 11,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "aglarond-caves",
+    "defaultVariant": "night",
+    "number": 156
+  },
+  {
+    "blueprintId": "11_233",
+    "title": "Chamber of Mazarbul",
+    "set": 11,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 157
+  },
+  {
+    "blueprintId": "11_234",
+    "title": "Crags of Emyn Muil",
+    "set": 11,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "emyn-muil",
+    "defaultVariant": "day",
+    "number": 158
+  },
+  {
+    "blueprintId": "11_235",
+    "title": "Dammed Gate-stream",
+    "set": 11,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "moria-entrance",
+    "defaultVariant": "night",
+    "number": 159
+  },
+  {
+    "blueprintId": "11_236",
+    "title": "East Road",
+    "set": 11,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "trollshaw-forest",
+    "defaultVariant": "day",
+    "number": 160
+  },
+  {
+    "blueprintId": "11_237",
+    "title": "Ettenmoors",
+    "set": 11,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "ettenmoors",
+    "defaultVariant": "day",
+    "number": 161
+  },
+  {
+    "blueprintId": "11_238",
+    "title": "Expanding Marshland",
+    "set": 11,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "midgewater-marshes",
+    "defaultVariant": "dusk",
+    "number": 162
+  },
+  {
+    "blueprintId": "11_239",
+    "title": "Fangorn Glade",
+    "set": 11,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "fangorn-forest",
+    "defaultVariant": "day",
+    "number": 163
+  },
+  {
+    "blueprintId": "11_240",
+    "title": "Flats of Rohan",
+    "set": 11,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 164
+  },
+  {
+    "blueprintId": "11_241",
+    "title": "Fortress of Orthanc",
+    "set": 11,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 165
+  },
+  {
+    "blueprintId": "11_242",
+    "title": "Green Dragon Inn",
+    "set": 11,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 166
+  },
+  {
+    "blueprintId": "11_243",
+    "title": "Harrowdale",
+    "set": 11,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 167
+  },
+  {
+    "blueprintId": "11_244",
+    "title": "Heights of Isengard",
+    "set": 11,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 168
+  },
+  {
+    "blueprintId": "11_245",
+    "title": "Helm's Gate",
+    "set": 11,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 169
+  },
+  {
+    "blueprintId": "11_246",
+    "title": "Mere of Dead Faces",
+    "set": 11,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "dead-marshes",
+    "defaultVariant": "night",
+    "number": 170
+  },
+  {
+    "blueprintId": "11_247",
+    "title": "Moria Guardroom",
+    "set": 11,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 171
+  },
+  {
+    "blueprintId": "11_248",
+    "title": "Moria Stairway",
+    "set": 11,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 172
+  },
+  {
+    "blueprintId": "11_249",
+    "title": "Neekerbreekers' Bog",
+    "set": 11,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "midgewater-marshes",
+    "defaultVariant": "dusk",
+    "number": 173
+  },
+  {
+    "blueprintId": "11_250",
+    "title": "North Undeep",
+    "set": 11,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 174
+  },
+  {
+    "blueprintId": "11_251",
+    "title": "Old Forest Road",
+    "set": 11,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "bree-outskirts",
+    "defaultVariant": "night",
+    "number": 175
+  },
+  {
+    "blueprintId": "11_252",
+    "title": "Osgiliath Reclaimed",
+    "set": 11,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "osgiliath-ruins",
+    "defaultVariant": "dusk",
+    "number": 176
+  },
+  {
+    "blueprintId": "11_253",
+    "title": "Pelennor Fields",
+    "set": 11,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 177
+  },
+  {
+    "blueprintId": "11_254",
+    "title": "Pelennor Flat",
+    "set": 11,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 178
+  },
+  {
+    "blueprintId": "11_255",
+    "title": "Pinnacle of Zirakzigil",
+    "set": 11,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 179
+  },
+  {
+    "blueprintId": "11_256",
+    "title": "The Prancing Pony",
+    "set": 11,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "bree-town",
+    "defaultVariant": "night",
+    "number": 180
+  },
+  {
+    "blueprintId": "11_257",
+    "title": "Rohan Uplands",
+    "set": 11,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 181
+  },
+  {
+    "blueprintId": "11_258",
+    "title": "Slag Mounds",
+    "set": 11,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mordor-wastes",
+    "defaultVariant": "dusk",
+    "number": 182
+  },
+  {
+    "blueprintId": "11_259",
+    "title": "Stables",
+    "set": 11,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 183
+  },
+  {
+    "blueprintId": "11_260",
+    "title": "Trollshaw Forest",
+    "set": 11,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "trollshaw-forest",
+    "defaultVariant": "day",
+    "number": 184
+  },
+  {
+    "blueprintId": "11_261",
+    "title": "Valley of the Silverlode",
+    "set": 11,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "lothlorien",
+    "defaultVariant": "dusk",
+    "number": 185
+  },
+  {
+    "blueprintId": "11_262",
+    "title": "Watch-tower of Cirith Ungol",
+    "set": 11,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "cirith-ungol",
+    "defaultVariant": "night",
+    "number": 186
+  },
+  {
+    "blueprintId": "11_263",
+    "title": "West Gate of Moria",
+    "set": 11,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-entrance",
+    "defaultVariant": "night",
+    "number": 187
+  },
+  {
+    "blueprintId": "11_264",
+    "title": "Westemnet Village",
+    "set": 11,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 188
+  },
+  {
+    "blueprintId": "11_265",
+    "title": "Window on the West",
+    "set": 11,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "henneth-annun",
+    "defaultVariant": "dusk",
+    "number": 189
+  },
+  {
+    "blueprintId": "11_266",
+    "title": "Woody-End",
+    "set": 11,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "shire-countryside",
+    "defaultVariant": "day",
+    "number": 190
+  },
+  {
+    "blueprintId": "12_185",
+    "title": "The Angle",
+    "set": 12,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "bree-outskirts",
+    "defaultVariant": "night",
+    "number": 191
+  },
+  {
+    "blueprintId": "12_186",
+    "title": "The Bridge of Khazad-dûm",
+    "set": 12,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-bridge",
+    "defaultVariant": "night",
+    "number": 192
+  },
+  {
+    "blueprintId": "12_187",
+    "title": "Emyn Muil",
+    "set": 12,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "emyn-muil",
+    "defaultVariant": "day",
+    "number": 193
+  },
+  {
+    "blueprintId": "12_188",
+    "title": "Hill of Sight",
+    "set": 12,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "amon-hen",
+    "defaultVariant": "day",
+    "number": 194
+  },
+  {
+    "blueprintId": "12_189",
+    "title": "Hobbiton Market",
+    "set": 12,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "shire-hobbiton",
+    "defaultVariant": "day",
+    "number": 195
+  },
+  {
+    "blueprintId": "12_190",
+    "title": "Northern Pelennor",
+    "set": 12,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "pelennor-fields",
+    "defaultVariant": "dusk",
+    "number": 196
+  },
+  {
+    "blueprintId": "12_191",
+    "title": "Shores of Nen Hithoel",
+    "set": 12,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "nen-hithoel",
+    "defaultVariant": "day",
+    "number": 197
+  },
+  {
+    "blueprintId": "12_192",
+    "title": "Slopes of Orodruin",
+    "set": 12,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mount-doom",
+    "defaultVariant": "dusk",
+    "number": 198
+  },
+  {
+    "blueprintId": "12_193",
+    "title": "Starkhorn",
+    "set": 12,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "dunharrow",
+    "defaultVariant": "day",
+    "number": 199
+  },
+  {
+    "blueprintId": "12_194",
+    "title": "Wold Battlefield",
+    "set": 12,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 200
+  },
+  {
+    "blueprintId": "13_185",
+    "title": "Abandoned Mine Shaft",
+    "set": 13,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "moria-halls",
+    "defaultVariant": "night",
+    "number": 201
+  },
+  {
+    "blueprintId": "13_186",
+    "title": "Caves of Aglarond",
+    "set": 13,
+    "terrain": "Underground/Cavern",
+    "archetype": "underground",
+    "landscapeId": "aglarond-caves",
+    "defaultVariant": "night",
+    "number": 202
+  },
+  {
+    "blueprintId": "13_187",
+    "title": "City of Kings",
+    "set": 13,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 203
+  },
+  {
+    "blueprintId": "13_188",
+    "title": "Courtyard Parapet",
+    "set": 13,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 204
+  },
+  {
+    "blueprintId": "13_189",
+    "title": "Crossroads of the Fallen Kings",
+    "set": 13,
+    "terrain": "Forest",
+    "archetype": "forest",
+    "landscapeId": "ithilien-forest",
+    "defaultVariant": "day",
+    "number": 205
+  },
+  {
+    "blueprintId": "13_190",
+    "title": "Doors of Durin",
+    "set": 13,
+    "terrain": "Marsh/Swamp",
+    "archetype": "water",
+    "landscapeId": "moria-entrance",
+    "defaultVariant": "night",
+    "number": 206
+  },
+  {
+    "blueprintId": "13_191",
+    "title": "Fords of Isen",
+    "set": 13,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 207
+  },
+  {
+    "blueprintId": "13_192",
+    "title": "The Great Gates",
+    "set": 13,
+    "terrain": "Fortress/Fortification",
+    "archetype": "fortress",
+    "landscapeId": "helms-deep-walls",
+    "defaultVariant": "night",
+    "number": 208
+  },
+  {
+    "blueprintId": "13_193",
+    "title": "Isenwash",
+    "set": 13,
+    "terrain": "Battlefield",
+    "archetype": "open-field",
+    "landscapeId": "rohan-camp",
+    "defaultVariant": "night",
+    "number": 209
+  },
+  {
+    "blueprintId": "13_194",
+    "title": "Redhorn Pass",
+    "set": 13,
+    "terrain": "Mountain/Pass",
+    "archetype": "mountain",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 210
+  },
+  {
+    "blueprintId": "15_187",
+    "title": "Anduin River",
+    "set": 15,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "anduin-river",
+    "defaultVariant": "day",
+    "number": 211
+  },
+  {
+    "blueprintId": "15_188",
+    "title": "Breeding pit of Isengard",
+    "set": 15,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-fortress",
+    "defaultVariant": "night",
+    "number": 212
+  },
+  {
+    "blueprintId": "15_189",
+    "title": "City Gates",
+    "set": 15,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 213
+  },
+  {
+    "blueprintId": "15_190",
+    "title": "East Wall of Rohan",
+    "set": 15,
+    "terrain": "Plains/Grassland",
+    "archetype": "open-field",
+    "landscapeId": "rohan-plains",
+    "defaultVariant": "day",
+    "number": 214
+  },
+  {
+    "blueprintId": "15_191",
+    "title": "Gate of Mordor",
+    "set": 15,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "black-gate",
+    "defaultVariant": "dusk",
+    "number": 215
+  },
+  {
+    "blueprintId": "15_192",
+    "title": "Isengard Ruined",
+    "set": 15,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "isengard-ruined",
+    "defaultVariant": "day",
+    "number": 216
+  },
+  {
+    "blueprintId": "15_193",
+    "title": "Mount Doom",
+    "set": 15,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mount-doom",
+    "defaultVariant": "dusk",
+    "number": 217
+  },
+  {
+    "blueprintId": "15_194",
+    "title": "Westfold Village",
+    "set": 15,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "edoras-city",
+    "defaultVariant": "day",
+    "number": 218
+  },
+  {
+    "blueprintId": "17_145",
+    "title": "Dol Guldur",
+    "set": 17,
+    "terrain": "Dark Stronghold",
+    "archetype": "dark-domain",
+    "landscapeId": "dol-guldur",
+    "defaultVariant": "night",
+    "number": 219
+  },
+  {
+    "blueprintId": "17_146",
+    "title": "Falls of Rauros",
+    "set": 17,
+    "terrain": "River/Waterway",
+    "archetype": "water",
+    "landscapeId": "argonath",
+    "defaultVariant": "day",
+    "number": 220
+  },
+  {
+    "blueprintId": "17_147",
+    "title": "Imladris",
+    "set": 17,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "rivendell",
+    "defaultVariant": "day",
+    "number": 221
+  },
+  {
+    "blueprintId": "17_148",
+    "title": "Nurn",
+    "set": 17,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mordor-wastes",
+    "defaultVariant": "dusk",
+    "number": 222
+  },
+  {
+    "blueprintId": "18_134",
+    "title": "Doorway to Doom",
+    "set": 18,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mount-doom",
+    "defaultVariant": "dusk",
+    "number": 223
+  },
+  {
+    "blueprintId": "18_135",
+    "title": "Foot of Mount Doom",
+    "set": 18,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "mount-doom",
+    "defaultVariant": "dusk",
+    "number": 224
+  },
+  {
+    "blueprintId": "18_136",
+    "title": "Mithlond",
+    "set": 18,
+    "terrain": "Elven Sanctuary",
+    "archetype": "sanctuary",
+    "landscapeId": "grey-havens",
+    "defaultVariant": "day",
+    "number": 225
+  },
+  {
+    "blueprintId": "18_137",
+    "title": "Morannon Plains",
+    "set": 18,
+    "terrain": "Volcanic/Mordor",
+    "archetype": "dark-domain",
+    "landscapeId": "black-gate",
+    "defaultVariant": "dusk",
+    "number": 226
+  },
+  {
+    "blueprintId": "18_138",
+    "title": "Sirannon Ruins",
+    "set": 18,
+    "terrain": "Hills/Ruins",
+    "archetype": "mountain",
+    "landscapeId": "eregion-hills",
+    "defaultVariant": "day",
+    "number": 227
+  },
+  {
+    "blueprintId": "18_139",
+    "title": "Steward's Tomb",
+    "set": 18,
+    "terrain": "City/Urban",
+    "archetype": "city",
+    "landscapeId": "minas-tirith-gates",
+    "defaultVariant": "dusk",
+    "number": 228
+  },
+  {
+    "blueprintId": "18_140",
+    "title": "Streets of Bree",
+    "set": 18,
+    "terrain": "Village/Dwelling",
+    "archetype": "city",
+    "landscapeId": "bree-town",
+    "defaultVariant": "night",
+    "number": 229
+  }
+]

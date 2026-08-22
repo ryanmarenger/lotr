@@ -1,13 +1,13 @@
 # LOTR TCG Digital — Living Plan
 
 > This document tracks progress, decisions, todos, and errors. Updated after every work session.
-> Last updated: 2026-03-27
+> Last updated: 2026-04-03
 
 ---
 
 ## Current Status
-**Milestone 1 — Card Database & Deck Builder**
-**Phase: Project initialization**
+**Milestone 2 — Local Two-Player Game**
+**Phase: Board UI art production (2.7)**
 
 ---
 
@@ -68,6 +68,14 @@
   - Hand management: mulligan (return + shuffle + redraw), reconcile (discard to 8), keep hand
   - Concede: instant game over
 - [ ] 2.7 Game board UI (zones from board editor layout)
+  - **Current: Art production for border frame elements (Midjourney)**
+  - Reference template: `board-editor/border-reference-1920x1080.html` — pixel-perfect 1920×1080 reference with mask/annotated/export modes, uses identical clip-path algorithm as board editor v4
+  - Three separate border structures to produce as art:
+    - **L-Border Frame** — left spine + top shelf + brackets (concave arcs) + bottom shelves + strip + horn bracket. Bounding box: (0,0)→(953,1080). 7 inset cutout areas (Twilight Pool, Adventure HUD, Phase Jewel, Doors of Durin, Palantír, Red Book, Horn of Gondor)
+    - **Narsil Shelf** — top center display shelf with quarter-circle end caps. Bounding box: (670,0)→(1515,84), 845×84px. Contains Narsil Shards decorative area
+    - **Portrait Bracket** — right edge bracket with 2 portrait frame cutouts. Bounding box: (1798,375)→(1920,613), 122×238px
+  - Concave arc shapes are quarter-circle clip-paths (N=40 segments, unit circle centered on opposite corner of bbox), rendered as elliptical arcs because bboxes aren't square
+  - After art production: composite into SvelteKit game board, build functional inset components
 - [ ] 2.8 Turn flow UI (phase indicator, action prompts)
 
 ---
@@ -285,6 +293,35 @@ Zones (fellowship, shadow, skirmish) are NOT opaque UI panels. They are invisibl
 
 ---
 
+### Tactical Mode — Eliminated
+- **No tactical mode needed.** Both combat phases (Assignment, Skirmish) now have their own dedicated UIs off the board. All remaining phases (Fellowship, Shadow, Maneuver, Archery, Regroup) are atmospheric — cards stay in immersive standee orientation at all times on the board.
+- The original concern about mass-rotating 15+ cards simultaneously at 60fps is moot.
+
+### Skirmish Overlay Transition — Two Variants
+
+**Standard skirmish:**
+1. Board dims (non-combatant standees fade to low opacity)
+2. Combatant standees glow briefly, then fade to silhouette
+3. Overlay slides/fades in with the same cards rendered **flat and readable from scratch** (no 3D rotation — a film-style dissolve cut between two separate renderings)
+4. On exit: overlay fades, standees rematerialize on bases with subtle glow
+
+**Ring-bearer skirmish (when RB is a combatant):**
+1. Gold/white pulse radiates from Ring-bearer's board position
+2. All combatant standees flash bright, then fade
+3. Overlay appears with faint Ring watermark behind combatants, gold-tinted border
+4. If Ring-bearer has high burdens: flash shifts from gold to sickly red — corruption bleeds into the UI chrome itself
+5. On exit: same as standard
+
+**Key insight:** The overlay renders cards independently from the board. Visual continuity comes from recognizing the card art, not from animating a physical rotation between views. Two different rendering contexts, dissolve between them.
+
+### Art Pipeline
+- **User creates ALL custom art** — phase jewel icons, jewel ring states, adventure HUD icon, hand thumbs, Barad-dur tower, standee bases, cinemagraphs, tokens, event flash art, screen backgrounds, card backs, etc.
+- **Claude implements code** that references art by filename from `static/art/{category}/`
+- **Full art manifest:** `ART_MANIFEST.md` — every asset with naming convention, filenames, descriptions, and counts (~140 total assets)
+- **CSS/programmatic effects** (not art): culture ripples, corruption filters, particles, shadows, glow, weather
+
+---
+
 ## Milestone 3 — Full Card Effect Engine
 _(not started)_
 
@@ -308,6 +345,12 @@ _(not started)_
 | 2026-03-27 | SQLite for persistence | Lightweight, no server needed for local play, portable |
 | 2026-03-27 | MCTS for AI opponent | Proven for card games with hidden information, runs on same TS engine |
 | 2026-03-27 | Card effects as data-driven interpreter | Scalable to 3,500 effects without 3,500 handler functions |
+| 2026-04-01 | UI elements inset into ornate border frame pieces | Each piece is a Tolkien object matching its function (palantír=seeing, horn=action, etc.) — functional UI IS the thematic decoration |
+| 2026-04-01 | Adventure HUD click opens Middle-earth map overlay | Nodes + travel lines on Tolkien's actual maps; dynamic path per deck; zoom for nearby sites |
+| 2026-04-01 | Burden tracker = Barad-dûr (not a border piece) | Already designed as 6-keyframe cinematic board overlay; One Ring already used for assignment waiting screen |
+| 2026-04-01 | SVG path-based border shapes | Resolution-independent, serializable, import from Inkscape/Figma as phase 1 |
+| 2026-04-01 | Game log = Doors of Durin, NOT Palantír | Palantír = pile browser only. Doors of Durin = ithildin glow → doors open → log revealed. Thematic separation of "seeing things" vs "seeing history" |
+| 2026-04-01 | L-shaped border frame finalized (TEMPLATE v5) | One sculptural piece: left spine + top shelf + two concave brackets + bottom shelf + horn bracket. Narsil shelf separate across top. Right side intentionally open. |
 
 ## Errors & Issues Log
 
@@ -318,6 +361,11 @@ _(not started)_
 ---
 
 ## Session Log
+
+### Session 6 — 2026-06-11
+- **User instruction: "open the board"** — get the game board rendering at `/game`
+- GameBoard.svelte imported 11 components but only 3 existed (GameBoard, BoardFrame, TwilightPool) — route was broken since April 3 session ended mid-scaffold
+- Building the 9 missing inset components with placeholder art (swapped for user art as it lands in `static/art/`): PhaseJewel, AdventureHUD, Palantir, DrawDeck, GameLog (Doors of Durin), PassButton (Horn of Gondor), BurdenTracker (Barad-dûr), NarsilShards, OpponentHand
 
 ### Session 1 — 2026-03-27
 - Reviewed board editor v3 (1,610 lines, 20 zone templates, full design tool)
@@ -418,7 +466,26 @@ _(not started)_
     - Skirmish phase: pop-up overlay — background darkens, flat top-down card matchup view appears
     - This would free up ~30% of the board for more landscape/atmosphere
     - **DECIDED: Remove skirmish zones from board.** Archery = visual effect across landscape. Skirmish = pop-up overlay.
-    - Board zones now: Fellowship, Shadow, Adventure Path, Twilight Pool + UI elements. More landscape visible.
+    - Board zones now: Fellowship, Shadow, Twilight Pool + UI elements. More landscape visible.
+19. **Adventure Path redesign — compact HUD widget, not a board zone**
+    - The adventure path is NOT a row of 9 site cards on the board. It's a small, opaque UI element.
+    - **Icon**: Map or compass rose
+    - **Counter**: Site progress (e.g. "3/9")
+    - **Label**: Current site name
+    - **Hover**: Card image preview floats up
+    - **Click**: Full-size card inspection
+    - The landscape cinemagraph already communicates where you are — no need to duplicate that with a card row.
+    - Frees up significant board real estate for landscape/atmosphere.
+    - Classification: **Opaque** UI element (not transparent, not a landscape zone).
+20. **Phase tracker redesign — compact jeweled icon, not a wide bar**
+    - The phase tracker is NOT a 60%-width bar across the top. It's a small circular jeweled widget.
+    - **Center symbol**: Morphs per phase (shield=Fellowship, eye=Shadow, chess piece=Maneuver, bow=Archery, crossed swords=Assignment, sword=Skirmish, star=Regroup)
+    - **7 jewels** arranged in a circle around the center symbol, colors:
+      - Fellowship=Gold, Shadow=Violet, Maneuver=Teal, Archery=Green, Assignment=Amber, Skirmish=Red, Regroup=Silver
+    - **Active jewel pulses/glows**, completed jewels leave dim afterglow trail, inactive jewels dim
+    - **Hover**: Popover listing all 7 phases in order with explanations
+    - Classification: **Opaque** HUD element
+    - Consider clustering with Adventure HUD as a unified "game status" widget group.
 
 ### Site Card Inventory & Landscape Strategy
 - **229 total site cards**, **204 unique names**, across 15 sets
@@ -453,3 +520,97 @@ The world doesn't just get redder — it gets *wrong*. Psychologically disturbin
   - Master List modal: Same graying treatment applied.
   - Toggle rebuilds checklist on change for instant visual feedback.
 - **Next: User reviews landscape mode → continue landscape composition work**
+
+### Session 5 — 2026-04-01
+- **Context menu viewport clamping fixed** — Right-click menus now always appear fully on-screen:
+  - Main menu: renders off-screen first, forces reflow, measures, then clamps to viewport with 8px padding all edges
+  - Submenus: switched from CSS `position: absolute` to JS-positioned `position: fixed`, flip left when right edge would overflow, clamp top/bottom
+- **Border Piece UI System — Design Decisions**
+  All major UI elements are inset into decorative border frame pieces (SVG path-based, ornate metalwork aesthetic). The border is not just decoration — it's the functional UI frame.
+
+  **Complete Border Inventory:**
+
+  | Border Location | Tolkien Object | UI Function |
+  |---|---|---|
+  | **Upper-left** | Phase Jewel | 7 jeweled circle + morphing center symbol, phase tracking |
+  | **Upper-left** (paired) | Adventure HUD (map/compass icon) | Site counter + name; **click opens Middle-earth map overlay** |
+  | **Upper area** | Mirror of Galadriel | Twilight pool — dark water surface with token count |
+  | **Lower-left** | Palantír | Pile browser (discard, dead, deck count, adventure deck) + game log |
+  | **Lower-center/edge** | Horn of Gondor | Pass/Done action |
+  | **Lower-right area** | Red Book of Westmarch | Draw deck — pages remaining = cards remaining |
+  | **Frame decoration** | Shards of Narsil → Andúril | Non-functional atmosphere — blade reassembles as fellowship advances through sites |
+
+  **Non-border board elements (already designed):**
+  - Barad-dûr tower (board overlay, upper-right, 6-keyframe cinematic corruption meter)
+  - One Ring (spins during shadow assignment waiting screen)
+  - Corruption CSS filters (global, escalates with burdens)
+
+  **Palantír menu contents** (pile browser only — game log moved to Doors of Durin):
+  - Discard pile (browsable + count)
+  - Dead pile (browsable + count)
+  - Draw deck count (display only)
+  - Adventure deck remaining (display only)
+  - Opponent piles accessible too (discard/dead are public info) — FP/Shadow toggle or two sections
+
+  **Border piece implementation approach:**
+  - SVG path-based shapes — resolution-independent, serialize to JSON
+  - Phase 1: Import pre-made SVG border pieces (designed in Inkscape/Figma, exported as path data)
+  - Phase 2 (optional): In-editor point-editing to tweak imported shapes
+  - Each piece is a component type in the board editor with position, scale, rotation, opacity, SVG path data
+
+- **Adventure HUD — Middle-earth Map Overlay**
+  Clicking the Adventure HUD opens a full map of Middle-earth (Tolkien's actual maps as base images). The map shows:
+  - **Nodes** at geographic positions corresponding to the 9 adventure deck sites
+  - **Dotted travel lines** connecting nodes in site order — the fellowship's chosen path
+  - **Visited nodes** glow/fill in, **current node** pulses, **future nodes** dim/unfilled
+  - **Hover** over any node shows the site card
+  - **Map style**: Tolkien's own hand-drawn cartography aesthetic (parchment, ink, calligraphic labels)
+  - **Zoom**: Pan and zoom on the map to resolve nearby sites. Detailed regional maps may be sourced for areas where many sites cluster (Moria interior, Minas Tirith tiers, Helm's Deep progression). If the base map resolution is sufficient, zoom alone may handle this.
+  - **Dynamic path**: Since adventure decks are player-built (9 from 229 possible sites), the map plots YOUR chosen journey, not a fixed route. Different decks draw different paths across the same base map.
+  - **Art source**: Tolkien's original maps (base images to be sourced by user). Potentially multiple detail levels — full Middle-earth overview + regional close-ups for dense areas.
+
+- **Doors of Durin — Game Log**
+  Game log is NOT in the Palantír. It has its own thematic object: the Doors of Durin (gates of Moria, ithildin inscription that glows in moonlight).
+  - **Trigger**: Small tome/scroll icon inset in the lower-left spine of the L-border
+  - **Idle**: Faint, barely-visible arch outline — ithildin invisible, just aged stone contour
+  - **Hover**: Moonlight effect — ithildin lines trace themselves in silver-blue, revealing the full door design (two trees, crown, star, anvil). Inscription appears: "Speak, friend, and enter."
+  - **Click/Open**: Doors crack apart, light spills from behind, game log revealed as dark interior — text scrolls upward like carved Dwarvish records on stone walls
+  - **Close**: Doors swing shut, ithildin fades to invisible
+  - Palantír handles pile browsing ONLY (discard, dead, draw count, adventure deck remaining). Game log is Doors of Durin only.
+
+- **Border Layout — Finalized (TEMPLATE v5)**
+  The board frame is an **L-shaped border** wrapping the left edge and bottom, with a separate **Narsil shelf** across the top center. NOT full-length panels — organic stone/metal brackets with concave arch cutouts.
+
+  **L-Border Frame** (one continuous sculptural piece):
+  - Left Spine: full-height strip (x=0, w=3) — backbone
+  - Top Shelf: extends right from spine top (x=2.7, w=22, h=9) — houses Twilight Pool → Adventure HUD → Phase Jewel
+  - Upper Bracket: corner-tl shape (x=3, y=9) with concave inner arch
+  - [Landscape arch opening: y≈35 to y≈65 — visible through the border]
+  - Lower Bracket: corner-bl shape (x=3, y=65) with concave inner arch
+  - Bottom Shelf: connector pieces extending rightward (y≈82-91)
+  - Bottom Strip: base running along bottom (y=91, h=9) with Horn Bracket extension
+  
+  **6 Tolkien objects inset in L-Border:**
+  1. Twilight Pool (Mirror of Galadriel) — top shelf, left
+  2. Adventure HUD (Map/Compass) — top shelf, center
+  3. Phase Jewel — top shelf, right (circle)
+  4. Doors of Durin (Game Log trigger) — lower-left spine, small tome/scroll
+  5. Palantír (Pile Browser) — bottom shelf, large circle
+  6. Red Book of Westmarch (Draw Deck) — bottom shelf, right
+
+  **Horn of Gondor (Pass/Done)** — inset in the Horn Bracket, extending from the bottom strip
+
+  **Narsil Shelf** (separate piece, top center):
+  - Left cap (quarter-bl), main shelf (rect), right cap (quarter-br)
+  - Narsil Shards float within — blade reassembles as sites advance
+
+  **Floating elements** (no border backing):
+  - Opp Hand Count — top-right badge
+  - Barad-dûr — board overlay, top-right (grows with burdens)
+  - One Ring — modal overlay during assignment phase
+  - Hand Fan — lower-right quarter-circle
+
+  **CRITICAL RULE: Fixed vs. Camera-Affected Elements**
+  - **Fixed** (never change size/position across layouts): ALL border pieces, ALL Tolkien insets (Twilight Pool, Adventure HUD, Phase Jewel, Doors of Durin, Palantír, Red Book, Horn of Gondor, Narsil), Opp Hand Count, Hand Fan, Barad-dûr, Ring Spinner
+  - **Camera-affected** (change per layout): Fellowship Zone, Shadow Zone positions/sizes, and the landscape cinemagraph (zoom, tilt, horizon)
+  - The border frame is the SAME in every layout. Only the landscape and card zones shift.

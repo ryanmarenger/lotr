@@ -1,0 +1,11 @@
+{
+	"version": "0.0.1",
+	"configurations": [
+		{
+			"name": "board-editor",
+			"runtimeExecutable": "npx",
+			"runtimeArgs": ["-y", "serve", "board-editor", "-l", "8123", "--no-clipboard"],
+			"port": 8123
+		}
+	]
+}
