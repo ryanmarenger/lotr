@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-const data = JSON.parse(readFileSync('C:/Projects/lotr/data/cards/all-cards.json', 'utf8'));
+const data = JSON.parse(readFileSync('G:/My Drive/claude-projects/lotr/data/cards/all-cards.json', 'utf8'));
 const sites = data.filter(c => c.type === 'Site');
 
 function assignTerrain(s) {

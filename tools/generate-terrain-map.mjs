@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-const data = JSON.parse(readFileSync('C:/Projects/lotr/data/cards/all-cards.json', 'utf8'));
+const data = JSON.parse(readFileSync('G:/My Drive/claude-projects/lotr/data/cards/all-cards.json', 'utf8'));
 const sites = data.filter(c => c.type === 'Site');
 sites.sort((a, b) => a.setNumber - b.setNumber || (a.siteNumber || 0) - (b.siteNumber || 0) || a.cardNumber - b.cardNumber);
 
@@ -234,5 +234,5 @@ Object.entries(counts).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => {
   console.log(`  ${v.toString().padStart(3)} ${k}`);
 });
 
-writeFileSync('C:/Projects/lotr/data/site-terrain-map.json', JSON.stringify(output, null, 2));
+writeFileSync('G:/My Drive/claude-projects/lotr/data/site-terrain-map.json', JSON.stringify(output, null, 2));
 console.log('Written to data/site-terrain-map.json');
