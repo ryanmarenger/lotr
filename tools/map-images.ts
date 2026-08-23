@@ -101,13 +101,24 @@ function main() {
 		const linkPath = path.join(OUTPUT_DIR, setKey);
 		const targetPath = path.join(CARD_IMAGES_ROOT, folderName);
 
-		// Remove existing link if present
+		// Remove existing link if present. A junction unlinks with unlinkSync;
+		// a real directory (the copy fallback below) needs rmSync.
 		try { fs.unlinkSync(linkPath); } catch { /* ignore */ }
 
 		if (fs.existsSync(targetPath)) {
-			// Use junction on Windows (doesn't require admin privileges)
-			fs.symlinkSync(targetPath, linkPath, 'junction');
-			console.log(`  ${setKey} → ${folderName}`);
+			try {
+				// Preferred: junction on Windows (no admin privileges needed, no duplication)
+				fs.symlinkSync(targetPath, linkPath, 'junction');
+				console.log(`  ${setKey} → ${folderName}`);
+			} catch (err) {
+				// Google Drive (and other non-NTFS volumes) reject reparse points:
+				// "Local NTFS volumes are required to complete the operation."
+				// Fall back to copying so the repo still works when it lives on Drive.
+				fs.rmSync(linkPath, { recursive: true, force: true });
+				fs.cpSync(targetPath, linkPath, { recursive: true });
+				const n = fs.readdirSync(linkPath).length;
+				console.log(`  ${setKey} ⧉ ${folderName}  (copied ${n} files — symlinks unavailable here)`);
+			}
 		}
 	}
 
